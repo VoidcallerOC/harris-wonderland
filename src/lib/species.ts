@@ -1,0 +1,278 @@
+export type SpeciesCategory = "snakes" | "lizards" | "shells" | "amphibians";
+
+export type Species = {
+  id: string;
+  name: string;
+  latin: string;
+  category: SpeciesCategory;
+  beginner: boolean;
+  floor: boolean;
+  image: string;
+  alt: string;
+  blurb: string;
+  handling: string;
+  enclosure: string;
+  heat: string;
+  humidity: string;
+  diet: string;
+  note: string;
+};
+
+export const CATEGORIES: { id: SpeciesCategory | "all" | "beginner"; label: string }[] = [
+  { id: "all", label: "All" },
+  { id: "beginner", label: "First animal" },
+  { id: "snakes", label: "Snakes" },
+  { id: "lizards", label: "Lizards" },
+  { id: "shells", label: "Shells" },
+  { id: "amphibians", label: "Amphibians" },
+];
+
+export const SPECIES: Species[] = [
+  {
+    id: "ball-python",
+    name: "Ball python",
+    latin: "Python regius",
+    category: "snakes",
+    beginner: false,
+    floor: true,
+    image: "/images/case-snakes.jpg",
+    alt: "Ball python on the rack at Harris in Wonderland",
+    blurb: "Designer morphs and well-started animals. The next snake after you have held a corn or a king.",
+    handling: "Calm once settled. Not the first snake if you have never held one.",
+    enclosure: "Secure tub or glass with hides on both ends. Size the box to the animal, not the room.",
+    heat: "Hot hide 88–92°F. Cool side 76–80°F. A thermostat is not optional.",
+    humidity: "50–60% at rest, closer to 70% in shed.",
+    diet: "Frozen/thawed rodents, sized to the thickest part of the body.",
+    note: "Ask Adam or Ashlee what is on the rack this week. Morphs change.",
+  },
+  {
+    id: "corn-snake",
+    name: "Corn snake",
+    latin: "Pantherophis guttatus",
+    category: "snakes",
+    beginner: true,
+    floor: false,
+    image: "/images/corn-snake.jpg",
+    alt: "Corn snake portrait",
+    blurb: "Easy to keep clean, easy to feed, a hide and a heat source. Harris names this first.",
+    handling: "The handling snake. Secure cage, then you pick it up.",
+    enclosure: "Escape-proof lid. Hide, water, aspen or similar. Hatchlings in a smaller box.",
+    heat: "75–82°F ambient, a warm end near 85°F.",
+    humidity: "40–50%. Dry is safer than damp.",
+    diet: "Frozen/thawed mice. Regulars buy feeders here even when they are not adding an animal.",
+    note: "Corn or king. That is the first ticket.",
+  },
+  {
+    id: "hognose",
+    name: "Western hognose",
+    latin: "Heterodon nasicus",
+    category: "snakes",
+    beginner: false,
+    floor: false,
+    image: "/images/hognose.jpg",
+    alt: "Western hognose snake portrait",
+    blurb: "Upturned snout, toad-hunter face, a lot of personality in a small snake.",
+    handling: "Theatrical bluffers. They settle. Not venomous in any way that belongs on a care sheet scare line.",
+    enclosure: "Deep enough to burrow. Secure lid. Hide and a water dish they will sit in.",
+    heat: "Warm end 88–90°F. Cool side the mid-70s.",
+    humidity: "30–50%. They are a dry-country snake.",
+    diet: "Frozen/thawed mice. Some are fussy as hatchlings — ask before you take one home hungry.",
+    note: "A second snake, not a first, unless you already keep corns.",
+  },
+  {
+    id: "bearded-dragon",
+    name: "Bearded dragon",
+    latin: "Pogona vitticeps",
+    category: "lizards",
+    beginner: true,
+    floor: false,
+    image: "/images/bearded-dragon.jpg",
+    alt: "Bearded dragon portrait",
+    blurb: "The handling lizard. Budget the UV and the heat before the animal.",
+    handling: "One of the two lizards they will name if you want to hold something. Most lizards would rather be watched.",
+    enclosure: "Adults want a long enclosure, not a tall one. Basking platform, hides, no wild-caught décor.",
+    heat: "Basking 95–105°F. Cool side the high 70s. Night drop is fine.",
+    humidity: "30–40%. They fail wet.",
+    diet: "Greens every day, insects on a schedule. Calcium and UVB are the actual food.",
+    note: "Leo or beardie. Bring photos of the fixture, not just the tank.",
+  },
+  {
+    id: "leopard-gecko",
+    name: "Leopard gecko",
+    latin: "Eublepharis macularius",
+    category: "lizards",
+    beginner: true,
+    floor: false,
+    image: "/images/leopard-gecko.jpg",
+    alt: "Leopard gecko portrait",
+    blurb: "Nocturnal, ground-dwelling, a hide and a heat mat done honestly.",
+    handling: "The other handling lizard. Slow, terrestrial, a good first gecko.",
+    enclosure: "Floor space over height. Moist hide, dry hide, warm hide. They will eat substrate — keep it smart.",
+    heat: "Warm hide 88–92°F. Cool side the mid-70s.",
+    humidity: "30–40% in the open, a damp hide for sheds.",
+    diet: "Roaches, crickets, mealworms. Dust them. The feeder cart is priced for people who actually feed.",
+    note: "Leo or beardie. Ask which animal on the rack is eating well.",
+  },
+  {
+    id: "giant-day-gecko",
+    name: "Giant day gecko",
+    latin: "Phelsuma grandis",
+    category: "lizards",
+    beginner: false,
+    floor: true,
+    image: "/images/hero.jpg",
+    alt: "Giant day gecko at Harris in Wonderland, 364 Albany Turnpike, Canton CT",
+    blurb: "The looking-glass animal. Day-active, electric, not a handling pet.",
+    handling: "Watch them. Skin tears if you grab. This is a display gecko.",
+    enclosure: "Tall and planted. Live plants if you will keep them alive. Screen or well-vented glass.",
+    heat: "80–85°F by day, a basking patch a few degrees warmer.",
+    humidity: "50–70% with a daily mist, then dry-out. Stagnant wet kills.",
+    diet: "Insects plus a gecko diet / fruit nectar. They hunt in the light.",
+    note: "On the floor in Canton. Ask before you fall for the color.",
+  },
+  {
+    id: "frilled-lizard",
+    name: "Frilled lizard",
+    latin: "Chlamydosaurus kingii",
+    category: "lizards",
+    beginner: false,
+    floor: true,
+    image: "/images/case-lizards.jpg",
+    alt: "Frilled lizard at Harris in Wonderland",
+    blurb: "The odd lizard that stops traffic. Not a first animal. A serious enclosure.",
+    handling: "They display. They do not want to be a lap lizard.",
+    enclosure: "Tall, hot, UV-heavy, branches they can actually use. This is not a 20-gallon animal.",
+    heat: "Basking 95–110°F. Strong UVB. Cool side still warm.",
+    humidity: "Moderate, with a wet and a dry cycle — not a rainforest box.",
+    diet: "Insects, and a lot of them while they grow.",
+    note: "Unusual lizards rotate. Call before you drive for a named one.",
+  },
+  {
+    id: "blue-tongue",
+    name: "Blue-tongue skink",
+    latin: "Tiliqua sp.",
+    category: "lizards",
+    beginner: false,
+    floor: false,
+    image: "/images/blue-tongue.jpg",
+    alt: "Blue-tongue skink portrait",
+    blurb: "Omnivore, terrestrial, a face like a sausage with opinions.",
+    handling: "Personable for a skink. Still a lizard — read the room.",
+    enclosure: "Long floor plan, hide, water they can soak in, a basking rock that actually gets hot.",
+    heat: "Basking 90–95°F. Cool side the mid-70s.",
+    humidity: "Varies by locality. Northern animals run drier. Ask which one is on the rack.",
+    diet: "Mixed: greens, protein, quality wet food. They are not a cricket-only lizard.",
+    note: "A second lizard. Bring the enclosure plan.",
+  },
+  {
+    id: "red-foot",
+    name: "Red-foot tortoise",
+    latin: "Chelonoidis carbonarius",
+    category: "shells",
+    beginner: true,
+    floor: false,
+    image: "/images/redfoot.jpg",
+    alt: "Red-foot tortoise portrait",
+    blurb: "Personable and long-lived. They eat every day and they are messy. Be honest about the maintenance.",
+    handling: "They walk. They do not want to be carried around a party.",
+    enclosure: "Floor space, humid hide, outdoor time when Connecticut allows it. They outgrow a tank.",
+    heat: "80–85°F ambient, basking the high 80s to 90. Soak water.",
+    humidity: "70–80% for the shell. Dry red-foots pyramid.",
+    diet: "Greens, fruit in measure, animal protein in small doses. Every day.",
+    note: "Red-foot or Russian. Russians are the other beginner tortoise they will name.",
+  },
+  {
+    id: "whites-frog",
+    name: "White's treefrog",
+    latin: "Ranoidea caerulea",
+    category: "amphibians",
+    beginner: true,
+    floor: false,
+    image: "/images/whites-frog.jpg",
+    alt: "White's treefrog portrait",
+    blurb: "The first frog. Clean water is not optional. Stagnant water turns toxic.",
+    handling: "Minimal. Hands-off display frog with a clown face.",
+    enclosure: "Tall, with a large water dish they can sit in. Live or fake plants. A tight lid.",
+    heat: "75–85°F. They like warm nights more than a desert lizard does.",
+    humidity: "50–70% with a daily mist and a dry-out. Not a swamp.",
+    diet: "Gut-loaded insects. Calcium. They will overeat if you let them.",
+    note: "White's or an Argentine horned frog. Red-eyes, mantellas, and darts come later.",
+  },
+  {
+    id: "red-eyed",
+    name: "Red-eyed treefrog",
+    latin: "Agalychnis callidryas",
+    category: "amphibians",
+    beginner: false,
+    floor: true,
+    image: "/images/case-amphibians.jpg",
+    alt: "Red-eyed tree frog at Harris in Wonderland",
+    blurb: "The damp-room poster. Beautiful, nocturnal, not a first frog.",
+    handling: "Don't. The skin is the animal.",
+    enclosure: "Tall, planted, a real photoperiod, a water dish they will not foul to death.",
+    heat: "75–82°F by day, a slight night drop.",
+    humidity: "70–80%. Mist, then air. Stagnant wet is how frogs fail.",
+    diet: "Insects sized to the mouth. They hunt at night.",
+    note: "On the floor in Canton. Ask for the sheet that matches this animal, not a generic tree-frog PDF.",
+  },
+  {
+    id: "dart-frog",
+    name: "Dart frog",
+    latin: "Dendrobatidae",
+    category: "amphibians",
+    beginner: false,
+    floor: false,
+    image: "/images/dart-frog.jpg",
+    alt: "Dyeing poison dart frog portrait",
+    blurb: "Vivarium animals. Captive-bred, fruit-fly keepers, not a handling pet.",
+    handling: "Never. This is a planted tank you watch.",
+    enclosure: "A bioactive vivarium, not a critter keeper. Leaf litter, plants, drainage, a glass front.",
+    heat: "72–78°F. They overheat in a sunny window.",
+    humidity: "80–100% with air movement. A stagnant box kills them as surely as a dry one.",
+    diet: "Springtails, fruit flies, small insects. You are keeping a culture, not a pet-store cricket.",
+    note: "Captive-bred here or by people the shop will stand behind. Call before you drive for a named morph.",
+  },
+];
+
+export function speciesById(id: string | undefined) {
+  return SPECIES.find((s) => s.id === id);
+}
+
+export function filterSpecies(filter: string) {
+  if (filter === "beginner") return SPECIES.filter((s) => s.beginner);
+  if (filter === "snakes" || filter === "lizards" || filter === "shells" || filter === "amphibians") {
+    return SPECIES.filter((s) => s.category === filter);
+  }
+  return SPECIES;
+}
+
+export const CHOOSER = [
+  {
+    id: "snake",
+    role: "Snakes",
+    title: "Corn or king",
+    body: "Easy to keep clean, easy to feed, a hide and a heat source. Ball pythons and boas are the next step, not the first ticket if you have never held a snake.",
+    speciesId: "corn-snake",
+  },
+  {
+    id: "lizard",
+    role: "Lizards",
+    title: "Leo or beardie",
+    body: "Leopard geckos and bearded dragons. Most lizards would rather be watched than handled. Budget the UV and the heat before the animal.",
+    speciesId: "leopard-gecko",
+  },
+  {
+    id: "shell",
+    role: "Shells",
+    title: "Red-foot",
+    body: "Personable and long-lived. They eat every day and they are messy. Be honest about the maintenance. Russians are the other beginner tortoise they will name.",
+    speciesId: "red-foot",
+  },
+  {
+    id: "frog",
+    role: "Amphibians",
+    title: "White's",
+    body: "White's treefrogs for a first frog. Clean water is not optional. Horned frogs are the other beginner they recommend. Red-eyes, mantellas, and darts come later.",
+    speciesId: "whites-frog",
+  },
+] as const;
