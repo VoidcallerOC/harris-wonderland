@@ -1,7 +1,7 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { SiteShell } from "@/components/site-shell";
 import { MapPin, Phone } from "lucide-react";
-import { SITE } from "@/lib/site";
+import { DIRECTIONS, PROGRAMS, SITE } from "@/lib/site";
 import { Button } from "@/components/ui/button";
 import { ContactForm } from "@/components/contact-form";
 import { HoursTicket } from "@/components/hours-ticket";
@@ -15,7 +15,7 @@ export const Route = createFileRoute("/visit")({
       {
         name: "description",
         content:
-          "Hours, the snake-handle door, birthday programs, and contact for the reptile specialty shop at 364 Albany Turnpike, Canton.",
+          "Hours, directions, the snake-handle door, birthday programs, and contact for the reptile specialty shop at 364 Albany Turnpike, Canton.",
       },
     ],
   }),
@@ -32,8 +32,8 @@ function VisitPage() {
             Come in through the snake-handle door.
           </Display>
           <Lede className="mt-5">
-            Dedicated parking, accessible entry. The collection lives in the room, not on
-            this site. Ask at the counter for care sheets.
+            {SITE.landmark} Dedicated parking, accessible entry. The collection lives in
+            the room, not on this site.
           </Lede>
         </div>
       </section>
@@ -51,17 +51,19 @@ function VisitPage() {
               <br />
               {SITE.address.city}, {SITE.address.region} {SITE.address.postal}
             </p>
+            <p className="mt-3 text-sm text-muted-foreground">{SITE.landmark}</p>
             <p className="mt-4 text-fg-soft">
               Shop{" "}
               <a className="text-brass underline-offset-4 hover:underline" href={SITE.phones.shop.href}>
                 {SITE.phones.shop.display}
               </a>
               <br />
-              Booking / mobile{" "}
+              Second line{" "}
               <a className="text-brass underline-offset-4 hover:underline" href={SITE.phones.booking.href}>
                 {SITE.phones.booking.display}
               </a>
             </p>
+            <p className="mt-2 text-sm text-muted-foreground">{SITE.phones.booking.note}</p>
             <p className="mt-4">
               <a className="text-brass underline-offset-4 hover:underline" href={`mailto:${SITE.emails.adam}`}>
                 {SITE.emails.adam}
@@ -89,7 +91,22 @@ function VisitPage() {
         </div>
       </section>
 
-      <section className="border-y border-border">
+      <section className="border-y border-border bg-bg-2 py-16 sm:py-20">
+        <div className="wrap">
+          <Kicker>How to find us</Kicker>
+          <Display className="mt-2">Three ways onto Route 44.</Display>
+          <div className="mt-8 grid gap-3 lg:grid-cols-3">
+            {DIRECTIONS.map((route) => (
+              <article key={route.from} className="border border-border bg-card p-5">
+                <h2 className="font-display text-card italic text-ticket">{route.from}</h2>
+                <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{route.body}</p>
+              </article>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section className="border-b border-border">
         <iframe
           title="Map of Harris in Wonderland, 364 Albany Turnpike, Canton CT"
           src={SITE.links.mapsEmbed}
@@ -105,23 +122,25 @@ function VisitPage() {
             <Kicker>Programs</Kicker>
             <Display className="mt-2">Birthdays & education</Display>
             <p className="mt-4 max-w-[46ch] text-fg-soft">
-              The animals are the event. Call to book. Mention ages, group size, and
-              whether anyone is new to reptiles. These fill — the booking line is{" "}
+              Adam brings the collection. Call to book. The booking line is{" "}
               {SITE.phones.booking.display}.
             </p>
             <div className="mt-6 grid gap-3">
+              {PROGRAMS.map((program) => (
+                <article key={program.title} className="border border-border bg-card p-5">
+                  <h3 className="font-display text-card italic text-ticket">{program.title}</h3>
+                  <p className="mt-2 text-sm text-muted-foreground">{program.body}</p>
+                </article>
+              ))}
               <article className="border border-border bg-card p-5">
-                <h3 className="font-display text-card italic text-ticket">Birthday programs</h3>
+                <h3 className="font-display text-card italic text-ticket">Pond estimate</h3>
                 <p className="mt-2 text-sm text-muted-foreground">
-                  Handling, looking, asking questions. Not a bounce-house with a snake in
-                  the corner. Book ahead.
-                </p>
-              </article>
-              <article className="border border-border bg-card p-5">
-                <h3 className="font-display text-card italic text-ticket">Education visits</h3>
-                <p className="mt-2 text-sm text-muted-foreground">
-                  Classrooms and groups. Adam and the collection travel when the calendar
-                  allows.
+                  Limited garden-pond installs each year — streams, waterfalls, bogs,
+                  lights. Free estimate.{" "}
+                  <Link to="/fish" className="text-brass underline-offset-4 hover:underline">
+                    Fish room & ponds
+                  </Link>
+                  .
                 </p>
               </article>
             </div>

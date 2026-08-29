@@ -12,9 +12,15 @@ export const SITE = {
     country: "US",
     line: "364 Albany Turnpike, Canton, CT 06019",
   },
+  landmark:
+    "Grey building on Route 44, attached to BreMar Rentals. Snake-handle door toward the right side of the building.",
   phones: {
     shop: { display: "(860) 674-0160", href: "tel:+18606740160" },
-    booking: { display: "(860) 888-5130", href: "tel:+18608885130" },
+    booking: {
+      display: "(860) 888-5130",
+      href: "tel:+18608885130",
+      note: "If you have trouble getting through, or to make an appointment.",
+    },
   },
   emails: {
     adam: "Adam@harrisinwonderland.com",
@@ -45,11 +51,14 @@ export const MARQUEE = [
   "Ball pythons",
   "Hognose",
   "Corns",
+  "Kings",
   "Dragons",
   "Dart frogs",
   "Red-foots",
-  "Feeders",
+  "Feeders they raise",
   "Birthday programs",
+  "Pond installs",
+  "Marine room",
   "Captive-bred",
   "Care sheets",
   "Giant day gecko",
@@ -74,26 +83,58 @@ export const KEEPERS = [
   },
 ] as const;
 
+export const REMEMBERING = {
+  name: "Jim White",
+  role: "Fish room",
+  bio: "Jim worked the fish room for several years — African cichlids especially — and was an active member of the Pioneer Valley Aquarium Society. He passed unexpectedly. The shop still talks about his enthusiasm, and so do the people he helped.",
+} as const;
+
 export const TIMELINE = [
   {
     when: "1940s · West Hartford",
     title: "Seth starts with fish",
-    body: "A breeding hobby, then New Britain Avenue, then a teaching career and the military closed the first shop.",
+    body: "A breeding hobby out of the house, then a shop on New Britain Avenue while he studied biology at UConn. Military service and 31 years teaching at Granby Memorial closed the first shop.",
   },
   {
     when: "1999 · Bloomfield",
     title: "Reopened next to a bar",
-    body: "Four hundred square feet, then 1,800 next door. Six years of the modern shop.",
+    body: "October 1999: four hundred square feet adjacent to a bar, then 1,800 next door once the smoke got old. Six years of the modern shop.",
   },
   {
     when: "Avon",
     title: "Two village rooms",
-    body: "Old Avon Village, then street level. The collection outgrew both.",
+    body: "Old Avon Village downstairs for seven years, then street level a quarter-mile away for four. The collection outgrew both.",
   },
   {
     when: "Now · Canton",
     title: "364 Albany Turnpike",
-    body: "Parking, access, road frontage, and room for the live collection. The snake-handle door is on Route 44.",
+    body: "Parking, handicapped access, road frontage. Grey building attached to BreMar Rentals. The snake-handle door is the landmark.",
+  },
+] as const;
+
+export const DIRECTIONS = [
+  {
+    from: "I-91 · Hartford",
+    body: "Trumbull Street exit. Straight off the ramp, second right onto Route 44. Stay on 44 over Avon Mountain, through Avon center, into Canton — about nine miles. Grey building on the left, attached to BreMar Rentals.",
+  },
+  {
+    from: "Granby / East Granby",
+    body: "10/202 south to Route 44, turn right — O'Neill's Buick is the opposite corner. 4.7 miles on 44. Snake-handle door on the right side of the building.",
+  },
+  {
+    from: "Farmington / Unionville",
+    body: "Route 10 north to 44, left at Avon Old Farms Inn. Through Avon into Canton (the road becomes Albany Turnpike). Same grey building, attached to BreMar.",
+  },
+] as const;
+
+export const PROGRAMS = [
+  {
+    title: "Birthday programs",
+    body: "The animals are the event. About twenty creatures from around the world, a chance to hold a live reptile, a feeding demonstration if you want it. Not a bounce-house with a snake in the corner. Book ahead — these fill.",
+  },
+  {
+    title: "Schools, libraries, scouts",
+    body: "Adam will come to a classroom, library, or scouting event with the same collection and the same honest talk. Mention ages, group size, and whether anyone is new to reptiles.",
   },
 ] as const;
 
@@ -103,5 +144,7 @@ export const CONTACT_TOPICS = [
   "Birthday / program",
   "Care sheet / husbandry",
   "Supplies / feeders",
-  "Fish room / ponds",
+  "Fish room / marine",
+  "Pond estimate",
+  "Sugar glider / mammal",
 ] as const;

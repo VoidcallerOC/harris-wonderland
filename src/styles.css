@@ -96,6 +96,12 @@
     outline-offset: 3px;
   }
 
+  select {
+    color: var(--color-ticket);
+    background-color: var(--color-surface);
+    border-radius: 0;
+  }
+
   img {
     outline: 1px solid color-mix(in oklab, var(--color-foreground) 10%, transparent);
     outline-offset: -1px;
@@ -141,10 +147,60 @@
   }
 }
 
+.field-cursor {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 90;
+  width: 10px;
+  height: 10px;
+  margin: -5px 0 0 -5px;
+  border: 1.5px solid var(--color-brass);
+  border-radius: 999px;
+  pointer-events: none;
+  mix-blend-mode: difference;
+  transition:
+    width var(--duration-fast) var(--ease-out-smooth),
+    height var(--duration-fast) var(--ease-out-smooth),
+    margin var(--duration-fast) var(--ease-out-smooth),
+    background var(--duration-fast);
+}
+
+.field-cursor.is-photo {
+  width: 76px;
+  height: 76px;
+  margin: -38px 0 0 -38px;
+  background: color-mix(in oklab, var(--color-ticket-ink) 35%, transparent);
+}
+
+.field-cursor.is-photo::after {
+  content: "Look";
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  font-family: var(--font-ui);
+  font-size: 0.62rem;
+  font-weight: 700;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--color-ticket);
+}
+
+@media (pointer: fine) {
+  html.fine-cursor,
+  html.fine-cursor a,
+  html.fine-cursor button {
+    cursor: none;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .marquee-track,
-  .hero-ken {
+  .hero-ken,
+  .field-cursor {
     animation: none;
+    transition: none;
   }
 
   html {

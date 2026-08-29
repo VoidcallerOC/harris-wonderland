@@ -1,6 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { SiteShell } from "@/components/site-shell";
-import { SITE, KEEPERS, TIMELINE } from "@/lib/site";
+import { SITE, KEEPERS, TIMELINE, REMEMBERING } from "@/lib/site";
 import { Button } from "@/components/ui/button";
 import { SpecimenPhoto } from "@/components/specimen-photo";
 import { Kicker, Display, Lede } from "@/components/type";
@@ -60,18 +60,21 @@ function StoryPage() {
           <div className="space-y-5 text-fg-soft">
             <p>
               The shop is first and foremost an exotic reptile and amphibian house. It
-              still earns a place on any Connecticut fishkeeper’s map — freshwater,
-              marine, ponds — but the front of the room is the herp collection.
+              still earns a place on any Connecticut fishkeeper’s map — freshwater, a
+              dedicated marine room, pond installs — but the front of the room is the herp
+              collection.
             </p>
             <p>
               Dedicated parking, handicapped access, road frontage, and a facility built
               to hold live animals instead of a village storefront. The snake-handle door
-              is the landmark. Come through it.
+              on the grey building attached to BreMar Rentals is the landmark. Come
+              through it.
             </p>
             <p>
               Many animals are captive-bred here or by local people the shop will stand
-              behind. Frozen rodents, crickets, and roaches are why regulars drive even
-              when they are not adding a new animal.
+              behind. They raise their own feeders for the collection and sell the surplus
+              — frozen rodents, crickets, and roaches are why regulars drive even when they
+              are not adding a new animal.
             </p>
           </div>
         </div>
@@ -92,6 +95,13 @@ function StoryPage() {
               </article>
             ))}
           </div>
+          <article className="mt-3 border border-dashed border-border bg-background p-6">
+            <Kicker>Remembering</Kicker>
+            <h2 className="mt-2 font-display text-3xl italic text-ticket">{REMEMBERING.name}</h2>
+            <p className="mt-3 max-w-[62ch] text-sm leading-relaxed text-muted-foreground">
+              {REMEMBERING.bio}
+            </p>
+          </article>
         </div>
       </section>
 

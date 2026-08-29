@@ -1,7 +1,9 @@
 import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
 import fallbackJson from "./square-catalog.json";
-import { SQUARE, stripHtml, type CatalogPayload, type SquareProduct } from "./square";
+import fallbackSkus from "./feeder-skus.json";
+import { withFeederSkus } from "./feeders";
+import { SQUARE, isFeeder, stripHtml, type CatalogPayload, type SquareProduct, type SquareSku } from "./square";
 
 type FallbackFile = {
   fetchedAt: string;
@@ -10,6 +12,7 @@ type FallbackFile = {
 };
 
 const fallback = fallbackJson as FallbackFile;
+const FALLBACK_SKUS = fallbackSkus as Record<string, SquareSku[]>;
 
 type Cache = { at: number; data: CatalogPayload };
 let cache: Cache | null = null;
@@ -18,7 +21,7 @@ const TTL_MS = 3 * 60 * 1000;
 const FALLBACK: CatalogPayload = {
   fetchedAt: fallback.fetchedAt,
   live: false,
-  products: fallback.products as SquareProduct[],
+  products: withFeederSkus(fallback.products as SquareProduct[]),
   categories: fallback.categories,
 };
 
@@ -33,6 +36,19 @@ function thumbUrl(item: Record<string, unknown>): string | null {
 function money(price: Record<string, unknown> | undefined, key: string) {
   const value = price?.[key];
   return typeof value === "number" ? value : null;
+}
+
+function normalizeSku(item: Record<string, unknown>): SquareSku {
+  const price = (item.price ?? {}) as Record<string, unknown>;
+  const sold = item.sold_out;
+  const amount = typeof price.regular === "number" ? price.regular : typeof price.current === "number" ? price.current : 0;
+  return {
+    id: String(item.id),
+    name: String(item.name ?? "Pack"),
+    price: amount,
+    soldOut: sold === true || sold === 1 || sold === "true",
+    sku: item.sku ? String(item.sku) : null,
+  };
 }
 
 function normalize(
@@ -80,6 +96,38 @@ async function squareGet(path: string) {
   return response.json() as Promise<{ data: unknown[]; meta?: { pagination?: { total_pages?: number } } }>;
 }
 
+async function loadSkus(productId: string): Promise<SquareSku[]> {
+  const skus: SquareSku[] = [];
+  for (let page = 1; page <= 4; page += 1) {
+    const json = await squareGet(`/products/${productId}/skus?per_page=50&page=${page}`);
+    for (const row of json.data ?? []) {
+      skus.push(normalizeSku(row as Record<string, unknown>));
+    }
+    const pages = json.meta?.pagination?.total_pages ?? page;
+    if (page >= pages) break;
+  }
+  return skus;
+}
+
+async function attachSkus(products: SquareProduct[]): Promise<SquareProduct[]> {
+  const targets = products.filter(isFeeder);
+  const loaded = await Promise.all(
+    targets.map(async (product) => {
+      try {
+        const skus = await loadSkus(product.id);
+        return [product.id, skus.length ? skus : (FALLBACK_SKUS[product.id] ?? [])] as const;
+      } catch {
+        return [product.id, FALLBACK_SKUS[product.id] ?? []] as const;
+      }
+    }),
+  );
+  const byId = new Map(loaded);
+  return products.map((product) => {
+    const skus = byId.get(product.id) ?? FALLBACK_SKUS[product.id];
+    return skus?.length ? { ...product, skus } : product;
+  });
+}
+
 async function loadLiveCatalog(): Promise<CatalogPayload> {
   const products: Record<string, unknown>[] = [];
   const categories: Array<{ id: string; site_category_id?: string | number; name: string }> = [];
@@ -95,10 +143,11 @@ async function loadLiveCatalog(): Promise<CatalogPayload> {
     const pages = json.meta?.pagination?.total_pages ?? page;
     if (page >= pages) break;
   }
+  const normalized = normalize(products, categories);
   return {
     fetchedAt: new Date().toISOString(),
     live: true,
-    products: normalize(products, categories),
+    products: await attachSkus(normalized),
     categories: categories.map((c) => ({
       id: c.id,
       siteCategoryId: String(c.site_category_id ?? ""),

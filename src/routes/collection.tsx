@@ -36,20 +36,19 @@ function CollectionPage() {
             What is on the rack this week.
           </Display>
           <Lede className="mt-5">
-            Ball pythons and designer morphs, corns, western hognose, milks and kings,
-            beardies, geckos, red-foots, darts, pacmans. The named animal lives in Canton
-            — this page is the map, not the inventory.
+            Ball pythons and designer morphs, corns, kings, western hognose, milks,
+            boas, beardies, geckos, red-foots, darts, pacmans. Many are captive-bred here
+            or locally. The named animal lives in Canton — this page is the map, not the
+            inventory.
           </Lede>
           <div className="mt-7 flex flex-wrap gap-3">
             <Button asChild>
-              <a href={SITE.links.collection} target="_blank" rel="noopener noreferrer">
-                Available animals
-              </a>
+              <Link to="/shop">Shop the rack</Link>
             </Button>
             <Button asChild variant="ghost">
-              <a href={SITE.links.feeders} target="_blank" rel="noopener noreferrer">
-                Feeder cart
-              </a>
+              <Link to="/" hash="feeders">
+                Shop feeders
+              </Link>
             </Button>
           </div>
         </div>

@@ -20,6 +20,16 @@ const jsonLd = {
     addressCountry: SITE.address.country,
   },
   url: "https://harrisinwonderland.com/",
+  hasMap: SITE.links.maps,
+  sameAs: [SITE.links.facebook, SITE.links.instagram],
+  openingHoursSpecification: [
+    { "@type": "OpeningHoursSpecification", dayOfWeek: "Tuesday", opens: "10:00", closes: "19:30" },
+    { "@type": "OpeningHoursSpecification", dayOfWeek: "Wednesday", opens: "10:00", closes: "19:30" },
+    { "@type": "OpeningHoursSpecification", dayOfWeek: "Thursday", opens: "10:00", closes: "19:30" },
+    { "@type": "OpeningHoursSpecification", dayOfWeek: "Friday", opens: "10:00", closes: "19:00" },
+    { "@type": "OpeningHoursSpecification", dayOfWeek: "Saturday", opens: "10:00", closes: "18:00" },
+    { "@type": "OpeningHoursSpecification", dayOfWeek: "Sunday", opens: "12:00", closes: "16:00" },
+  ],
 };
 
 export const Route = createRootRoute({

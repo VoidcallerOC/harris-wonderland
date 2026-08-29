@@ -11,6 +11,8 @@ export function SiteFooter() {
           <p className="mt-3 max-w-md text-muted-foreground">
             {SITE.address.line}
             <br />
+            {SITE.landmark}
+            <br />
             Shop{" "}
             <a className="text-fg-soft underline-offset-4 hover:text-brass" href={SITE.phones.shop.href}>
               {SITE.phones.shop.display}
@@ -57,14 +59,13 @@ export function SiteFooter() {
           >
             Live animals
           </Link>
-          <a
+          <Link
             className="font-ui text-kicker font-bold uppercase tracking-kicker text-muted-foreground no-underline hover:text-brass"
-            href={SITE.links.feeders}
-            target="_blank"
-            rel="noopener noreferrer"
+            to="/"
+            hash="feeders"
           >
-            Feeder cart
-          </a>
+            Feeder locker
+          </Link>
           <a
             className="font-ui text-kicker font-bold uppercase tracking-kicker text-muted-foreground no-underline hover:text-brass"
             href={SITE.links.instagram}

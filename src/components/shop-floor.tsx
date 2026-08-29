@@ -1,13 +1,19 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { ShoppingBag } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { FeederLocker } from "@/components/feeder-locker";
 import { useCart } from "@/lib/cart-store";
 import {
   SHOP_FILTERS,
   canBuy,
+  defaultSku,
+  formatMoney,
+  isFeeder,
   matchesFilter,
+  packLabel,
   priceLabel,
   productImage,
+  skuCartName,
   splitProductName,
   type CatalogPayload,
   type ShopFilter,
@@ -21,10 +27,15 @@ function ProductCard({ product }: { product: SquareProduct }) {
   const buyable = canBuy(product);
   const { kind, title } = splitProductName(product.name);
   const cat = product.categories[0] ?? kind ?? "Harris";
+  const packs = (product.skus ?? []).filter((sku) => !sku.soldOut && sku.price > 0);
+  const [skuId, setSkuId] = useState(defaultSku(product)?.id ?? packs[0]?.id ?? "");
+  const selected = packs.find((pack) => pack.id === skuId) ?? packs[0];
+  const price = selected ? formatMoney(selected.price) : priceLabel(product);
+  const feeder = isFeeder(product);
 
   return (
     <article className="group flex flex-col border border-border bg-card">
-      <div className="relative aspect-[4/5] overflow-hidden bg-surface">
+      <div data-photo className="relative aspect-[4/5] overflow-hidden bg-surface">
         <img
           src={productImage(product)}
           alt={product.name}
@@ -38,27 +49,45 @@ function ProductCard({ product }: { product: SquareProduct }) {
         </p>
       </div>
       <div className="flex flex-1 flex-col p-4">
-        {kind ? <Kicker>{kind}</Kicker> : null}
+        {kind ? <Kicker>{kind}</Kicker> : feeder ? <Kicker>Feeder</Kicker> : null}
         <h3 className="mt-1 font-display text-card italic text-ticket">{title}</h3>
         {product.description ? (
           <p className="mt-2 line-clamp-2 text-sm text-muted-foreground">{product.description}</p>
         ) : null}
+        {packs.length > 1 ? (
+          <label className="mt-3 grid gap-2">
+            <span className="font-ui text-kicker font-bold uppercase tracking-kicker text-muted-foreground">
+              Pack
+            </span>
+            <select
+              value={selected?.id ?? ""}
+              onChange={(event) => setSkuId(event.target.value)}
+              className="min-h-11 border border-border bg-surface px-3 font-ui text-sm text-ticket"
+            >
+              {packs.map((pack) => (
+                <option key={pack.id} value={pack.id}>
+                  {packLabel(product, pack)} — {formatMoney(pack.price)}
+                </option>
+              ))}
+            </select>
+          </label>
+        ) : null}
         <div className="mt-auto flex items-end justify-between gap-3 pt-4">
-          <p className="font-ui text-sm font-bold uppercase tracking-kicker text-brass">
-            {priceLabel(product)}
-          </p>
+          <p className="font-ui text-sm font-bold uppercase tracking-kicker text-brass">{price}</p>
           <Button
             size="sm"
             variant={buyable ? "brass" : "ghost"}
             disabled={!buyable}
             onClick={() =>
               add({
-                id: product.id,
-                name: product.name,
-                price: product.priceLow ?? 0,
+                id: selected?.id ?? product.id,
+                name: selected ? skuCartName(product, selected) : product.name,
+                price: selected?.price ?? product.priceLow ?? 0,
                 image: productImage(product),
                 url: product.url,
                 siteProductId: product.siteProductId,
+                maxQty: feeder ? 48 : Math.min(product.stock && product.stock > 0 ? product.stock : 4, 4),
+                tag: feeder ? "Feeder · Canton pickup" : "Live animal · Canton pickup",
               })
             }
           >
@@ -81,10 +110,12 @@ export function ShopFloor({
   catalog,
   heading = "The rack, priced.",
   lede = "Live Square inventory. Animals and feeders ring through Harris’s Square account — pickup at 364 Albany Turnpike.",
+  headingAs = "h2",
 }: {
   catalog: CatalogPayload;
   heading?: string;
   lede?: string;
+  headingAs?: "h1" | "h2";
 }) {
   const [filter, setFilter] = useState<ShopFilter>("animals");
   const items = useMemo(() => {
@@ -98,11 +129,18 @@ export function ShopFloor({
   }, [catalog.products, filter]);
   const available = items.filter(canBuy).length;
 
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    if (window.location.pathname === "/shop" && window.location.hash === "#feeders") {
+      setFilter("feeders");
+    }
+  }, []);
+
   return (
     <section id="rack" className="border-y border-border bg-bg-2 py-16 sm:py-24">
       <div className="wrap">
         <Kicker>{catalog.live ? "Live from Square" : "Square catalog"}</Kicker>
-        <Display className="mt-2">{heading}</Display>
+        <Display as={headingAs} className="mt-2">{heading}</Display>
         <Lede className="mt-4 max-w-2xl">{lede}</Lede>
         <p className="mt-3 font-ui text-kicker font-bold uppercase tracking-kicker text-muted-foreground">
           {available} in stock{catalog.live ? " · live Square feed" : " · cached Square catalog"}
@@ -124,7 +162,9 @@ export function ShopFloor({
             </button>
           ))}
         </div>
-        {items.length === 0 ? (
+        {filter === "feeders" ? (
+          <FeederLocker catalog={catalog} embedded />
+        ) : items.length === 0 ? (
           <p className="mt-10 text-muted-foreground">Nothing in this case right now. Call the shop.</p>
         ) : (
           <div className="mt-8 grid gap-3 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">

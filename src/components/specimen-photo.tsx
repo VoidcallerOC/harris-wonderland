@@ -16,7 +16,7 @@ export function SpecimenPhoto({
   eager?: boolean;
 }) {
   return (
-    <figure className={cn("relative overflow-hidden bg-surface", className)}>
+    <figure data-photo className={cn("relative overflow-hidden bg-surface", className)}>
       <img
         src={src}
         alt={alt}

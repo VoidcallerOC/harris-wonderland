@@ -9,6 +9,7 @@ import { HoursTicket } from "@/components/hours-ticket";
 import { SpeciesMarquee } from "@/components/marquee";
 import { SpecimenPhoto } from "@/components/specimen-photo";
 import { ShopFloor } from "@/components/shop-floor";
+import { FeederLocker } from "@/components/feeder-locker";
 import { getSquareCatalog } from "@/lib/square-api";
 import { Kicker, Display, Lede } from "@/components/type";
 
@@ -64,12 +65,10 @@ function Home() {
                 </a>
               </Button>
               <Button asChild variant="ghost">
-                <Link to="/visit">Visit the shop</Link>
+                <a href="#feeders">Shop feeders</a>
               </Button>
               <Button asChild variant="ghost">
-                <a href={SITE.links.feeders} target="_blank" rel="noopener noreferrer">
-                  Feeder cart
-                </a>
+                <Link to="/visit">Visit the shop</Link>
               </Button>
             </div>
           </div>
@@ -129,6 +128,8 @@ function Home() {
         </div>
       </section>
 
+      <FeederLocker catalog={catalog} />
+
       <ShopFloor catalog={catalog} />
 
       <section className="py-16 sm:py-24">
@@ -158,9 +159,10 @@ function Home() {
               </p>
               <p>
                 Many animals are captive-bred here or by local people the shop will stand
-                behind. Frozen rodents, crickets, and roaches are why regulars drive even
-                when they are not adding a new animal. Ask for the care sheet that matches
-                the animal on the rack.
+                behind. They raise their own feeders for the collection and sell the surplus.
+                Frozen rodents, crickets, and roaches are why regulars drive even when they
+                are not adding a new animal. Ask for the care sheet that matches the animal
+                on the rack.
               </p>
             </div>
           </div>
@@ -184,7 +186,8 @@ function Home() {
                 Parties that handle animals
               </h3>
               <p className="mt-2 text-sm text-muted-foreground">
-                Birthday programs and education visits. Book ahead. These fill.
+                About twenty creatures, a chance to hold one, a feeding demo if you want
+                it. Birthdays, classrooms, libraries, scouts. Book ahead. These fill.
               </p>
             </article>
           </div>

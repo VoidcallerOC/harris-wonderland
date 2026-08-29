@@ -44,7 +44,7 @@ export function CartDrawer() {
   async function beginPay() {
     setError(null);
     if (!name.trim() || !email.trim() || phone.trim().length < 7) {
-      setError("Name, email, and phone — they will call if the animal is a bad fit.");
+      setError("Name, email, and phone — they will call if the animal or the cup is a bad fit.");
       return;
     }
     if (!items.length) return;
@@ -103,13 +103,20 @@ export function CartDrawer() {
             <div className="flex min-h-0 flex-1 flex-col">
               <div className="min-h-0 flex-1 overflow-y-auto px-5 py-4">
                 {items.length === 0 ? (
-                  <p className="text-muted-foreground">The cart is empty. Pull something off the rack.</p>
+                  <p className="text-muted-foreground">
+                    The cart is empty. Pull something off the rack, or a pack from the feeder locker.
+                  </p>
                 ) : (
                   <ul className="grid gap-4">
                     {items.map((item) => (
                       <li key={item.id} className="grid grid-cols-[4.5rem_1fr] gap-3">
                         <img src={item.image} alt="" className="size-[4.5rem] object-cover" />
                         <div>
+                          {item.tag ? (
+                            <p className="font-ui text-kicker font-bold uppercase tracking-kicker text-brass">
+                              {item.tag}
+                            </p>
+                          ) : null}
                           <p className="font-display text-lg italic leading-tight text-ticket">{item.name}</p>
                           <p className="mt-1 font-ui text-kicker font-bold uppercase tracking-kicker text-brass">
                             {formatMoney(item.price)}
@@ -253,7 +260,8 @@ export function CartDrawer() {
             <div className="px-5 py-8">
               <p className="font-display text-3xl italic text-ticket">Paid through Square.</p>
               <p className="mt-3 text-muted-foreground">
-                They will pull the animal when you come through the snake-handle door. Bring the setup questions.
+                They will pull the ticket when you come through the snake-handle door. Frozen stays
+                frozen. Live cups go home the same day.
               </p>
               <Button className="mt-6" onClick={() => setOpen(false)}>
                 Back to the rack
