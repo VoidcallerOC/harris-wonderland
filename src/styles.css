@@ -130,6 +130,12 @@
   .hero-ken {
     animation: ken 28s ease-in-out infinite alternate;
   }
+
+  @media (max-width: 767px) {
+    .hero-ken {
+      animation: none;
+    }
+  }
 }
 
 @keyframes marquee-x {
