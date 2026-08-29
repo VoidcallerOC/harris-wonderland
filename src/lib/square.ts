@@ -221,6 +221,24 @@ function ballPythonMorphPhoto(name: string) {
   return null;
 }
 
+function pickBurmesePhoto(text: string) {
+  if (/(?<!(?:het|heterozygous)(?:\s+for)?\s+)\balbino\b/.test(text) || /\bpearl\b/.test(text)) {
+    return "/images/morphs/burmese-albino.jpg";
+  }
+  if (/\bhypo\b/.test(text)) return "/images/morphs/burmese-hypo.jpg";
+  if (/\bnormal\b/.test(text)) return "/images/morphs/burmese-normal.jpg";
+  return null;
+}
+
+function burmeseMorphPhoto(product: SquareProduct) {
+  const named = product.name.replace(/^burmese\s*python\s*[-–]\s*\d+\s*/i, "").trim().toLowerCase();
+  return (
+    pickBurmesePhoto(named) ??
+    pickBurmesePhoto(stripHtml(product.description).toLowerCase()) ??
+    "/images/morphs/burmese-normal.jpg"
+  );
+}
+
 export function productImage(product: SquareProduct) {
   if (isFeeder(product)) {
     const blob = product.name.toLowerCase();
@@ -240,9 +258,12 @@ export function productImage(product: SquareProduct) {
   if (blob.includes("frog") || blob.includes("amphib")) return "/images/case-amphibians.jpg";
   if (blob.includes("milk")) return "/images/milk-snake.jpg";
   if (blob.includes("kingsnake") || blob.includes("king snake")) return "/images/kingsnake.jpg";
+  if (blob.includes("burmese") || (blob.includes("python") && !blob.includes("ball"))) {
+    return burmeseMorphPhoto(product);
+  }
+  if (blob.includes("dumeril")) return "/images/dumerils-boa.jpg";
   if (hasWord(blob, "boa")) return "/images/boa.jpg";
   if (blob.includes("ball python")) return "/images/ball-python.jpg";
-  if (blob.includes("python")) return "/images/boa.jpg";
   if (blob.includes("snake")) return "/images/corn-snake.jpg";
   return "/images/hero.jpg";
 }
