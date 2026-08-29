@@ -75,7 +75,20 @@ function hasWord(haystack: string, word: string) {
 
 export function isAnimal(product: SquareProduct) {
   const blob = blobOf(product);
-  return ANIMAL_CATS.some((c) => blob.includes(c));
+  if (ANIMAL_CATS.some((c) => blob.includes(c))) return true;
+  const n = product.name.toLowerCase();
+  return (
+    n.includes("ball python") ||
+    n.includes("burmese") ||
+    hasWord(n, "boa") ||
+    n.includes("hognose") ||
+    n.includes("kingsnake") ||
+    n.includes("milksnake") ||
+    n.includes("milk snake") ||
+    n.includes("corn snake") ||
+    n.includes("rat snake") ||
+    n.includes("gecko")
+  );
 }
 
 export function isFeeder(product: SquareProduct) {
@@ -239,6 +252,57 @@ function burmeseMorphPhoto(product: SquareProduct) {
   );
 }
 
+function supplyImage(product: SquareProduct) {
+  const blob = blobOf(product);
+  if (
+    blob.includes("uvb") ||
+    blob.includes("bulb") ||
+    blob.includes("lamp") ||
+    blob.includes("halogen") ||
+    blob.includes("led") ||
+    blob.includes("hood") ||
+    blob.includes("basking") ||
+    blob.includes("sun")
+  ) {
+    return "/images/supplies/bulbs.jpg";
+  }
+  if (
+    blob.includes("heat") ||
+    blob.includes("ceramic") ||
+    blob.includes("emitter") ||
+    blob.includes("thermostat")
+  ) {
+    return "/images/supplies/heat.jpg";
+  }
+  if (
+    blob.includes("bark") ||
+    blob.includes("moss") ||
+    blob.includes("aspen") ||
+    blob.includes("soil") ||
+    blob.includes("earth") ||
+    blob.includes("husk") ||
+    blob.includes("bedding") ||
+    blob.includes("substrate") ||
+    blob.includes("coco")
+  ) {
+    return "/images/supplies/bedding.jpg";
+  }
+  if (
+    blob.includes("diet") ||
+    blob.includes("hpw") ||
+    blob.includes("pangea") ||
+    blob.includes("repashy") ||
+    blob.includes("vitamin") ||
+    blob.includes("supplement")
+  ) {
+    return "/images/supplies/diet.jpg";
+  }
+  if (blob.includes("vine") || blob.includes("terrarium") || blob.includes("equipment")) {
+    return "/images/supplies/enclosure.jpg";
+  }
+  return "/images/supplies/enclosure.jpg";
+}
+
 export function productImage(product: SquareProduct) {
   if (isFeeder(product)) {
     const blob = product.name.toLowerCase();
@@ -249,12 +313,14 @@ export function productImage(product: SquareProduct) {
     return "/images/feeders/other.jpg";
   }
   if (product.image) return product.image;
+  if (!isAnimal(product)) return supplyImage(product);
   const morph = ballPythonMorphPhoto(product.name);
   if (morph) return morph;
   const blob = blobOf(product);
   if (blob.includes("hognose")) return "/images/hognose.jpg";
   if (blob.includes("corn") || blob.includes("rat snake")) return "/images/corn-snake.jpg";
-  if (blob.includes("gecko") || blob.includes("lizard")) return "/images/case-lizards.jpg";
+  if (blob.includes("gecko")) return "/images/hero.jpg";
+  if (blob.includes("lizard")) return "/images/case-lizards.jpg";
   if (blob.includes("frog") || blob.includes("amphib")) return "/images/case-amphibians.jpg";
   if (blob.includes("milk")) return "/images/milk-snake.jpg";
   if (blob.includes("kingsnake") || blob.includes("king snake")) return "/images/kingsnake.jpg";
@@ -265,7 +331,7 @@ export function productImage(product: SquareProduct) {
   if (hasWord(blob, "boa")) return "/images/boa.jpg";
   if (blob.includes("ball python")) return "/images/ball-python.jpg";
   if (blob.includes("snake")) return "/images/corn-snake.jpg";
-  return "/images/hero.jpg";
+  return "/images/ball-python.jpg";
 }
 
 export const SQUARE = {
