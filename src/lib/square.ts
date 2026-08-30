@@ -216,7 +216,7 @@ const BALL_PYTHON_MORPH_PHOTOS: { test: RegExp; src: string }[] = [
   { test: /banana.*enchi.*pied|banana.*pied/i, src: "/images/morphs/banana-enchi-pied.jpg" },
   { test: /pastel.*clown.*super\s*enchi|super\s*enchi.*clown/i, src: "/images/morphs/pastel-clown-super-enchi.jpg" },
   { test: /coral\s*glow/i, src: "/images/morphs/coral-glow-specter-yb.jpg" },
-  { test: /leopard.*pinstripe|pinstripe.*leopard/i, src: "/images/morphs/leopard-pinstripe.jpg" },
+  { test: /leopard.*pinstripe|pinstripe.*leopard/i, src: "/images/morphs/leopard-pinstripe-clean.jpg" },
   { test: /blackhead|black\s*head/i, src: "/images/morphs/blackhead-mojave.jpg" },
   { test: /fire.*calico|calico.*fire/i, src: "/images/morphs/fire-calico.jpg" },
   { test: /fire.*yellow\s*belly|yellow\s*belly.*fire/i, src: "/images/morphs/fire-yellowbelly.jpg" },
