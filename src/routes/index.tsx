@@ -1,5 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { SiteShell } from "@/components/site-shell";
+import { Hero } from "@/components/hero";
 import { ArrowRight, Phone } from "lucide-react";
 import { SITE, KEEPERS, TIMELINE } from "@/lib/site";
 import { SPECIES } from "@/lib/species";
@@ -30,55 +31,7 @@ function Home() {
   return (
     <SiteShell>
     <main>
-      <section className="relative overflow-hidden bg-bg md:min-h-[100svh]">
-        <div className="relative h-[42svh] overflow-hidden sm:h-[50svh] md:absolute md:inset-0 md:h-full">
-          <img
-            src="/images/hero.jpg"
-            alt="Giant day gecko at Harris in Wonderland, 364 Albany Turnpike, Canton CT"
-            width={1600}
-            height={1200}
-            className="hero-ken absolute inset-0 h-full w-full object-cover object-[28%_48%] md:object-center"
-            fetchPriority="high"
-          />
-          <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(11,10,9,0.2)_0%,rgba(11,10,9,0.08)_40%,rgba(11,10,9,1)_100%)] md:bg-[linear-gradient(180deg,rgba(11,10,9,0.28)_0%,rgba(11,10,9,0.55)_42%,rgba(11,10,9,0.92)_100%)]" />
-        </div>
-        <div className="relative wrap flex flex-col justify-end gap-7 pb-12 pt-8 md:min-h-[100svh] md:gap-8 md:pb-16 md:pt-28">
-          <div className="max-w-3xl">
-            <Kicker>Connecticut reptile specialty shop</Kicker>
-            <h1 className="mt-3 font-display text-display font-semibold italic leading-[0.88] tracking-display text-ticket">
-              Harris
-              <br />
-              in <em className="text-brass">Wonderland</em>
-            </h1>
-            <p className="mt-4 font-ui text-kicker font-bold uppercase tracking-kicker text-fg-soft">
-              Snakes, lizards, frogs · Canton, Connecticut
-            </p>
-            <Lede className="mt-5">
-              Not a pet aisle. A working herp collection — snakes, lizards, frogs, and
-              feeders — run by people who breed the animals and will talk you out of the
-              wrong one.
-            </Lede>
-            <div className="mt-7 flex max-w-full flex-wrap gap-3">
-              <Button asChild>
-                <a href="#rack">
-                  <span className="sm:hidden">Shop the rack</span>
-                  <span className="hidden sm:inline">Shop the live rack</span>
-                  <ArrowRight className="hidden sm:block" />
-                </a>
-              </Button>
-              <Button asChild variant="ghost">
-                <a href="#feeders">Shop feeders</a>
-              </Button>
-              <Button asChild variant="ghost">
-                <Link to="/visit">Visit the shop</Link>
-              </Button>
-            </div>
-          </div>
-          <p className="font-ui text-kicker font-bold uppercase tracking-kicker text-ticket/80">
-            Giant day gecko · looking glass · Route 44
-          </p>
-        </div>
-      </section>
+      <Hero />
 
       <SpeciesMarquee />
 
