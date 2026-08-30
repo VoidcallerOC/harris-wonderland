@@ -84,11 +84,11 @@ function Home() {
         </div>
       </section>
 
+      <SocialFloor />
+
       <FeederLocker catalog={catalog} />
 
       <ShopFloor catalog={catalog} />
-
-      <SocialFloor />
 
       <section className="py-16 sm:py-24">
         <div className="wrap">
