@@ -203,37 +203,25 @@
   content: "";
   position: absolute;
   inset: 0;
-  border: 2px solid var(--color-brass);
+  border: 1.5px solid var(--color-brass);
   border-radius: 999px;
   box-shadow:
     0 0 0 1px var(--color-ticket-ink),
-    0 0 0 3px color-mix(in oklab, var(--color-ticket) 22%, transparent),
-    0 0 16px color-mix(in oklab, var(--color-ember) 55%, transparent);
-}
-
-.field-cursor::after {
-  content: "";
-  position: absolute;
-  inset: -5px;
-  background:
-    linear-gradient(var(--color-ticket), var(--color-ticket)) 50% 0 / 2px 8px no-repeat,
-    linear-gradient(var(--color-ticket), var(--color-ticket)) 50% 100% / 2px 8px no-repeat,
-    linear-gradient(var(--color-ticket), var(--color-ticket)) 0 50% / 8px 2px no-repeat,
-    linear-gradient(var(--color-ticket), var(--color-ticket)) 100% 50% / 8px 2px no-repeat;
+    0 0 14px color-mix(in oklab, var(--color-ember) 40%, transparent);
 }
 
 .field-cursor-pip {
   position: absolute;
   top: 50%;
   left: 50%;
-  width: 8px;
-  height: 8px;
-  margin: -4px 0 0 -4px;
+  width: 6px;
+  height: 6px;
+  margin: -3px 0 0 -3px;
+  border-radius: 999px;
   background: var(--color-ember);
   box-shadow:
-    0 0 0 1.5px var(--color-ticket),
-    0 0 14px var(--color-ember-2);
-  transform: rotate(45deg);
+    0 0 0 1px var(--color-ticket),
+    0 0 10px var(--color-ember-2);
   transition:
     opacity var(--duration-fast),
     transform var(--duration-fast) var(--ease-out-smooth);
@@ -261,7 +249,7 @@
 }
 
 .field-cursor.is-hot .field-cursor-pip {
-  transform: rotate(45deg) scale(1.15);
+  transform: scale(1.2);
 }
 
 .field-cursor.is-photo {
@@ -276,10 +264,6 @@
   box-shadow:
     0 0 0 1px var(--color-ticket-ink),
     0 0 22px color-mix(in oklab, var(--color-ember) 40%, transparent);
-}
-
-.field-cursor.is-photo::after {
-  opacity: 0;
 }
 
 .field-cursor.is-photo .field-cursor-pip {
