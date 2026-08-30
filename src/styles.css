@@ -223,23 +223,12 @@
     0 0 0 1px var(--color-ticket),
     0 0 10px var(--color-ember-2);
   transition:
+    width var(--duration-fast) var(--ease-out-smooth),
+    height var(--duration-fast) var(--ease-out-smooth),
+    margin var(--duration-fast) var(--ease-out-smooth),
     opacity var(--duration-fast),
+    background var(--duration-fast),
     transform var(--duration-fast) var(--ease-out-smooth);
-}
-
-.field-cursor-mark {
-  position: absolute;
-  inset: 0;
-  display: grid;
-  place-items: center;
-  font-family: var(--font-ui);
-  font-size: 0.68rem;
-  font-weight: 700;
-  letter-spacing: 0.28em;
-  text-transform: uppercase;
-  color: var(--color-ticket);
-  opacity: 0;
-  pointer-events: none;
 }
 
 .field-cursor.is-hot {
@@ -253,25 +242,26 @@
 }
 
 .field-cursor.is-photo {
-  width: 88px;
-  height: 88px;
-  margin: -44px 0 0 -44px;
+  width: 72px;
+  height: 72px;
+  margin: -36px 0 0 -36px;
 }
 
 .field-cursor.is-photo::before {
-  border-radius: 2px;
-  background: color-mix(in oklab, var(--color-ticket-ink) 82%, transparent);
+  border-color: var(--color-ticket);
   box-shadow:
     0 0 0 1px var(--color-ticket-ink),
-    0 0 22px color-mix(in oklab, var(--color-ember) 40%, transparent);
+    inset 0 0 0 1.5px color-mix(in oklab, var(--color-brass) 55%, transparent),
+    0 0 20px color-mix(in oklab, var(--color-ember) 35%, transparent);
 }
 
 .field-cursor.is-photo .field-cursor-pip {
-  opacity: 0;
-}
-
-.field-cursor.is-photo .field-cursor-mark {
-  opacity: 1;
+  width: 5px;
+  height: 5px;
+  margin: -2.5px 0 0 -2.5px;
+  background: transparent;
+  box-shadow: none;
+  border: 1.5px solid var(--color-ember);
 }
 
 @media (pointer: fine) {

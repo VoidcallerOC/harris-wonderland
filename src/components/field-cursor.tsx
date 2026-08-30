@@ -68,7 +68,6 @@ export function FieldCursor() {
       <div ref={trailRef} className="field-cursor-trail" aria-hidden style={{ transform: "translate3d(-80px,-80px,0)" }} />
       <div ref={coreRef} className="field-cursor" aria-hidden style={{ transform: "translate3d(-80px,-80px,0)" }}>
         <span className="field-cursor-pip" />
-        <span className="field-cursor-mark">Live</span>
       </div>
     </>
   );
