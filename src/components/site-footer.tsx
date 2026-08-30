@@ -50,6 +50,12 @@ export function SiteFooter() {
           <Link className="font-ui text-kicker font-bold uppercase tracking-kicker text-muted-foreground no-underline hover:text-brass" to="/visit">
             Visit
           </Link>
+          <Link className="font-ui text-kicker font-bold uppercase tracking-kicker text-muted-foreground no-underline hover:text-brass" to="/rentals">
+            Rentals
+          </Link>
+          <Link className="font-ui text-kicker font-bold uppercase tracking-kicker text-muted-foreground no-underline hover:text-brass" to="/merch">
+            Merch
+          </Link>
           <Link className="font-ui text-kicker font-bold uppercase tracking-kicker text-muted-foreground no-underline hover:text-brass" to="/fish">
             Fish room
           </Link>

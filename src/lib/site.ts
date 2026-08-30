@@ -29,6 +29,8 @@ export const SITE = {
   links: {
     collection: "https://my-hiwsite-6573.square.site/available-animals",
     feeders: "https://my-hiwsite-6573.square.site/shop/feeders-for-pick-up/17",
+    // TODO: swap to the Square merch category URL once Adam stocks it.
+    merch: "https://my-hiwsite-6573.square.site",
     maps: "https://maps.google.com/?q=364+Albany+Turnpike+Canton+CT+06019",
     mapsEmbed:
       "https://maps.google.com/maps?q=364%20Albany%20Turnpike%20Canton%20CT%2006019&z=15&output=embed",
@@ -164,6 +166,45 @@ export const RENTAL_EVENTS = [
     role: "Production",
     title: "Corporate, expo & events",
     body: "Booth draws, product launches, festivals, team events — a rack of animals people line up to meet.",
+  },
+] as const;
+
+export const MERCH_CATEGORIES = [
+  {
+    role: "Apparel",
+    title: "Tees & hoodies",
+    body: "The wordmark and the snake-handle door on soft cotton. Keeper and kid sizes.",
+    ships: "Ships anywhere",
+  },
+  {
+    role: "Wall",
+    title: "Prints & posters",
+    body: "Looking-glass animals and specimen plates, framed for the reptile room.",
+    ships: "Ships anywhere",
+  },
+  {
+    role: "Small goods",
+    title: "Stickers & patches",
+    body: "Day gecko, ball python, the mark. The cheap way to fly the flag.",
+    ships: "Ships anywhere",
+  },
+  {
+    role: "Give it",
+    title: "Gift cards",
+    body: "For the person building a first enclosure. Any amount, spend in store or online.",
+    ships: "Store & online",
+  },
+  {
+    role: "Drinkware",
+    title: "Mugs & bottles",
+    body: "Route 44 enamel. Coffee for the morning feed.",
+    ships: "Ships anywhere",
+  },
+  {
+    role: "Keepers",
+    title: "Hats",
+    body: "Low-profile shop caps. The Saturday feeder-run uniform.",
+    ships: "Ships anywhere",
   },
 ] as const;
 
