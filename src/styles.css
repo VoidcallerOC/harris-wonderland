@@ -153,58 +153,156 @@
   }
 }
 
-.field-cursor {
+.field-cursor,
+.field-cursor-trail {
   position: fixed;
   top: 0;
   left: 0;
-  z-index: 90;
-  width: 10px;
-  height: 10px;
-  margin: -5px 0 0 -5px;
-  border: 1.5px solid var(--color-brass);
-  border-radius: 999px;
+  z-index: 200;
+  width: 36px;
+  height: 36px;
+  margin: -18px 0 0 -18px;
   pointer-events: none;
-  mix-blend-mode: difference;
+  will-change: transform;
+}
+
+.field-cursor-trail {
+  border: 1.5px solid color-mix(in oklab, var(--color-ember) 80%, white);
+  border-radius: 999px;
+  opacity: 0.5;
+  box-shadow: 0 0 18px color-mix(in oklab, var(--color-ember) 45%, transparent);
   transition:
     width var(--duration-fast) var(--ease-out-smooth),
     height var(--duration-fast) var(--ease-out-smooth),
     margin var(--duration-fast) var(--ease-out-smooth),
-    background var(--duration-fast);
+    opacity var(--duration-fast);
 }
 
-.field-cursor.is-photo {
-  width: 76px;
-  height: 76px;
-  margin: -38px 0 0 -38px;
-  background: color-mix(in oklab, var(--color-ticket-ink) 35%, transparent);
+.field-cursor-trail.is-photo {
+  width: 96px;
+  height: 96px;
+  margin: -48px 0 0 -48px;
+  opacity: 0.28;
 }
 
-.field-cursor.is-photo::after {
-  content: "Look";
+.field-cursor-trail.is-hot {
+  width: 22px;
+  height: 22px;
+  margin: -11px 0 0 -11px;
+  opacity: 0.7;
+}
+
+.field-cursor {
+  transition:
+    width var(--duration-fast) var(--ease-out-smooth),
+    height var(--duration-fast) var(--ease-out-smooth),
+    margin var(--duration-fast) var(--ease-out-smooth);
+}
+
+.field-cursor::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border: 2px solid var(--color-brass);
+  border-radius: 999px;
+  box-shadow:
+    0 0 0 1px var(--color-ticket-ink),
+    0 0 0 3px color-mix(in oklab, var(--color-ticket) 22%, transparent),
+    0 0 16px color-mix(in oklab, var(--color-ember) 55%, transparent);
+}
+
+.field-cursor::after {
+  content: "";
+  position: absolute;
+  inset: -5px;
+  background:
+    linear-gradient(var(--color-ticket), var(--color-ticket)) 50% 0 / 2px 8px no-repeat,
+    linear-gradient(var(--color-ticket), var(--color-ticket)) 50% 100% / 2px 8px no-repeat,
+    linear-gradient(var(--color-ticket), var(--color-ticket)) 0 50% / 8px 2px no-repeat,
+    linear-gradient(var(--color-ticket), var(--color-ticket)) 100% 50% / 8px 2px no-repeat;
+}
+
+.field-cursor-pip {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 8px;
+  height: 8px;
+  margin: -4px 0 0 -4px;
+  background: var(--color-ember);
+  box-shadow:
+    0 0 0 1.5px var(--color-ticket),
+    0 0 14px var(--color-ember-2);
+  transform: rotate(45deg);
+  transition:
+    opacity var(--duration-fast),
+    transform var(--duration-fast) var(--ease-out-smooth);
+}
+
+.field-cursor-mark {
   position: absolute;
   inset: 0;
   display: grid;
   place-items: center;
   font-family: var(--font-ui);
-  font-size: 0.62rem;
+  font-size: 0.68rem;
   font-weight: 700;
-  letter-spacing: 0.22em;
+  letter-spacing: 0.28em;
   text-transform: uppercase;
   color: var(--color-ticket);
+  opacity: 0;
+  pointer-events: none;
+}
+
+.field-cursor.is-hot {
+  width: 22px;
+  height: 22px;
+  margin: -11px 0 0 -11px;
+}
+
+.field-cursor.is-hot .field-cursor-pip {
+  transform: rotate(45deg) scale(1.15);
+}
+
+.field-cursor.is-photo {
+  width: 88px;
+  height: 88px;
+  margin: -44px 0 0 -44px;
+}
+
+.field-cursor.is-photo::before {
+  border-radius: 2px;
+  background: color-mix(in oklab, var(--color-ticket-ink) 82%, transparent);
+  box-shadow:
+    0 0 0 1px var(--color-ticket-ink),
+    0 0 22px color-mix(in oklab, var(--color-ember) 40%, transparent);
+}
+
+.field-cursor.is-photo::after {
+  opacity: 0;
+}
+
+.field-cursor.is-photo .field-cursor-pip {
+  opacity: 0;
+}
+
+.field-cursor.is-photo .field-cursor-mark {
+  opacity: 1;
 }
 
 @media (pointer: fine) {
   html.fine-cursor,
-  html.fine-cursor a,
-  html.fine-cursor button {
-    cursor: none;
+  html.fine-cursor * {
+    cursor: none !important;
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
   .marquee-track,
   .hero-ken,
-  .field-cursor {
+  .field-cursor,
+  .field-cursor-trail,
+  .field-cursor-pip {
     animation: none;
     transition: none;
   }
