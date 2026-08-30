@@ -255,21 +255,29 @@ function burmeseMorphPhoto(product: SquareProduct) {
 function supplyImage(product: SquareProduct) {
   const blob = blobOf(product);
   if (blob.includes("vine")) return "/images/supplies/enclosure.jpg";
+  if (blob.includes("jungle dawn") || (blob.includes("led") && blob.includes("bar"))) {
+    return "/images/supplies/jungle-dawn.jpg";
+  }
+  if (blob.includes("powersun") || blob.includes("mercury")) return "/images/supplies/powersun.jpg";
+  if (blob.includes("hood")) return "/images/supplies/t5-hood.jpg";
+  if (blob.includes("basking")) return "/images/supplies/basking.jpg";
+  if (blob.includes("daylight")) return "/images/supplies/daylight-blue.jpg";
+  if (blob.includes("t5") && blob.includes("5.0")) return "/images/supplies/t5-5.jpg";
+  if (blob.includes("t8") || (blob.includes("10.0") && blob.includes("uvb"))) return "/images/supplies/t8-10.jpg";
+  if (blob.includes("ceramic") || blob.includes("emitter")) return "/images/supplies/ceramic.jpg";
+  if (blob.includes("heat mat") || blob.includes("heat pad")) return "/images/supplies/heat-mat.jpg";
+  if (blob.includes("thermostat")) return "/images/supplies/heat.jpg";
   if (
     blob.includes("uvb") ||
     blob.includes("bulb") ||
     blob.includes("lamp") ||
     blob.includes("halogen") ||
     blob.includes("led") ||
-    blob.includes("hood") ||
-    blob.includes("basking") ||
     blob.includes("sun")
   ) {
-    return "/images/supplies/bulbs.jpg";
+    return "/images/supplies/basking.jpg";
   }
-  if (blob.includes("heat") || blob.includes("ceramic") || blob.includes("emitter") || blob.includes("thermostat")) {
-    return "/images/supplies/heat.jpg";
-  }
+  if (blob.includes("heat")) return "/images/supplies/heat.jpg";
   if (blob.includes("reptibark") || (blob.includes("bark") && !blob.includes("forest"))) {
     return "/images/supplies/reptibark.jpg";
   }
