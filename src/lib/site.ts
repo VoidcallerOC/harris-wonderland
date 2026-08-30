@@ -35,6 +35,7 @@ export const SITE = {
     mapsEmbed:
       "https://maps.google.com/maps?q=364%20Albany%20Turnpike%20Canton%20CT%2006019&z=15&output=embed",
     facebook: "https://www.facebook.com/profile.php?id=100063473713270",
+    facebookShop: "https://www.facebook.com/harris.wonderland/",
     instagram: "https://www.instagram.com/harris_in_wonderland_pets/",
   },
   timezone: "America/New_York",
