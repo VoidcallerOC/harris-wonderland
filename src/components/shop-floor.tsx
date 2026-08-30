@@ -1,5 +1,5 @@
-import { useEffect, useMemo, useState } from "react";
-import { ShoppingBag } from "lucide-react";
+import { useEffect, useMemo, useRef, useState, type ReactNode } from "react";
+import { ChevronLeft, ChevronRight, ShoppingBag } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { FeederLocker } from "@/components/feeder-locker";
 import { useCart } from "@/lib/cart-store";
@@ -22,7 +22,13 @@ import {
 import { cn } from "@/lib/utils";
 import { Display, Kicker, Lede } from "@/components/type";
 
-function ProductCard({ product, focused }: { product: SquareProduct; focused?: boolean }) {
+function ProductCard({
+  product,
+  focused,
+}: {
+  product: SquareProduct;
+  focused?: boolean;
+}) {
   const add = useCart((s) => s.add);
   const buyable = canBuy(product);
   const { kind, title } = splitProductName(product.name);
@@ -37,7 +43,7 @@ function ProductCard({ product, focused }: { product: SquareProduct; focused?: b
     <article
       id={`sku-${product.id}`}
       className={cn(
-        "group flex flex-col border bg-card",
+        "group flex h-full flex-col border bg-card",
         focused ? "border-brass" : "border-border",
       )}
     >
@@ -112,6 +118,77 @@ function ProductCard({ product, focused }: { product: SquareProduct; focused?: b
   );
 }
 
+function RackRail({ children }: { children: ReactNode }) {
+  const scroller = useRef<HTMLDivElement>(null);
+  const [canPrev, setCanPrev] = useState(false);
+  const [canNext, setCanNext] = useState(false);
+
+  function measure() {
+    const el = scroller.current;
+    if (!el) return;
+    setCanPrev(el.scrollLeft > 12);
+    setCanNext(el.scrollLeft + el.clientWidth < el.scrollWidth - 12);
+  }
+
+  useEffect(() => {
+    const el = scroller.current;
+    if (!el) return;
+    measure();
+    el.addEventListener("scroll", measure, { passive: true });
+    const ro = new ResizeObserver(measure);
+    ro.observe(el);
+    return () => {
+      el.removeEventListener("scroll", measure);
+      ro.disconnect();
+    };
+  }, [children]);
+
+  function jump(dir: -1 | 1) {
+    const el = scroller.current;
+    if (!el) return;
+    const card = el.querySelector<HTMLElement>("[data-rack-card]");
+    const step = card ? card.offsetWidth + 12 : Math.round(el.clientWidth * 0.75);
+    el.scrollBy({ left: dir * step, behavior: "smooth" });
+  }
+
+  return (
+    <div className="relative mt-8">
+      <div
+        ref={scroller}
+        className="rack-scroll flex snap-x snap-mandatory gap-3 overflow-x-auto overscroll-x-contain pb-4"
+      >
+        {children}
+      </div>
+      <div className="pointer-events-none absolute inset-y-0 left-0 hidden w-16 bg-gradient-to-r from-bg-2 to-transparent md:block" />
+      <div className="pointer-events-none absolute inset-y-0 right-0 hidden w-16 bg-gradient-to-l from-bg-2 to-transparent md:block" />
+      <button
+        type="button"
+        aria-label="Previous on the rack"
+        disabled={!canPrev}
+        onClick={() => jump(-1)}
+        className={cn(
+          "absolute left-0 top-1/2 z-10 hidden size-11 -translate-y-1/2 items-center justify-center border border-brass bg-ticket-ink text-ticket md:inline-flex",
+          !canPrev && "opacity-30",
+        )}
+      >
+        <ChevronLeft className="size-5" />
+      </button>
+      <button
+        type="button"
+        aria-label="Next on the rack"
+        disabled={!canNext}
+        onClick={() => jump(1)}
+        className={cn(
+          "absolute right-0 top-1/2 z-10 hidden size-11 -translate-y-1/2 items-center justify-center border border-brass bg-ticket-ink text-ticket md:inline-flex",
+          !canNext && "opacity-30",
+        )}
+      >
+        <ChevronRight className="size-5" />
+      </button>
+    </div>
+  );
+}
+
 export function ShopFloor({
   catalog,
   heading = "The rack, priced.",
@@ -152,17 +229,20 @@ export function ShopFloor({
     if (!focusId) return;
     const node = document.getElementById(`sku-${focusId}`);
     if (!node) return;
-    node.scrollIntoView({ behavior: "smooth", block: "center" });
+    node.scrollIntoView({ behavior: "smooth", inline: "center", block: "nearest" });
   }, [focusId, filter, items]);
 
   return (
     <section id="rack" className="border-y border-border bg-bg-2 py-16 sm:py-24">
       <div className="wrap">
         <Kicker>{catalog.live ? "Live from Square" : "Square catalog"}</Kicker>
-        <Display as={headingAs} className="mt-2">{heading}</Display>
+        <Display as={headingAs} className="mt-2">
+          {heading}
+        </Display>
         <Lede className="mt-4 max-w-2xl">{lede}</Lede>
         <p className="mt-3 font-ui text-kicker font-bold uppercase tracking-kicker text-muted-foreground">
           {available} in stock{catalog.live ? " · live Square feed" : " · cached Square catalog"}
+          {filter === "feeders" ? "" : " · slide the rack"}
         </p>
         <div className="mt-8 flex gap-2 overflow-x-auto pb-2">
           {SHOP_FILTERS.map((chip) => (
@@ -186,11 +266,17 @@ export function ShopFloor({
         ) : items.length === 0 ? (
           <p className="mt-10 text-muted-foreground">Nothing in this case right now. Call the shop.</p>
         ) : (
-          <div className="mt-8 grid gap-3 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+          <RackRail key={filter}>
             {items.map((product) => (
-              <ProductCard key={product.id} product={product} focused={product.id === focusId} />
+              <div
+                key={product.id}
+                data-rack-card
+                className="w-[min(78vw,18.5rem)] shrink-0 snap-start self-stretch sm:w-[19rem]"
+              >
+                <ProductCard product={product} focused={product.id === focusId} />
+              </div>
             ))}
-          </div>
+          </RackRail>
         )}
       </div>
     </section>

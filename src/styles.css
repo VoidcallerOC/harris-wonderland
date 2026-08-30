@@ -153,6 +153,24 @@
   }
 }
 
+.rack-scroll {
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-brass) transparent;
+  -webkit-overflow-scrolling: touch;
+}
+
+.rack-scroll::-webkit-scrollbar {
+  height: 6px;
+}
+
+.rack-scroll::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.rack-scroll::-webkit-scrollbar-thumb {
+  background: var(--color-brass);
+}
+
 .field-cursor,
 .field-cursor-trail {
   position: fixed;
