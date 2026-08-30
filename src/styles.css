@@ -178,18 +178,12 @@
     opacity var(--duration-fast);
 }
 
-.field-cursor-trail.is-photo {
-  width: 96px;
-  height: 96px;
-  margin: -48px 0 0 -48px;
-  opacity: 0.28;
-}
-
 .field-cursor-trail.is-hot {
-  width: 22px;
-  height: 22px;
-  margin: -11px 0 0 -11px;
-  opacity: 0.7;
+  width: 28px;
+  height: 28px;
+  margin: -14px 0 0 -14px;
+  opacity: 0.85;
+  border-color: var(--color-ember);
 }
 
 .field-cursor {
@@ -205,9 +199,14 @@
   inset: 0;
   border: 1.5px solid var(--color-brass);
   border-radius: 999px;
+  background: transparent;
   box-shadow:
     0 0 0 1px var(--color-ticket-ink),
     0 0 14px color-mix(in oklab, var(--color-ember) 40%, transparent);
+  transition:
+    background var(--duration-fast) var(--ease-out-smooth),
+    border-color var(--duration-fast),
+    box-shadow var(--duration-fast);
 }
 
 .field-cursor-pip {
@@ -226,42 +225,31 @@
     width var(--duration-fast) var(--ease-out-smooth),
     height var(--duration-fast) var(--ease-out-smooth),
     margin var(--duration-fast) var(--ease-out-smooth),
-    opacity var(--duration-fast),
     background var(--duration-fast),
+    box-shadow var(--duration-fast),
     transform var(--duration-fast) var(--ease-out-smooth);
 }
 
 .field-cursor.is-hot {
-  width: 22px;
-  height: 22px;
-  margin: -11px 0 0 -11px;
+  width: 16px;
+  height: 16px;
+  margin: -8px 0 0 -8px;
 }
 
-.field-cursor.is-hot .field-cursor-pip {
-  transform: scale(1.2);
-}
-
-.field-cursor.is-photo {
-  width: 72px;
-  height: 72px;
-  margin: -36px 0 0 -36px;
-}
-
-.field-cursor.is-photo::before {
+.field-cursor.is-hot::before {
+  background: var(--color-ember);
   border-color: var(--color-ticket);
   box-shadow:
     0 0 0 1px var(--color-ticket-ink),
-    inset 0 0 0 1.5px color-mix(in oklab, var(--color-brass) 55%, transparent),
-    0 0 20px color-mix(in oklab, var(--color-ember) 35%, transparent);
+    0 0 18px color-mix(in oklab, var(--color-ember) 70%, transparent);
 }
 
-.field-cursor.is-photo .field-cursor-pip {
-  width: 5px;
-  height: 5px;
-  margin: -2.5px 0 0 -2.5px;
-  background: transparent;
+.field-cursor.is-hot .field-cursor-pip {
+  width: 4px;
+  height: 4px;
+  margin: -2px 0 0 -2px;
+  background: var(--color-ticket);
   box-shadow: none;
-  border: 1.5px solid var(--color-ember);
 }
 
 @media (pointer: fine) {

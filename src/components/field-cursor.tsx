@@ -1,5 +1,7 @@
 import { useEffect, useRef } from "react";
 
+const HOT = "a, button, [role='button'], [role='link'], input, textarea, select, label, summary, [href]";
+
 export function FieldCursor() {
   const coreRef = useRef<HTMLDivElement>(null);
   const trailRef = useRef<HTMLDivElement>(null);
@@ -41,14 +43,9 @@ export function FieldCursor() {
       ty = event.clientY;
       core.style.transform = `translate3d(${tx}px, ${ty}px, 0)`;
       const node = event.target as HTMLElement | null;
-      const overPhoto = Boolean(node?.closest?.("[data-photo]"));
-      const overHot = Boolean(
-        node?.closest?.("a, button, [role='button'], input, label, summary, select"),
-      );
-      core.classList.toggle("is-photo", overPhoto);
-      core.classList.toggle("is-hot", overHot && !overPhoto);
-      trail.classList.toggle("is-photo", overPhoto);
-      trail.classList.toggle("is-hot", overHot && !overPhoto);
+      const overHot = Boolean(node?.closest?.(HOT));
+      core.classList.toggle("is-hot", overHot);
+      trail.classList.toggle("is-hot", overHot);
       if (!looping) {
         looping = true;
         raf = requestAnimationFrame(tick);
