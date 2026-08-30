@@ -19,10 +19,10 @@ export function SiteHeader() {
 
   return (
     <header className="sticky top-0 z-40 border-b border-border bg-background/90 pt-[env(safe-area-inset-top)] backdrop-blur-xl">
-      <div className="wrap flex h-[4.25rem] min-w-0 items-center justify-between gap-3 sm:h-[4.5rem]">
+      <div className="wrap flex h-[4.25rem] min-w-0 items-center gap-3 sm:h-[4.5rem] sm:gap-4">
         <Link
           to="/"
-          className="flex min-w-0 items-center gap-2.5 text-foreground no-underline hover:text-ticket"
+          className="flex shrink-0 items-center gap-2.5 text-foreground no-underline hover:text-ticket"
         >
           <img
             src="/images/logo-192.png"
@@ -31,17 +31,17 @@ export function SiteHeader() {
             height={192}
             className="size-11 shrink-0 rounded-full ring-1 ring-brass/50 sm:size-12"
           />
-          <span className="min-w-0">
-            <span className="block truncate font-display text-[1.05rem] font-semibold italic leading-none sm:text-xl">
+          <span className="hidden sm:block">
+            <span className="block whitespace-nowrap font-display text-lg font-semibold italic leading-none xl:text-xl">
               Harris in Wonderland
             </span>
-            <span className="mt-1 hidden font-ui text-kicker font-bold uppercase tracking-kicker text-brass sm:block">
+            <span className="mt-1 block font-ui text-kicker font-bold uppercase tracking-kicker text-brass">
               Canton
             </span>
           </span>
         </Link>
 
-        <nav className="hidden items-center gap-5 xl:flex">
+        <nav className="hidden min-w-0 flex-1 items-center justify-center gap-x-3 xl:flex 2xl:gap-x-5">
           {NAV.map((item) => {
             const current =
               item.to === "/" ? pathname === "/" : pathname.startsWith(item.to);
@@ -51,7 +51,7 @@ export function SiteHeader() {
                 to={item.to}
                 aria-current={current ? "page" : undefined}
                 className={cn(
-                  "font-ui text-kicker font-bold uppercase tracking-kicker text-fg-soft no-underline transition-colors duration-quick hover:text-ticket",
+                  "whitespace-nowrap font-ui text-kicker font-bold uppercase tracking-[0.12em] text-fg-soft no-underline transition-colors duration-quick hover:text-ticket 2xl:tracking-kicker",
                   current && "text-ticket",
                 )}
               >
@@ -61,9 +61,9 @@ export function SiteHeader() {
           })}
         </nav>
 
-        <div className="flex items-center gap-2 sm:gap-3">
-          <OpenBadge className="hidden xl:inline-flex" />
-          <Button asChild size="sm" variant="ghost" className="hidden md:inline-flex">
+        <div className="ml-auto flex shrink-0 items-center gap-2 sm:gap-3">
+          <OpenBadge className="hidden 2xl:inline-flex" />
+          <Button asChild size="sm" variant="ghost" className="hidden 2xl:inline-flex">
             <a href={SITE.phones.shop.href}>
               <Phone />
               Call
