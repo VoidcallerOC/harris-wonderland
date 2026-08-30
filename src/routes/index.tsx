@@ -13,6 +13,7 @@ import { ShopFloor } from "@/components/shop-floor";
 import { FeederLocker } from "@/components/feeder-locker";
 import { getSquareCatalog } from "@/lib/square-api";
 import { Kicker, Display, Lede } from "@/components/type";
+import { SocialFloor } from "@/components/social-floor";
 
 export const Route = createFileRoute("/")({
   loader: () => getSquareCatalog(),
@@ -86,6 +87,8 @@ function Home() {
       <FeederLocker catalog={catalog} />
 
       <ShopFloor catalog={catalog} />
+
+      <SocialFloor />
 
       <section className="py-16 sm:py-24">
         <div className="wrap">
