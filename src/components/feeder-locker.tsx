@@ -69,7 +69,7 @@ function FeederCard({ product, eager }: { product: SquareProduct; eager?: boolea
             </select>
           </label>
         ) : (
-          <div className="mt-4 flex flex-wrap gap-2">
+          <div className="mt-4 grid grid-cols-2 gap-2">
             {packs.map((pack) => {
               const active = pack.id === selected.id;
               return (
@@ -78,7 +78,7 @@ function FeederCard({ product, eager }: { product: SquareProduct; eager?: boolea
                   type="button"
                   onClick={() => setSkuId(pack.id)}
                   className={cn(
-                    "min-h-11 border px-3 font-ui text-kicker font-bold uppercase tracking-kicker",
+                    "inline-flex min-h-11 w-full items-center justify-center border px-2 text-center font-ui text-kicker font-bold uppercase tracking-kicker",
                     active
                       ? "border-brass bg-brass text-ticket-ink"
                       : "border-border bg-transparent text-fg-soft hover:border-brass hover:text-ticket",
@@ -90,13 +90,14 @@ function FeederCard({ product, eager }: { product: SquareProduct; eager?: boolea
             })}
           </div>
         )}
-        <div className="mt-auto flex items-end justify-between gap-3 pt-4">
+        <div className="mt-auto flex flex-col gap-3 pt-4 sm:flex-row sm:items-end sm:justify-between">
           <p className="font-ui text-sm font-bold uppercase tracking-kicker text-brass">
             {formatMoney(selected.price)}
           </p>
           <Button
             size="sm"
             variant="brass"
+            className="w-full sm:w-auto"
             onClick={() =>
               add({
                 id: selected.id,
