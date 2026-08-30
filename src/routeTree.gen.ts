@@ -13,6 +13,7 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as CareRouteImport } from './routes/care'
 import { Route as CollectionRouteImport } from './routes/collection'
 import { Route as FishRouteImport } from './routes/fish'
+import { Route as RentalsRouteImport } from './routes/rentals'
 import { Route as ShopRouteImport } from './routes/shop'
 import { Route as StoryRouteImport } from './routes/story'
 import { Route as VisitRouteImport } from './routes/visit'
@@ -37,6 +38,11 @@ const FishRoute = FishRouteImport.update({
   path: '/fish',
   getParentRoute: () => rootRouteImport,
 } as any)
+const RentalsRoute = RentalsRouteImport.update({
+  id: '/rentals',
+  path: '/rentals',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ShopRoute = ShopRouteImport.update({
   id: '/shop',
   path: '/shop',
@@ -58,6 +64,7 @@ export interface FileRoutesByFullPath {
   '/care': typeof CareRoute
   '/collection': typeof CollectionRoute
   '/fish': typeof FishRoute
+  '/rentals': typeof RentalsRoute
   '/shop': typeof ShopRoute
   '/story': typeof StoryRoute
   '/visit': typeof VisitRoute
@@ -67,6 +74,7 @@ export interface FileRoutesByTo {
   '/care': typeof CareRoute
   '/collection': typeof CollectionRoute
   '/fish': typeof FishRoute
+  '/rentals': typeof RentalsRoute
   '/shop': typeof ShopRoute
   '/story': typeof StoryRoute
   '/visit': typeof VisitRoute
@@ -77,6 +85,7 @@ export interface FileRoutesById {
   '/care': typeof CareRoute
   '/collection': typeof CollectionRoute
   '/fish': typeof FishRoute
+  '/rentals': typeof RentalsRoute
   '/shop': typeof ShopRoute
   '/story': typeof StoryRoute
   '/visit': typeof VisitRoute
@@ -84,15 +93,31 @@ export interface FileRoutesById {
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
-    '/' | '/care' | '/collection' | '/fish' | '/shop' | '/story' | '/visit'
+    | '/'
+    | '/care'
+    | '/collection'
+    | '/fish'
+    | '/rentals'
+    | '/shop'
+    | '/story'
+    | '/visit'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/care' | '/collection' | '/fish' | '/shop' | '/story' | '/visit'
+  to:
+    | '/'
+    | '/care'
+    | '/collection'
+    | '/fish'
+    | '/rentals'
+    | '/shop'
+    | '/story'
+    | '/visit'
   id:
     | '__root__'
     | '/'
     | '/care'
     | '/collection'
     | '/fish'
+    | '/rentals'
     | '/shop'
     | '/story'
     | '/visit'
@@ -103,6 +128,7 @@ export interface RootRouteChildren {
   CareRoute: typeof CareRoute
   CollectionRoute: typeof CollectionRoute
   FishRoute: typeof FishRoute
+  RentalsRoute: typeof RentalsRoute
   ShopRoute: typeof ShopRoute
   StoryRoute: typeof StoryRoute
   VisitRoute: typeof VisitRoute
@@ -138,6 +164,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof FishRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/rentals': {
+      id: '/rentals'
+      path: '/rentals'
+      fullPath: '/rentals'
+      preLoaderRoute: typeof RentalsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/shop': {
       id: '/shop'
       path: '/shop'
@@ -167,6 +200,7 @@ const rootRouteChildren: RootRouteChildren = {
   CareRoute: CareRoute,
   CollectionRoute: CollectionRoute,
   FishRoute: FishRoute,
+  RentalsRoute: RentalsRoute,
   ShopRoute: ShopRoute,
   StoryRoute: StoryRoute,
   VisitRoute: VisitRoute,

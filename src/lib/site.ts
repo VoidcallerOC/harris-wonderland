@@ -43,6 +43,7 @@ export const NAV = [
   { to: "/shop", label: "Shop" },
   { to: "/collection", label: "Collection" },
   { to: "/care", label: "Care" },
+  { to: "/rentals", label: "Rentals" },
   { to: "/story", label: "Story" },
   { to: "/visit", label: "Visit" },
 ] as const;
@@ -136,6 +137,43 @@ export const PROGRAMS = [
     title: "Schools, libraries, scouts",
     body: "Adam will come to a classroom, library, or scouting event with the same collection and the same honest talk. Mention ages, group size, and whether anyone is new to reptiles.",
   },
+] as const;
+
+export const RENTAL_EVENTS = [
+  {
+    role: "Parties",
+    title: "Birthdays & private events",
+    body: "The animals are the entertainment — about twenty creatures, a chance to hold one, a feeding demo if you want it. Hands-on for the brave, observe-only for the rest.",
+  },
+  {
+    role: "Photo & content",
+    title: "Photoshoots",
+    body: "Reptiles for portrait, editorial, brand, and social shoots. Calm, camera-tested animals with a keeper just off-frame.",
+  },
+  {
+    role: "Film & TV",
+    title: "Movies & production",
+    body: "On-set animal talent for film, television, music video, and commercial work. A handler stays with the animals the whole day.",
+  },
+  {
+    role: "Education",
+    title: "Schools, libraries, scouts",
+    body: "Biology-forward programs from trained teachers — the science is real, not a script. Mention ages and group size.",
+  },
+  {
+    role: "Production",
+    title: "Corporate, expo & events",
+    body: "Booth draws, product launches, festivals, team events — a rack of animals people line up to meet.",
+  },
+] as const;
+
+export const RENTAL_EVENT_TYPES = [
+  "Birthday / private party",
+  "Photoshoot / content",
+  "Film / TV / production",
+  "Educational program",
+  "Corporate / expo / event",
+  "Something else",
 ] as const;
 
 export const CONTACT_TOPICS = [
