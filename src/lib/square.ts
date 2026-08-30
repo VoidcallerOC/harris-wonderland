@@ -254,6 +254,7 @@ function burmeseMorphPhoto(product: SquareProduct) {
 
 function supplyImage(product: SquareProduct) {
   const blob = blobOf(product);
+  if (blob.includes("vine")) return "/images/supplies/enclosure.jpg";
   if (
     blob.includes("uvb") ||
     blob.includes("bulb") ||
@@ -266,26 +267,20 @@ function supplyImage(product: SquareProduct) {
   ) {
     return "/images/supplies/bulbs.jpg";
   }
-  if (
-    blob.includes("heat") ||
-    blob.includes("ceramic") ||
-    blob.includes("emitter") ||
-    blob.includes("thermostat")
-  ) {
+  if (blob.includes("heat") || blob.includes("ceramic") || blob.includes("emitter") || blob.includes("thermostat")) {
     return "/images/supplies/heat.jpg";
   }
-  if (
-    blob.includes("bark") ||
-    blob.includes("moss") ||
-    blob.includes("aspen") ||
-    blob.includes("soil") ||
-    blob.includes("earth") ||
-    blob.includes("husk") ||
-    blob.includes("bedding") ||
-    blob.includes("substrate") ||
-    blob.includes("coco")
-  ) {
-    return "/images/supplies/bedding.jpg";
+  if (blob.includes("reptibark") || (blob.includes("bark") && !blob.includes("forest"))) {
+    return "/images/supplies/reptibark.jpg";
+  }
+  if (blob.includes("aspen")) return "/images/supplies/aspen.jpg";
+  if (blob.includes("eco earth") || /\bearth\b/.test(blob)) return "/images/supplies/eco-earth.jpg";
+  if (blob.includes("frog moss")) return "/images/supplies/frog-moss.jpg";
+  if (blob.includes("sphagnum") || blob.includes("moss")) return "/images/supplies/sphagnum.jpg";
+  if (blob.includes("soil")) return "/images/supplies/reptisoil.jpg";
+  if (blob.includes("husk") || blob.includes("coco")) return "/images/supplies/coco-husk.jpg";
+  if (blob.includes("forest") || blob.includes("cypress") || blob.includes("bedding") || blob.includes("substrate")) {
+    return "/images/supplies/forest-floor.jpg";
   }
   if (
     blob.includes("diet") ||
@@ -297,11 +292,13 @@ function supplyImage(product: SquareProduct) {
   ) {
     return "/images/supplies/diet.jpg";
   }
-  if (blob.includes("vine") || blob.includes("terrarium") || blob.includes("equipment")) {
+  if (blob.includes("terrarium") || blob.includes("equipment")) {
     return "/images/supplies/enclosure.jpg";
   }
   return "/images/supplies/enclosure.jpg";
 }
+
+const REPTIBARK_STOCK = "G4MYJQAAS2TX5NRSUGF7L5HQ";
 
 export function productImage(product: SquareProduct) {
   if (isFeeder(product)) {
@@ -312,7 +309,10 @@ export function productImage(product: SquareProduct) {
     if (blob.includes("rabbit") || blob.includes("guinea")) return "/images/feeders/mammals.jpg";
     return "/images/feeders/other.jpg";
   }
-  if (product.image) return product.image;
+  const raw = product.image;
+  const reptibarkOnWrongSku =
+    Boolean(raw?.includes(REPTIBARK_STOCK)) && !product.name.toLowerCase().includes("reptibark");
+  if (raw && !reptibarkOnWrongSku) return raw;
   if (!isAnimal(product)) return supplyImage(product);
   const morph = ballPythonMorphPhoto(product.name);
   if (morph) return morph;
