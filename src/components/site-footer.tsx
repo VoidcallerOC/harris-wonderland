@@ -7,7 +7,16 @@ export function SiteFooter() {
     <footer className="border-t border-border bg-bg-2">
       <div className="wrap grid gap-10 py-12 md:grid-cols-[1.3fr_1fr]">
         <div>
-          <p className="font-display text-3xl italic text-ticket">Harris in Wonderland</p>
+          <p className="flex items-center gap-3 font-display text-3xl italic text-ticket">
+            <img
+              src="/images/logo-192.png"
+              alt=""
+              width={48}
+              height={48}
+              className="size-12 rounded-full ring-1 ring-brass/40"
+            />
+            Harris in Wonderland
+          </p>
           <p className="mt-3 max-w-md text-muted-foreground">
             {SITE.address.line}
             <br />

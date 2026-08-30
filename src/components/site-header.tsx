@@ -8,26 +8,6 @@ import { OpenBadge } from "@/components/open-badge";
 import { cartCount, useCart } from "@/lib/cart-store";
 import { cn } from "@/lib/utils";
 
-function Mark({ className }: { className?: string }) {
-  return (
-    <svg
-      viewBox="0 0 32 32"
-      className={cn("size-8 shrink-0 text-brass", className)}
-      aria-hidden="true"
-    >
-      <circle cx="16" cy="16" r="14.5" fill="none" stroke="currentColor" strokeWidth="1.4" />
-      <circle cx="16" cy="16" r="9" fill="none" stroke="currentColor" strokeWidth="1" opacity="0.55" />
-      <path
-        d="M11 17.5c2.2-4 7.8-4 10 0"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="1.3"
-        strokeLinecap="round"
-      />
-    </svg>
-  );
-}
-
 export function SiteHeader() {
   const pathname = useRouterState({ select: (s) => s.location.pathname });
   const [open, setOpen] = useState(false);
@@ -38,19 +18,26 @@ export function SiteHeader() {
   const count = hydrated ? cartCount(items) : 0;
 
   return (
-    <header className="sticky top-0 z-40 border-b border-border bg-background/85 backdrop-blur-xl">
-      <div className="wrap flex h-16 min-w-0 items-center justify-between gap-3">
+    <header className="sticky top-0 z-40 border-b border-border bg-background/90 pt-[env(safe-area-inset-top)] backdrop-blur-xl">
+      <div className="wrap flex h-[4.25rem] min-w-0 items-center justify-between gap-3 sm:h-[4.5rem]">
         <Link
           to="/"
           className="flex min-w-0 items-center gap-2.5 text-foreground no-underline hover:text-ticket"
         >
-          <Mark />
-          <span className="truncate font-display text-lg font-semibold italic leading-none sm:text-xl">
-            <span className="sm:hidden">Harris</span>
-            <span className="hidden sm:inline">Harris in Wonderland</span>
-          </span>
-          <span className="hidden shrink-0 font-ui text-kicker font-bold uppercase tracking-kicker text-brass md:inline">
-            Canton
+          <img
+            src="/images/logo-192.png"
+            alt=""
+            width={192}
+            height={192}
+            className="size-11 shrink-0 rounded-full ring-1 ring-brass/50 sm:size-12"
+          />
+          <span className="min-w-0">
+            <span className="block truncate font-display text-[1.05rem] font-semibold italic leading-none sm:text-xl">
+              Harris in Wonderland
+            </span>
+            <span className="mt-1 hidden font-ui text-kicker font-bold uppercase tracking-kicker text-brass sm:block">
+              Canton
+            </span>
           </span>
         </Link>
 
@@ -108,7 +95,14 @@ export function SiteHeader() {
               <Dialog.Overlay className="fixed inset-0 z-50 bg-background/80" />
               <Dialog.Content className="fixed inset-y-0 right-0 z-50 flex w-[min(20rem,100%)] flex-col border-l border-brass bg-card p-6 shadow-none">
                 <div className="flex items-center justify-between">
-                  <Dialog.Title className="font-display text-2xl italic text-ticket">
+                  <Dialog.Title className="flex items-center gap-2 font-display text-2xl italic text-ticket">
+                    <img
+                      src="/images/logo-192.png"
+                      alt=""
+                      width={40}
+                      height={40}
+                      className="size-10 rounded-full"
+                    />
                     Menu
                   </Dialog.Title>
                   <Dialog.Close asChild>
