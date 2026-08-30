@@ -32,6 +32,9 @@ const HERO_FRAMES: HeroFrame[] = [
     src: "/images/case-lizards.jpg",
     alt: speciesById("frilled-lizard")!.alt,
     caption: "Frilled lizard · on the floor · Route 44",
+    // Portrait shot, head up top-left — pull the crop up so the desktop
+    // (wide) frame keeps the head instead of centering on the body.
+    position: "object-[42%_18%]",
   },
   {
     src: "/images/redfoot.jpg",
@@ -45,7 +48,7 @@ const HERO_FRAMES: HeroFrame[] = [
   },
 ];
 
-const INTERVAL_MS = 8000;
+const INTERVAL_MS = 6000;
 
 export function Hero() {
   const [active, setActive] = useState(0);
@@ -71,7 +74,7 @@ export function Hero() {
             width={1600}
             height={1200}
             className={cn(
-              "hero-ken absolute inset-0 h-full w-full object-cover transition-opacity duration-[2000ms] ease-out-smooth motion-reduce:transition-none",
+              "hero-ken absolute inset-0 h-full w-full object-cover transition-opacity duration-[1500ms] ease-out-smooth motion-reduce:transition-none",
               frame.position ?? "object-center",
               i === active ? "opacity-100" : "opacity-0",
             )}
