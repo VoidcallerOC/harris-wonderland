@@ -45,7 +45,7 @@ const HERO_FRAMES: HeroFrame[] = [
   },
 ];
 
-const INTERVAL_MS = 5000;
+const INTERVAL_MS = 8000;
 
 export function Hero() {
   const [active, setActive] = useState(0);
@@ -71,7 +71,7 @@ export function Hero() {
             width={1600}
             height={1200}
             className={cn(
-              "hero-ken absolute inset-0 h-full w-full object-cover transition-opacity duration-1000 ease-out-smooth motion-reduce:transition-none",
+              "hero-ken absolute inset-0 h-full w-full object-cover transition-opacity duration-[2000ms] ease-out-smooth motion-reduce:transition-none",
               frame.position ?? "object-center",
               i === active ? "opacity-100" : "opacity-0",
             )}
