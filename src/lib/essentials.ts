@@ -5,6 +5,7 @@ export type CareEssential = {
 
 export const ESSENTIALS: Record<string, CareEssential[]> = {
   "ball-python": [
+    { label: "Enclosure", product: "ZooMed Terrariums & Screen Cages" },
     { label: "Thermostat", product: "Thermostats" },
     { label: "Heat mat", product: "ExoTerra Heat Mat" },
     { label: "Humidity hide", product: "Humidity Hut" },
@@ -27,6 +28,7 @@ export const ESSENTIALS: Record<string, CareEssential[]> = {
     { label: "Frozen mice", product: "Frozen Mice" },
   ],
   boa: [
+    { label: "Enclosure", product: "ZooMed Terrariums & Screen Cages" },
     { label: "Thermostat", product: "Thermostats" },
     { label: "Heat mat", product: "ExoTerra Heat Mat" },
     { label: "Cypress bedding", product: "ZM Forest Floor Cypress Bedding" },
@@ -34,6 +36,7 @@ export const ESSENTIALS: Record<string, CareEssential[]> = {
     { label: "Frozen mice", product: "Frozen Mice" },
   ],
   hognose: [
+    { label: "Enclosure", product: "ZooMed Terrariums & Screen Cages" },
     { label: "Thermostat", product: "Thermostats" },
     { label: "Heat mat", product: "ExoTerra Heat Mat" },
     { label: "Aspen bedding", product: "ZM Aspen Snake Bedding" },
@@ -48,6 +51,7 @@ export const ESSENTIALS: Record<string, CareEssential[]> = {
     { label: "Enclosure", product: "ZooMed Terrariums & Screen Cages" },
   ],
   "leopard-gecko": [
+    { label: "Enclosure", product: "ZooMed Terrariums & Screen Cages" },
     { label: "Thermostat", product: "Thermostats" },
     { label: "Heat mat", product: "ExoTerra Heat Mat" },
     { label: "Moist hide", product: "Humidity Hut" },
@@ -72,6 +76,7 @@ export const ESSENTIALS: Record<string, CareEssential[]> = {
     { label: "Calcium / vitamins", product: "Vitamin And Mineral Suppliments" },
   ],
   "blue-tongue": [
+    { label: "Enclosure", product: "ZooMed Terrariums & Screen Cages" },
     { label: "Thermostat", product: "Thermostats" },
     { label: "Basking lamp", product: "ZM Repti Basking Spot Lamp" },
     { label: "UVB", product: "Arcadia Shade Dweller ProT5 7% UVB" },
@@ -80,6 +85,7 @@ export const ESSENTIALS: Record<string, CareEssential[]> = {
     { label: "Calcium / vitamins", product: "Vitamin And Mineral Suppliments" },
   ],
   "red-foot": [
+    { label: "Enclosure", product: "ZooMed Terrariums & Screen Cages" },
     { label: "Tropical UVB", product: "ZM Reptisun T5 5.0 UVB Bulbs" },
     { label: "Basking lamp", product: "ZM Repti Basking Spot Lamp" },
     { label: "Cypress bedding", product: "ZM Forest Floor Cypress Bedding" },
