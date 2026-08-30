@@ -22,7 +22,7 @@ import {
 import { cn } from "@/lib/utils";
 import { Display, Kicker, Lede } from "@/components/type";
 
-function ProductCard({ product }: { product: SquareProduct }) {
+function ProductCard({ product, focused }: { product: SquareProduct; focused?: boolean }) {
   const add = useCart((s) => s.add);
   const buyable = canBuy(product);
   const { kind, title } = splitProductName(product.name);
@@ -34,7 +34,13 @@ function ProductCard({ product }: { product: SquareProduct }) {
   const feeder = isFeeder(product);
 
   return (
-    <article className="group flex flex-col border border-border bg-card">
+    <article
+      id={`sku-${product.id}`}
+      className={cn(
+        "group flex flex-col border bg-card",
+        focused ? "border-brass" : "border-border",
+      )}
+    >
       <div data-photo className="relative aspect-[4/5] overflow-hidden bg-surface">
         <img
           src={productImage(product)}
@@ -111,13 +117,15 @@ export function ShopFloor({
   heading = "The rack, priced.",
   lede = "Live Square inventory. Animals and feeders ring through Harris’s Square account — pickup at 364 Albany Turnpike.",
   headingAs = "h2",
+  focusId,
 }: {
   catalog: CatalogPayload;
   heading?: string;
   lede?: string;
   headingAs?: "h1" | "h2";
+  focusId?: string;
 }) {
-  const [filter, setFilter] = useState<ShopFilter>("animals");
+  const [filter, setFilter] = useState<ShopFilter>(focusId ? "all" : "animals");
   const items = useMemo(() => {
     const list = catalog.products.filter((p) => matchesFilter(p, filter));
     return [...list].sort((a, b) => {
@@ -131,10 +139,21 @@ export function ShopFloor({
 
   useEffect(() => {
     if (typeof window === "undefined") return;
+    if (focusId) {
+      setFilter("all");
+      return;
+    }
     if (window.location.pathname === "/shop" && window.location.hash === "#feeders") {
       setFilter("feeders");
     }
-  }, []);
+  }, [focusId]);
+
+  useEffect(() => {
+    if (!focusId) return;
+    const node = document.getElementById(`sku-${focusId}`);
+    if (!node) return;
+    node.scrollIntoView({ behavior: "smooth", block: "center" });
+  }, [focusId, filter, items]);
 
   return (
     <section id="rack" className="border-y border-border bg-bg-2 py-16 sm:py-24">
@@ -169,7 +188,7 @@ export function ShopFloor({
         ) : (
           <div className="mt-8 grid gap-3 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
             {items.map((product) => (
-              <ProductCard key={product.id} product={product} />
+              <ProductCard key={product.id} product={product} focused={product.id === focusId} />
             ))}
           </div>
         )}

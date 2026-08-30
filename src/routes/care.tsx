@@ -2,10 +2,13 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { SiteShell } from "@/components/site-shell";
 import { SITE } from "@/lib/site";
 import { CATEGORIES, SPECIES, filterSpecies, speciesById } from "@/lib/species";
+import { essentialsFor } from "@/lib/essentials";
 import { Button } from "@/components/ui/button";
 import { SpecimenPhoto } from "@/components/specimen-photo";
 import { Kicker, Display, Lede } from "@/components/type";
 import { cn } from "@/lib/utils";
+import { getSquareCatalog } from "@/lib/square-api";
+import { formatMoney, productByName, productImage, type SquareProduct } from "@/lib/square";
 
 type CareSearch = { id?: string };
 
@@ -13,6 +16,7 @@ export const Route = createFileRoute("/care")({
   validateSearch: (search: Record<string, unknown>): CareSearch => ({
     id: typeof search.id === "string" ? search.id : undefined,
   }),
+  loader: () => getSquareCatalog(),
   component: CarePage,
   head: () => ({
     meta: [
@@ -28,6 +32,7 @@ export const Route = createFileRoute("/care")({
 
 function CarePage() {
   const { id } = Route.useSearch();
+  const catalog = Route.useLoaderData();
   const selected = speciesById(id) ?? SPECIES[0];
   const related = filterSpecies(selected.category).filter((s) => s.id !== selected.id);
 
@@ -113,6 +118,12 @@ function CarePage() {
             </div>
           </article>
 
+          <Essentials
+            speciesId={selected.id}
+            speciesName={selected.name}
+            products={catalog.products}
+          />
+
           <div className="mt-10 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
             {related.map((species) => (
               <Link
@@ -137,6 +148,79 @@ function CarePage() {
       </section>
     </main>
     </SiteShell>
+  );
+}
+
+function Essentials({
+  speciesId,
+  speciesName,
+  products,
+}: {
+  speciesId: string;
+  speciesName: string;
+  products: SquareProduct[];
+}) {
+  const items = essentialsFor(speciesId);
+  if (!items.length) return null;
+
+  return (
+    <section className="mt-6 border border-border bg-card p-5 sm:p-8">
+      <Kicker>Essentials</Kicker>
+      <h3 className="mt-2 font-display text-section italic text-ticket">
+        What goes home with a {speciesName.toLowerCase()}.
+      </h3>
+      <p className="mt-3 max-w-2xl text-sm text-fg-soft">
+        Setup SKUs from the Canton Square rack — not a generic kit. Pickup at 364 Albany
+        Turnpike.
+      </p>
+      <ul className="mt-6 grid gap-2 sm:grid-cols-2">
+        {items.map((item) => {
+          const product = productByName(products, item.product);
+          const inner = (
+            <>
+              <div className="relative size-20 shrink-0 overflow-hidden bg-surface">
+                {product ? (
+                  <img
+                    src={productImage(product)}
+                    alt=""
+                    width={160}
+                    height={160}
+                    className="h-full w-full object-cover"
+                  />
+                ) : null}
+              </div>
+              <div className="min-w-0 py-1 pr-2">
+                <p className="font-ui text-kicker font-bold uppercase tracking-kicker text-brass">
+                  {item.label}
+                </p>
+                <p className="mt-1 truncate font-display text-lg italic text-ticket">
+                  {product?.name ?? item.product}
+                </p>
+                <p className="mt-1 font-ui text-kicker font-bold uppercase tracking-kicker text-muted-foreground">
+                  {product ? formatMoney(product.priceLow) : "Ask the shop"}
+                </p>
+              </div>
+            </>
+          );
+
+          return (
+            <li key={item.label}>
+              {product ? (
+                <Link
+                  to="/shop"
+                  search={{ item: product.id }}
+                  className="flex gap-3 border border-border bg-background p-2 no-underline transition-colors hover:border-brass"
+                >
+                  {inner}
+                </Link>
+              ) : (
+                <div className="flex gap-3 border border-border bg-background p-2">{inner}</div>
+              )}
+            </li>
+          );
+        })}
+      </ul>
+    </section>
   );
 }
 

@@ -334,6 +334,11 @@ export function productImage(product: SquareProduct) {
   return "/images/ball-python.jpg";
 }
 
+export function productByName(products: SquareProduct[], name: string) {
+  const needle = name.toLowerCase();
+  return products.find((product) => product.name.toLowerCase() === needle);
+}
+
 export const SQUARE = {
   merchantId: "DS6T9M4TDWYFT",
   locationId: "3DKC91D1D0V6X",
