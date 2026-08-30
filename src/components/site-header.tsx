@@ -8,6 +8,36 @@ import { OpenBadge } from "@/components/open-badge";
 import { cartCount, useCart } from "@/lib/cart-store";
 import { cn } from "@/lib/utils";
 
+function NavLinks({
+  pathname,
+  className,
+}: {
+  pathname: string;
+  className?: string;
+}) {
+  return (
+    <>
+      {NAV.map((item) => {
+        const current = item.to === "/" ? pathname === "/" : pathname.startsWith(item.to);
+        return (
+          <Link
+            key={item.to}
+            to={item.to}
+            aria-current={current ? "page" : undefined}
+            className={cn(
+              "whitespace-nowrap font-ui text-kicker font-bold uppercase tracking-kicker text-fg-soft no-underline transition-colors duration-quick hover:text-ticket",
+              current && "text-ticket",
+              className,
+            )}
+          >
+            {item.label}
+          </Link>
+        );
+      })}
+    </>
+  );
+}
+
 export function SiteHeader() {
   const pathname = useRouterState({ select: (s) => s.location.pathname });
   const [open, setOpen] = useState(false);
@@ -19,10 +49,10 @@ export function SiteHeader() {
 
   return (
     <header className="sticky top-0 z-40 border-b border-border bg-background/90 pt-[env(safe-area-inset-top)] backdrop-blur-xl">
-      <div className="wrap flex h-[4.25rem] min-w-0 items-center gap-3 sm:h-[4.5rem] sm:gap-4">
+      <div className="wrap flex h-[4.25rem] min-w-0 items-center justify-between gap-3 sm:h-[4.5rem]">
         <Link
           to="/"
-          className="flex shrink-0 items-center gap-2.5 text-foreground no-underline hover:text-ticket"
+          className="flex min-w-0 shrink-0 items-center gap-2.5 text-foreground no-underline hover:text-ticket"
         >
           <img
             src="/images/logo-192.png"
@@ -32,7 +62,7 @@ export function SiteHeader() {
             className="size-11 shrink-0 rounded-full ring-1 ring-brass/50 sm:size-12"
           />
           <span className="hidden sm:block">
-            <span className="block whitespace-nowrap font-display text-lg font-semibold italic leading-none xl:text-xl">
+            <span className="block whitespace-nowrap font-display text-lg font-semibold italic leading-none sm:text-xl">
               Harris in Wonderland
             </span>
             <span className="mt-1 block font-ui text-kicker font-bold uppercase tracking-kicker text-brass">
@@ -41,29 +71,9 @@ export function SiteHeader() {
           </span>
         </Link>
 
-        <nav className="hidden min-w-0 flex-1 items-center justify-center gap-x-3 xl:flex 2xl:gap-x-5">
-          {NAV.map((item) => {
-            const current =
-              item.to === "/" ? pathname === "/" : pathname.startsWith(item.to);
-            return (
-              <Link
-                key={item.to}
-                to={item.to}
-                aria-current={current ? "page" : undefined}
-                className={cn(
-                  "whitespace-nowrap font-ui text-kicker font-bold uppercase tracking-[0.12em] text-fg-soft no-underline transition-colors duration-quick hover:text-ticket 2xl:tracking-kicker",
-                  current && "text-ticket",
-                )}
-              >
-                {item.label}
-              </Link>
-            );
-          })}
-        </nav>
-
-        <div className="ml-auto flex shrink-0 items-center gap-2 sm:gap-3">
-          <OpenBadge className="hidden 2xl:inline-flex" />
-          <Button asChild size="sm" variant="ghost" className="hidden 2xl:inline-flex">
+        <div className="flex shrink-0 items-center gap-2 sm:gap-3">
+          <OpenBadge className="hidden md:inline-flex" />
+          <Button asChild size="sm" variant="ghost" className="hidden md:inline-flex">
             <a href={SITE.phones.shop.href}>
               <Phone />
               Call
@@ -85,7 +95,7 @@ export function SiteHeader() {
           <Dialog.Root open={open} onOpenChange={setOpen}>
             <Dialog.Trigger asChild>
               <button
-                className="inline-flex size-11 shrink-0 items-center justify-center border border-brass/40 text-ticket xl:hidden"
+                className="inline-flex size-11 shrink-0 items-center justify-center border border-brass/40 text-ticket lg:hidden"
                 aria-label="Open menu"
               >
                 <Menu className="size-5" />
@@ -150,6 +160,12 @@ export function SiteHeader() {
           </Dialog.Root>
         </div>
       </div>
+
+      <nav className="hidden border-t border-border lg:block">
+        <div className="wrap flex items-center justify-center gap-x-5 py-2.5 2xl:gap-x-8">
+          <NavLinks pathname={pathname} />
+        </div>
+      </nav>
     </header>
   );
 }
