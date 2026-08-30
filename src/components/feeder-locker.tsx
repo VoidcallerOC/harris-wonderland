@@ -26,9 +26,9 @@ function FeederCard({ product, eager }: { product: SquareProduct; eager?: boolea
 
   if (!selected) {
     return (
-      <article className="flex flex-col border border-border bg-card">
+      <article className="flex min-w-0 w-full flex-col overflow-hidden border border-border bg-card">
         <SpecimenPhoto src={meta.image} alt={meta.title} caption="Call the shop" className="aspect-[16/10]" />
-        <div className="flex flex-1 flex-col p-4">
+        <div className="flex min-w-0 flex-1 flex-col p-4">
           <Kicker>{meta.kicker}</Kicker>
           <h3 className="mt-1 font-display text-card italic text-ticket">{meta.title}</h3>
           <p className="mt-2 text-sm text-muted-foreground">{meta.blurb}</p>
@@ -39,7 +39,7 @@ function FeederCard({ product, eager }: { product: SquareProduct; eager?: boolea
   }
 
   return (
-    <article className="group flex flex-col border border-border bg-card">
+    <article className="group flex min-w-0 w-full flex-col overflow-hidden border border-border bg-card">
       <SpecimenPhoto
         src={meta.image}
         alt={meta.title}
@@ -47,19 +47,19 @@ function FeederCard({ product, eager }: { product: SquareProduct; eager?: boolea
         className="aspect-[16/10]"
         eager={eager}
       />
-      <div className="flex flex-1 flex-col p-4">
+      <div className="flex min-w-0 flex-1 flex-col p-4">
         <Kicker>{meta.kicker}</Kicker>
         <h3 className="mt-1 font-display text-card italic text-ticket">{meta.title}</h3>
         <p className="mt-2 text-sm text-muted-foreground">{meta.blurb}</p>
         {useSelect ? (
-          <label className="mt-4 grid gap-2">
+          <label className="mt-4 grid min-w-0 gap-2">
             <span className="font-ui text-kicker font-bold uppercase tracking-kicker text-muted-foreground">
               Pack
             </span>
             <select
               value={selected.id}
               onChange={(event) => setSkuId(event.target.value)}
-              className="min-h-11 border border-border bg-surface px-3 font-ui text-sm text-ticket"
+              className="min-h-11 min-w-0 border border-border bg-surface px-3 font-ui text-sm text-ticket"
             >
               {packs.map((pack) => (
                 <option key={pack.id} value={pack.id}>
@@ -69,7 +69,7 @@ function FeederCard({ product, eager }: { product: SquareProduct; eager?: boolea
             </select>
           </label>
         ) : (
-          <div className="mt-4 grid grid-cols-2 gap-2">
+          <div className="mt-4 grid min-w-0 grid-cols-3 gap-2">
             {packs.map((pack) => {
               const active = pack.id === selected.id;
               return (
@@ -78,7 +78,7 @@ function FeederCard({ product, eager }: { product: SquareProduct; eager?: boolea
                   type="button"
                   onClick={() => setSkuId(pack.id)}
                   className={cn(
-                    "inline-flex min-h-11 w-full items-center justify-center border px-2 text-center font-ui text-kicker font-bold uppercase tracking-kicker",
+                    "inline-flex min-h-12 min-w-0 items-center justify-center border px-1 text-center font-ui text-[0.62rem] font-bold uppercase leading-none tracking-[0.12em] sm:text-kicker sm:tracking-kicker",
                     active
                       ? "border-brass bg-brass text-ticket-ink"
                       : "border-border bg-transparent text-fg-soft hover:border-brass hover:text-ticket",
@@ -90,14 +90,14 @@ function FeederCard({ product, eager }: { product: SquareProduct; eager?: boolea
             })}
           </div>
         )}
-        <div className="mt-auto flex flex-col gap-3 pt-4 sm:flex-row sm:items-end sm:justify-between">
+        <div className="mt-auto flex flex-col items-center gap-3 pt-4">
           <p className="font-ui text-sm font-bold uppercase tracking-kicker text-brass">
             {formatMoney(selected.price)}
           </p>
           <Button
             size="sm"
             variant="brass"
-            className="w-full sm:w-auto"
+            className="w-full"
             onClick={() =>
               add({
                 id: selected.id,
@@ -156,7 +156,7 @@ export function FeederLocker({
             </Lede>
           </>
         )}
-        <div className={cn("grid gap-3 md:grid-cols-2", embedded ? "mt-6" : "mt-10")}>
+        <div className={cn("grid min-w-0 gap-3 md:grid-cols-2", embedded ? "mt-6" : "mt-10")}>
           {families.map((product, index) => (
             <FeederCard key={product.id} product={product} eager={index === 0 && !embedded} />
           ))}
