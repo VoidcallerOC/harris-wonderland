@@ -55,8 +55,8 @@ function FishPage() {
     <main>
       <section className="relative min-h-[52svh] overflow-hidden">
         <SpecimenPhoto
-          src="/images/drive-frog.jpg"
-          alt="Green tree frog portrait from the Harris in Wonderland collection"
+          src="/images/fish-room.jpg"
+          alt="Planted freshwater aquarium"
           className="absolute inset-0 h-full w-full"
           imgClassName="scale-105"
           eager

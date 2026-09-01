@@ -84,24 +84,6 @@ function Home() {
         </div>
       </section>
 
-      <section className="border-y border-border bg-bg-2 py-16 sm:py-24">
-        <div className="wrap grid items-end gap-8 lg:grid-cols-[0.7fr_1.3fr]">
-          <div>
-            <Kicker>Field notes</Kicker>
-            <Display className="mt-2">Look closer.</Display>
-            <p className="mt-4 max-w-[30ch] text-fg-soft">The collection rewards a second glance: color, texture, tiny feet, watchful eyes. These are the animals that make the front room feel like a small-scale zoo.</p>
-          </div>
-          <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
-            {[["/images/drive-blue-frog.jpg", "Blue hour"], ["/images/drive-frog.jpg", "Quiet watcher"], ["/images/drive-color-chameleon.jpg", "Color study"], ["/images/drive-gecko.jpg", "Big character"]].map(([src, label]) => (
-              <figure key={src} className="group relative aspect-[4/5] overflow-hidden border border-border bg-card">
-                <img src={src} alt={`${label} from the Harris in Wonderland collection`} width="900" height="1100" loading="lazy" className="h-full w-full object-cover transition-transform duration-slow ease-out-smooth group-hover:scale-[1.04]" />
-                <figcaption className="absolute inset-x-2 bottom-2 bg-ticket-ink/75 px-2 py-1 font-ui text-[0.6rem] font-bold uppercase tracking-kicker text-ticket">{label}</figcaption>
-              </figure>
-            ))}
-          </div>
-        </div>
-      </section>
-
       <SocialFloor />
 
       <FeederLocker catalog={catalog} />

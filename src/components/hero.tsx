@@ -18,18 +18,18 @@ type HeroFrame = {
 // it stays the poster — then a rotating cast of what Harris actually keeps.
 const HERO_FRAMES: HeroFrame[] = [
   {
-    src: "/images/drive-hero.jpg",
+    src: "/images/hero.jpg",
     alt: speciesById("giant-day-gecko")!.alt,
-    caption: "Chameleon portrait · looking glass · Route 44",
+    caption: "Giant day gecko · looking glass · Route 44",
     position: "object-[28%_48%] md:object-center",
   },
   {
-    src: "/images/drive-gecko.jpg",
+    src: "/images/ball-python.jpg",
     alt: speciesById("ball-python")!.alt,
     caption: "Ball python · captive-bred · Route 44",
   },
   {
-    src: "/images/drive-color-chameleon.jpg",
+    src: "/images/case-lizards.jpg",
     alt: speciesById("frilled-lizard")!.alt,
     caption: "Frilled lizard · on the floor · Route 44",
     // Portrait shot, head up top-left — pull the crop up so the desktop
@@ -37,12 +37,12 @@ const HERO_FRAMES: HeroFrame[] = [
     position: "object-[42%_18%]",
   },
   {
-    src: "/images/drive-frog.jpg",
+    src: "/images/redfoot.jpg",
     alt: speciesById("red-foot")!.alt,
     caption: "Red-foot tortoise · captive-bred · Route 44",
   },
   {
-    src: "/images/drive-poison-frog.jpg",
+    src: "/images/case-amphibians.jpg",
     alt: speciesById("red-eyed")!.alt,
     caption: "Red-eyed tree frog · damp room · Route 44",
   },
