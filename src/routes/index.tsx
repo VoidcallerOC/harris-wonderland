@@ -26,24 +26,29 @@ const CASES = [
   SPECIES.find((s) => s.id === "red-eyed")!,
 ];
 
-// Owner-supplied photographs of animals on the floor that do not have their own
-// care sheet — a color-and-detail showcase, not a species claim.
+// Owner-supplied photographs of animals on the floor — a color-and-detail
+// showcase, not a species claim. The captions read as field notes, not IDs.
 const LOOK_CLOSER = [
-  {
-    src: "/images/drive-color-chameleon.jpg",
-    alt: "Chameleon in full color at Harris in Wonderland",
-    caption: "Color study",
-  },
-  {
-    src: "/images/drive-poison-frog.jpg",
-    alt: "Blue poison dart frog at Harris in Wonderland",
-    caption: "Warning colors",
-  },
-  {
-    src: "/images/drive-gecko.jpg",
-    alt: "Gecko eye at Harris in Wonderland",
-    caption: "Eye to eye",
-  },
+  { src: "/images/drive-hero.jpg", alt: "Blue-and-green chameleon at Harris in Wonderland", caption: "Blue hour" },
+  { src: "/images/floor/gecko-bark.jpg", alt: "Giant gecko on cork bark at Harris in Wonderland", caption: "Old growth" },
+  { src: "/images/drive-poison-frog.jpg", alt: "Blue poison dart frog at Harris in Wonderland", caption: "Warning colors" },
+  { src: "/images/floor/day-geckos-hand.jpg", alt: "Two day geckos held at Harris in Wonderland", caption: "Regulars" },
+  { src: "/images/drive-color-chameleon.jpg", alt: "Panther chameleon in full color at Harris in Wonderland", caption: "Color study" },
+  { src: "/images/floor/gecko-chainmail.jpg", alt: "Gecko close-up at Harris in Wonderland", caption: "Chainmail" },
+  { src: "/images/floor/dart-frog-yellow.jpg", alt: "Yellow poison dart frog at Harris in Wonderland", caption: "Yellowback" },
+  { src: "/images/floor/gecko-seafoam.jpg", alt: "Teal gecko at Harris in Wonderland", caption: "Seafoam" },
+  { src: "/images/drive-frog.jpg", alt: "White's tree frog at Harris in Wonderland", caption: "Sleepy" },
+  { src: "/images/floor/gecko-pocket.jpg", alt: "Young gecko on a fingertip at Harris in Wonderland", caption: "Pocket-sized" },
+  { src: "/images/floor/chameleon-casque.jpg", alt: "Chameleon portrait at Harris in Wonderland", caption: "Casque" },
+  { src: "/images/floor/day-gecko-neon.jpg", alt: "Day gecko on a plant at Harris in Wonderland", caption: "Neon" },
+  { src: "/images/drive-blue-frog.jpg", alt: "Dyeing poison dart frog at Harris in Wonderland", caption: "Bold as paint" },
+  { src: "/images/floor/gecko-emerald.jpg", alt: "Green gecko at Harris in Wonderland", caption: "Emerald" },
+  { src: "/images/floor/dart-frog-rose.jpg", alt: "Black-and-pink poison frog at Harris in Wonderland", caption: "Ink & rose" },
+  { src: "/images/floor/gecko-hatchling.jpg", alt: "Hatchling gecko on a fingertip at Harris in Wonderland", caption: "Fresh out" },
+  { src: "/images/drive-gecko.jpg", alt: "Gecko eye at Harris in Wonderland", caption: "Eye to eye" },
+  { src: "/images/floor/day-gecko-hand.jpg", alt: "Day gecko on a keeper's hand at Harris in Wonderland", caption: "Hitchhiker" },
+  { src: "/images/floor/lizard-arrival.jpg", alt: "Patterned lizard at Harris in Wonderland", caption: "New arrival" },
+  { src: "/images/floor/gecko-ghost.jpg", alt: "Pale gecko on a leaf at Harris in Wonderland", caption: "Ghost" },
 ];
 
 function Home() {
@@ -105,7 +110,7 @@ function Home() {
       </section>
 
       <section className="border-y border-border bg-bg-2 py-16 sm:py-24">
-        <div className="wrap grid items-end gap-8 lg:grid-cols-[0.7fr_1.3fr]">
+        <div className="wrap flex items-end justify-between gap-6">
           <div>
             <Kicker>Field notes</Kicker>
             <Display className="mt-2">Look closer.</Display>
@@ -115,21 +120,30 @@ function Home() {
               zoo.
             </Lede>
           </div>
-          <div className="grid grid-cols-3 gap-3">
-            {LOOK_CLOSER.map((photo) => (
-              <div
-                key={photo.src}
-                className="group border border-border bg-card transition-[border-color] duration-fast ease-out-smooth hover:border-brass"
-              >
-                <SpecimenPhoto
-                  src={photo.src}
-                  alt={photo.alt}
-                  caption={photo.caption}
-                  className="aspect-[4/5]"
-                />
-              </div>
-            ))}
-          </div>
+          <p className="hidden shrink-0 pb-1 font-ui text-kicker font-bold uppercase tracking-kicker text-fg-soft sm:block">
+            Drag to scroll →
+          </p>
+        </div>
+        <div
+          className="look-closer wrap mt-8 flex snap-x snap-mandatory gap-3 overflow-x-auto pb-4"
+          role="list"
+          aria-label="Photographs of animals on the floor"
+        >
+          {LOOK_CLOSER.map((photo, index) => (
+            <div
+              key={photo.src}
+              role="listitem"
+              className="group w-[14rem] shrink-0 snap-start border border-border bg-card transition-[border-color] duration-fast ease-out-smooth hover:border-brass sm:w-[16rem]"
+            >
+              <SpecimenPhoto
+                src={photo.src}
+                alt={photo.alt}
+                caption={photo.caption}
+                className="aspect-[4/5]"
+                eager={index === 0}
+              />
+            </div>
+          ))}
         </div>
       </section>
 

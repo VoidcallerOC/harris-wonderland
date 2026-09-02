@@ -133,6 +133,21 @@
     animation: ken 28s ease-in-out infinite alternate;
   }
 
+  .look-closer {
+    scrollbar-width: thin;
+    scrollbar-color: color-mix(in oklab, var(--color-brass) 55%, transparent) transparent;
+    -webkit-overflow-scrolling: touch;
+  }
+  .look-closer::-webkit-scrollbar {
+    height: 6px;
+  }
+  .look-closer::-webkit-scrollbar-thumb {
+    background: color-mix(in oklab, var(--color-brass) 55%, transparent);
+  }
+  .look-closer::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
   @media (max-width: 767px) {
     .hero-ken {
       animation: none;
