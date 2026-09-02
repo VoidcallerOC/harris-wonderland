@@ -35,11 +35,6 @@ const LOOK_CLOSER = [
     caption: "Color study",
   },
   {
-    src: "/images/drive-hero.jpg",
-    alt: "Chameleon showing blue and green at Harris in Wonderland",
-    caption: "Blue hour",
-  },
-  {
     src: "/images/drive-poison-frog.jpg",
     alt: "Blue poison dart frog at Harris in Wonderland",
     caption: "Warning colors",
@@ -120,7 +115,7 @@ function Home() {
               zoo.
             </Lede>
           </div>
-          <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
+          <div className="grid grid-cols-3 gap-3">
             {LOOK_CLOSER.map((photo) => (
               <div
                 key={photo.src}

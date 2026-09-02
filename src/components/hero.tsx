@@ -24,6 +24,12 @@ const HERO_FRAMES: HeroFrame[] = [
     position: "object-[28%_48%] md:object-center",
   },
   {
+    // No care sheet of its own — a floor showpiece, so the alt is literal.
+    src: "/images/drive-hero.jpg",
+    alt: "Chameleon on the floor at Harris in Wonderland",
+    caption: "Chameleon · on the floor · Route 44",
+  },
+  {
     src: "/images/ball-python.jpg",
     alt: speciesById("ball-python")!.alt,
     caption: "Ball python · captive-bred · Route 44",
