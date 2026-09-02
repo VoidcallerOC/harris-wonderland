@@ -14,14 +14,14 @@ type HeroFrame = {
   position?: string;
 };
 
-// The looking glass fades between the animals on the floor. Day gecko first —
-// it stays the poster — then a rotating cast of what Harris actually keeps.
+// The looking glass fades between the animals on the floor. Adam shop chameleon
+// first as the poster, then a rotating cast of what Harris actually keeps.
 const HERO_FRAMES: HeroFrame[] = [
   {
-    src: "/images/hero.jpg",
-    alt: speciesById("giant-day-gecko")!.alt,
-    caption: "Giant day gecko · looking glass · Route 44",
-    position: "object-[28%_48%] md:object-center",
+    src: "/images/adam/hero.svg",
+    alt: "Panther chameleon in foliage at Harris in Wonderland, Canton CT",
+    caption: "Panther chameleon · looking glass · Route 44",
+    position: "object-center",
   },
   {
     src: "/images/ball-python.jpg",
@@ -29,12 +29,10 @@ const HERO_FRAMES: HeroFrame[] = [
     caption: "Ball python · captive-bred · Route 44",
   },
   {
-    src: "/images/case-lizards.jpg",
-    alt: speciesById("frilled-lizard")!.alt,
-    caption: "Frilled lizard · on the floor · Route 44",
-    // Portrait shot, head up top-left — pull the crop up so the desktop
-    // (wide) frame keeps the head instead of centering on the body.
-    position: "object-[42%_18%]",
+    src: "/images/adam/lizard-green-turquoise.svg",
+    alt: "Bright green turquoise lizard on bromeliad at Harris in Wonderland",
+    caption: "Lizards on the floor · Route 44",
+    position: "object-[42%_28%]",
   },
   {
     src: "/images/redfoot.jpg",
@@ -42,7 +40,7 @@ const HERO_FRAMES: HeroFrame[] = [
     caption: "Red-foot tortoise · captive-bred · Route 44",
   },
   {
-    src: "/images/case-amphibians.jpg",
+    src: "/images/adam/frog-red-eyed.svg",
     alt: speciesById("red-eyed")!.alt,
     caption: "Red-eyed tree frog · damp room · Route 44",
   },
