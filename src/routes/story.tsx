@@ -37,8 +37,8 @@ function StoryPage() {
             </Lede>
           </div>
           <SpecimenPhoto
-            src="/images/hero.jpg"
-            alt="Giant day gecko at Harris in Wonderland"
+            src="/images/adam/hero.svg"
+            alt="Panther chameleon at Harris in Wonderland"
             caption="Looking glass · Canton"
             className="aspect-[4/3]"
             eager
