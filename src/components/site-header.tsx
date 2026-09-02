@@ -61,11 +61,11 @@ export function SiteHeader() {
             height={192}
             className="size-11 shrink-0 rounded-full ring-1 ring-brass/50 sm:size-12"
           />
-          <span className="hidden sm:block">
-            <span className="block whitespace-nowrap font-display text-lg font-semibold italic leading-none sm:text-xl">
+          <span className="block min-w-0">
+            <span className="block whitespace-nowrap font-display text-base font-semibold italic leading-none sm:text-xl">
               Harris in Wonderland
             </span>
-            <span className="mt-1 block font-ui text-kicker font-bold uppercase tracking-kicker text-brass">
+            <span className="mt-1 hidden font-ui text-kicker font-bold uppercase tracking-kicker text-brass sm:block">
               Canton
             </span>
           </span>
