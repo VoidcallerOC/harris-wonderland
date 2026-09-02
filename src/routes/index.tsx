@@ -26,6 +26,26 @@ const CASES = [
   SPECIES.find((s) => s.id === "red-eyed")!,
 ];
 
+// Owner-supplied photographs of animals on the floor that do not have their own
+// care sheet — a color-and-detail showcase, not a species claim.
+const LOOK_CLOSER = [
+  {
+    src: "/images/drive-color-chameleon.jpg",
+    alt: "Chameleon in full color at Harris in Wonderland",
+    caption: "Color study",
+  },
+  {
+    src: "/images/drive-poison-frog.jpg",
+    alt: "Blue poison dart frog at Harris in Wonderland",
+    caption: "Warning colors",
+  },
+  {
+    src: "/images/drive-gecko.jpg",
+    alt: "Gecko eye at Harris in Wonderland",
+    caption: "Eye to eye",
+  },
+];
+
 function Home() {
   const catalog = Route.useLoaderData();
 
@@ -81,6 +101,35 @@ function Home() {
               <ArrowRight />
             </Link>
           </Button>
+        </div>
+      </section>
+
+      <section className="border-y border-border bg-bg-2 py-16 sm:py-24">
+        <div className="wrap grid items-end gap-8 lg:grid-cols-[0.7fr_1.3fr]">
+          <div>
+            <Kicker>Field notes</Kicker>
+            <Display className="mt-2">Look closer.</Display>
+            <Lede className="mt-4">
+              The collection rewards a second glance: color, texture, tiny feet, watchful
+              eyes. These are the animals that make the front room feel like a small-scale
+              zoo.
+            </Lede>
+          </div>
+          <div className="grid grid-cols-3 gap-3">
+            {LOOK_CLOSER.map((photo) => (
+              <div
+                key={photo.src}
+                className="group border border-border bg-card transition-[border-color] duration-fast ease-out-smooth hover:border-brass"
+              >
+                <SpecimenPhoto
+                  src={photo.src}
+                  alt={photo.alt}
+                  caption={photo.caption}
+                  className="aspect-[4/5]"
+                />
+              </div>
+            ))}
+          </div>
         </div>
       </section>
 
