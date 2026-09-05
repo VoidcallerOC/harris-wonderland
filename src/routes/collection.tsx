@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { createFileRoute, Link } from "@tanstack/react-router";
+import { pageHead } from "@/lib/seo";
 import { SiteShell } from "@/components/site-shell";
 import { SITE } from "@/lib/site";
 import { CATEGORIES, filterSpecies } from "@/lib/species";
@@ -10,16 +11,13 @@ import { cn } from "@/lib/utils";
 
 export const Route = createFileRoute("/collection")({
   component: CollectionPage,
-  head: () => ({
-    meta: [
-      { title: "The collection — Harris in Wonderland" },
-      {
-        name: "description",
-        content:
-          "Snakes, lizards, tortoises, and amphibians at Harris in Wonderland in Canton, CT. Captive-bred stock, feeders, and care sheets.",
-      },
-    ],
-  }),
+  head: () =>
+    pageHead({
+      title: "The collection — Harris in Wonderland",
+      description:
+        "Snakes, lizards, tortoises, and amphibians at Harris in Wonderland in Canton, CT. Captive-bred stock, feeders, and care sheets.",
+      path: "/collection",
+    }),
 });
 
 function CollectionPage() {
