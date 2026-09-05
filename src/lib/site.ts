@@ -2,6 +2,8 @@ export const SITE = {
   name: "Harris in Wonderland",
   shortName: "Harris",
   tagline: "Reptile specialty shop, Canton CT",
+  origin: "https://harrisinwonderland.com",
+  ogImage: "/og.jpg",
   description:
     "A working herp collection in Canton — captive-bred snakes, lizards, frogs, and feeders, run by people who breed the animals and will talk you out of the wrong one.",
   address: {
@@ -175,37 +177,37 @@ export const MERCH_CATEGORIES = [
     role: "Apparel",
     title: "Tees & hoodies",
     body: "The wordmark and the snake-handle door on soft cotton. Keeper and kid sizes.",
-    ships: "Ships anywhere",
+    ships: "Coming soon",
   },
   {
     role: "Wall",
     title: "Prints & posters",
     body: "Looking-glass animals and specimen plates, framed for the reptile room.",
-    ships: "Ships anywhere",
+    ships: "Coming soon",
   },
   {
     role: "Small goods",
     title: "Stickers & patches",
     body: "Day gecko, ball python, the mark. The cheap way to fly the flag.",
-    ships: "Ships anywhere",
+    ships: "Coming soon",
   },
   {
     role: "Give it",
     title: "Gift cards",
     body: "For the person building a first enclosure. Any amount, spend in store or online.",
-    ships: "Store & online",
+    ships: "Coming soon",
   },
   {
     role: "Drinkware",
     title: "Mugs & bottles",
     body: "Route 44 enamel. Coffee for the morning feed.",
-    ships: "Ships anywhere",
+    ships: "Coming soon",
   },
   {
     role: "Keepers",
     title: "Hats",
     body: "Low-profile shop caps. The Saturday feeder-run uniform.",
-    ships: "Ships anywhere",
+    ships: "Coming soon",
   },
 ] as const;
 
