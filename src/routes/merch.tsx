@@ -1,4 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { pageHead } from "@/lib/seo";
 import { SiteShell } from "@/components/site-shell";
 import { ArrowUpRight } from "lucide-react";
 import { MERCH_CATEGORIES, SITE } from "@/lib/site";
@@ -7,16 +8,13 @@ import { Kicker, Display, Lede } from "@/components/type";
 
 export const Route = createFileRoute("/merch")({
   component: MerchPage,
-  head: () => ({
-    meta: [
-      { title: "Merch — Harris in Wonderland" },
-      {
-        name: "description",
-        content:
-          "Harris in Wonderland apparel, prints, and shop merch. Ships anywhere, or pick up in Canton, CT.",
-      },
-    ],
-  }),
+  head: () =>
+    pageHead({
+      title: "Merch — Harris in Wonderland",
+      description:
+        "Harris in Wonderland apparel, prints, and shop merch — coming soon. Pickup in Canton, CT, or ask Adam when the first drop lands.",
+      path: "/merch",
+    }),
 });
 
 function MerchPage() {
@@ -31,7 +29,7 @@ function MerchPage() {
           </Display>
           <Lede className="mt-5">
             Apparel, prints, and shop marks for the people who drive to Canton on purpose.
-            Ships anywhere, or grab it at the counter.
+            Not for sale yet — email Adam when you want first word.
           </Lede>
         </div>
       </section>
