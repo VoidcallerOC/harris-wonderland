@@ -1,4 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { pageHead } from "@/lib/seo";
 import { SiteShell } from "@/components/site-shell";
 import { Phone } from "lucide-react";
 import { RENTAL_EVENTS, SITE } from "@/lib/site";
@@ -8,16 +9,13 @@ import { Kicker, Display, Lede } from "@/components/type";
 
 export const Route = createFileRoute("/rentals")({
   component: RentalsPage,
-  head: () => ({
-    meta: [
-      { title: "Animal Rentals — Harris in Wonderland, Canton CT" },
-      {
-        name: "description",
-        content:
-          "Rent Harris in Wonderland animals for birthday parties, photoshoots, film and TV productions, and educational programs across Connecticut. Keeper-handled. Request an event and a date.",
-      },
-    ],
-  }),
+  head: () =>
+    pageHead({
+      title: "Animal Rentals — Harris in Wonderland, Canton CT",
+      description:
+        "Rent Harris in Wonderland animals for birthday parties, photoshoots, film and TV productions, and educational programs across Connecticut. Keeper-handled. Request an event and a date.",
+      path: "/rentals",
+    }),
 });
 
 const STEPS = [
