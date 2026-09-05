@@ -73,10 +73,10 @@ export function SiteHeader() {
 
         <div className="flex shrink-0 items-center gap-2 sm:gap-3">
           <OpenBadge className="hidden md:inline-flex" />
-          <Button asChild size="sm" variant="ghost" className="hidden md:inline-flex">
-            <a href={SITE.phones.shop.href}>
+          <Button asChild size="sm" variant="ghost" className="inline-flex">
+            <a href={SITE.phones.shop.href} aria-label={`Call the shop at ${SITE.phones.shop.display}`}>
               <Phone />
-              Call
+              <span className="hidden sm:inline">Call</span>
             </a>
           </Button>
           <button
