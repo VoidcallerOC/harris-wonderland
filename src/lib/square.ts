@@ -124,7 +124,18 @@ export function isColubrid(product: SquareProduct) {
   );
 }
 
+export function isPlaceholderName(name: string) {
+  const n = name.trim();
+  return !n || /^\d+$/.test(n) || /^sku[:\s-]/i.test(n);
+}
+
+export function isListableProduct(product: SquareProduct) {
+  if (isPlaceholderName(product.name)) return false;
+  return true;
+}
+
 export function matchesFilter(product: SquareProduct, filter: ShopFilter) {
+  if (!isListableProduct(product)) return false;
   if (filter === "all") return true;
   const cats = product.categories.join(" ").toLowerCase();
   const name = product.name.toLowerCase();
@@ -180,6 +191,21 @@ export function stripHtml(value: string) {
     .replace(/"/g, '"')
     .replace(/\s+/g, " ")
     .trim();
+}
+
+export function publicDescription(product: SquareProduct) {
+  const raw = stripHtml(product.description);
+  if (!raw) return "";
+  const title = product.name.toLowerCase();
+  const titleMale = /\bmale\b/.test(title);
+  const titleFemale = /\bfemale\b/.test(title);
+  if (titleMale && /\bfemale\b/.test(raw.toLowerCase()) && !titleFemale) {
+    return raw.replace(/\bfemale\b/gi, "male");
+  }
+  if (titleFemale && /\bmale\b/.test(raw.toLowerCase()) && !titleMale) {
+    return raw.replace(/\bmale\b/gi, "female");
+  }
+  return raw;
 }
 
 export function splitProductName(name: string) {
