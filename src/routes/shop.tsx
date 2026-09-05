@@ -1,4 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { pageHead } from "@/lib/seo";
 import { SiteShell } from "@/components/site-shell";
 import { ShopFloor } from "@/components/shop-floor";
 import { getSquareCatalog } from "@/lib/square-api";
@@ -11,16 +12,13 @@ export const Route = createFileRoute("/shop")({
   }),
   loader: () => getSquareCatalog(),
   component: ShopPage,
-  head: () => ({
-    meta: [
-      { title: "Shop the rack — Harris in Wonderland" },
-      {
-        name: "description",
-        content:
-          "Live Square inventory from Harris in Wonderland in Canton, CT. Snakes, lizards, feeders, and husbandry — pickup at 364 Albany Turnpike.",
-      },
-    ],
-  }),
+  head: () =>
+    pageHead({
+      title: "Shop the rack — Harris in Wonderland",
+      description:
+        "Live Square inventory from Harris in Wonderland in Canton, CT. Snakes, lizards, feeders, and husbandry — pickup at 364 Albany Turnpike.",
+      path: "/shop",
+    }),
 });
 
 function ShopPage() {
