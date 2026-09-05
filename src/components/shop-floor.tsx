@@ -15,6 +15,7 @@ import {
   productImage,
   skuCartName,
   splitProductName,
+  publicDescription,
   type CatalogPayload,
   type ShopFilter,
   type SquareProduct,
@@ -63,8 +64,8 @@ function ProductCard({
       <div className="flex flex-1 flex-col p-4">
         {kind ? <Kicker>{kind}</Kicker> : feeder ? <Kicker>Feeder</Kicker> : null}
         <h3 className="mt-1 font-display text-card italic text-ticket">{title}</h3>
-        {product.description ? (
-          <p className="mt-2 line-clamp-2 text-sm text-muted-foreground">{product.description}</p>
+        {publicDescription(product) ? (
+          <p className="mt-2 line-clamp-2 text-sm text-muted-foreground">{publicDescription(product)}</p>
         ) : null}
         {packs.length > 1 ? (
           <label className="mt-3 grid gap-2">
@@ -195,23 +196,29 @@ export function ShopFloor({
   lede = "Live Square inventory. Animals and feeders ring through Harris’s Square account — pickup at 364 Albany Turnpike.",
   headingAs = "h2",
   focusId,
+  tease,
 }: {
   catalog: CatalogPayload;
   heading?: string;
   lede?: string;
   headingAs?: "h1" | "h2";
   focusId?: string;
+  tease?: number;
 }) {
   const [filter, setFilter] = useState<ShopFilter>(focusId ? "all" : "animals");
   const items = useMemo(() => {
     const list = catalog.products.filter((p) => matchesFilter(p, filter));
-    return [...list].sort((a, b) => {
+    const sorted = [...list].sort((a, b) => {
       const aBuy = canBuy(a) ? 0 : 1;
       const bBuy = canBuy(b) ? 0 : 1;
       if (aBuy !== bBuy) return aBuy - bBuy;
       return (a.priceLow ?? 0) - (b.priceLow ?? 0);
     });
-  }, [catalog.products, filter]);
+    if (tease && !focusId) {
+      return sorted.filter(canBuy).slice(0, tease);
+    }
+    return sorted;
+  }, [catalog.products, filter, tease, focusId]);
   const available = items.filter(canBuy).length;
 
   useEffect(() => {
