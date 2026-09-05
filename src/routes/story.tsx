@@ -1,4 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
+import { pageHead } from "@/lib/seo";
 import { SiteShell } from "@/components/site-shell";
 import { SITE, KEEPERS, TIMELINE, REMEMBERING } from "@/lib/site";
 import { Button } from "@/components/ui/button";
@@ -7,16 +8,13 @@ import { Kicker, Display, Lede } from "@/components/type";
 
 export const Route = createFileRoute("/story")({
   component: StoryPage,
-  head: () => ({
-    meta: [
-      { title: "The Harris story — Harris in Wonderland" },
-      {
-        name: "description",
-        content:
-          "From a house of tanks in West Hartford to the snake-handle door on Route 44. Seth, Adam, and Ashlee.",
-      },
-    ],
-  }),
+  head: () =>
+    pageHead({
+      title: "The Harris story — Harris in Wonderland",
+      description:
+        "From a house of tanks in West Hartford to the snake-handle door on Route 44. Seth, Adam, and Ashlee.",
+      path: "/story",
+    }),
 });
 
 function StoryPage() {
