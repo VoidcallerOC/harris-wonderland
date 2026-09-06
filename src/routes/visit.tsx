@@ -30,8 +30,7 @@ function VisitPage() {
             Come in through the snake-handle door.
           </Display>
           <Lede className="mt-5">
-            {SITE.landmark} Dedicated parking, accessible entry. The collection lives in
-            the room, not on this site.
+            {SITE.landmark} Dedicated parking, accessible entry.
           </Lede>
         </div>
       </section>

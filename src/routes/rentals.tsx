@@ -58,7 +58,7 @@ function RentalsPage() {
             <Button asChild variant="ghost">
               <a href={SITE.phones.booking.href}>
                 <Phone />
-                Booking line {SITE.phones.booking.display}
+                Second line {SITE.phones.booking.display}
               </a>
             </Button>
           </div>

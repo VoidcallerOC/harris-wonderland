@@ -30,8 +30,9 @@ function StoryPage() {
             </Display>
             <Lede className="mt-5">
               Biology, not scripts. A fish-keeper who taught high-school science, a
-              herpetologist with field time on four continents, and the person who will
-              tell you the showy animal is the wrong one.
+              herpetologist with field seasons in Costa Rica, Thailand, Australia, South
+              Africa, and the Bahamas, and the person who will tell you which animal
+              actually fits your setup.
             </Lede>
           </div>
           <SpecimenPhoto
@@ -69,10 +70,10 @@ function StoryPage() {
               through it.
             </p>
             <p>
-              Many animals are captive-bred here or by local people the shop will stand
-              behind. They raise their own feeders for the collection and sell the surplus
-              — frozen rodents, crickets, and roaches are why regulars drive even when they
-              are not adding a new animal.
+              Many of the animals are captive-bred here or by local keepers we stand
+              behind. We raise our own feeders for the collection and sell the surplus —
+              frozen rodents, crickets, and roaches are why regulars drive out even when
+              they are not adding a new animal.
             </p>
           </div>
         </div>

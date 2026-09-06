@@ -38,10 +38,10 @@ export function SocialFloor() {
         <div className="flex flex-wrap items-end justify-between gap-4">
           <div className="min-w-0">
             <Kicker>Floor notes</Kicker>
-            <Display className="mt-2">What they posted this week.</Display>
+            <Display className="mt-2">From the shop’s Instagram.</Display>
             <Lede className="mt-4 max-w-2xl">
-              Live from the shop Instagram — pink-tongues in, tortoise hides back,
-              electric blues.
+              New arrivals, restocks, and setups, posted from the floor. Follow along for
+              what lands between visits.
             </Lede>
           </div>
           <a

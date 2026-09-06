@@ -148,9 +148,9 @@ export function FeederLocker({
         {embedded ? null : (
           <>
             <Kicker>Pickup feeders</Kicker>
-            <Display className="mt-2">The locker, priced.</Display>
+            <Display className="mt-2">Feeders, priced.</Display>
             <Lede className="mt-4">
-              They raise their own feeders for the animals on the rack and sell the surplus.
+              We raise our own feeders for the animals on the rack and sell the surplus.
               Frozen mice, dubia, mealworms, and the odd cup regulars drive for. Pickup at
               364 Albany Turnpike — nothing ships.
             </Lede>

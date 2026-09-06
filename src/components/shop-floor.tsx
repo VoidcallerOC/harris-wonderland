@@ -192,8 +192,8 @@ function RackRail({ children }: { children: ReactNode }) {
 
 export function ShopFloor({
   catalog,
-  heading = "The rack, priced.",
-  lede = "Live Square inventory. Animals and feeders ring through Harris’s Square account — pickup at 364 Albany Turnpike.",
+  heading = "Animals for sale now.",
+  lede = "Live from our Square inventory — animals and feeders, priced. Pickup at 364 Albany Turnpike.",
   headingAs = "h2",
   focusId,
   tease,

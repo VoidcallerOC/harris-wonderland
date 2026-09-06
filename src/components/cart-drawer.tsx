@@ -260,8 +260,8 @@ export function CartDrawer() {
             <div className="px-5 py-8">
               <p className="font-display text-3xl italic text-ticket">Paid through Square.</p>
               <p className="mt-3 text-muted-foreground">
-                They will pull the ticket when you come through the snake-handle door. Frozen stays
-                frozen. Live cups go home the same day.
+                We will have your order ready when you come through the snake-handle door. Frozen
+                stays frozen. Live cups go home the same day.
               </p>
               <Button className="mt-6" onClick={() => setOpen(false)}>
                 Back to the rack
