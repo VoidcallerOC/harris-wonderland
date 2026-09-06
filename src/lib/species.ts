@@ -60,7 +60,7 @@ export const SPECIES: Species[] = [
     heat: "75–82°F ambient, a warm end near 85°F.",
     humidity: "40–50%. Dry is safer than damp.",
     diet: "Frozen/thawed mice. Regulars buy feeders here even when they are not adding an animal.",
-    note: "Corn or king. That is the first ticket.",
+    note: "Corn or king. That is the first snake.",
   },
   {
     id: "kingsnake",
@@ -71,7 +71,7 @@ export const SPECIES: Species[] = [
     floor: false,
     image: "/images/kingsnake.jpg",
     alt: "Mexican black kingsnake at Harris in Wonderland",
-    blurb: "The other first snake they name. Mexican blacks, bananas, high-white cal kings when they have them.",
+    blurb: "The other first snake we point people to. Mexican blacks, bananas, high-white cal kings when we have them.",
     handling: "Confident eaters, usually calm once they know the room. Still a snake — secure the lid.",
     enclosure: "Escape-proof. Hide, water, aspen or similar. They will find a gap.",
     heat: "Warm end the mid-80s. Cool side the mid-70s.",
@@ -94,7 +94,7 @@ export const SPECIES: Species[] = [
     heat: "Warm end the high 80s to 90. Cool side the upper 70s. A thermostat is not optional.",
     humidity: "Varies by species — rainbows want more moisture than a Dumeril's. Ask which one is on the rack.",
     diet: "Frozen/thawed rodents, sized honestly. They get expensive if you skip the math.",
-    note: "Ball pythons and boas are the next step, not the first ticket if you have never held a snake.",
+    note: "Ball pythons and boas are the next step, not the first snake if you have never held one.",
   },
   {
     id: "hognose",
@@ -302,7 +302,7 @@ export const CHOOSER = [
     id: "snake",
     role: "Snakes",
     title: "Corn or king",
-    body: "Easy to keep clean, easy to feed, a hide and a heat source. Ball pythons and boas are the next step, not the first ticket if you have never held a snake.",
+    body: "Easy to keep clean, easy to feed, a hide and a heat source. Ball pythons and boas are the next step, not the first snake if you have never held one.",
     speciesId: "corn-snake",
   },
   {

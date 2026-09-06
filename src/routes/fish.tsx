@@ -20,7 +20,7 @@ export const Route = createFileRoute("/fish")({
 const ROOMS = [
   {
     title: "Freshwater",
-    body: "Livebearers — guppies, platies, swordtails — plus African cichlids, discus, angelfish, knife fish, goldfish and koi. Community fish and the unglamorous livestock that keeps a tank stable. Ask if you want a named fish ordered in.",
+    body: "Livebearers — guppies, platies, swordtails — plus African cichlids, discus, angelfish, knife fish, goldfish and koi. Community fish and the unglamorous livestock that keeps a tank stable. Ask us to order in something specific.",
   },
   {
     title: "Marine & coral",
@@ -28,22 +28,22 @@ const ROOMS = [
   },
   {
     title: "Ponds",
-    body: "Limited garden-pond installs each year. Streams, waterfalls, bogs, fountains, lights. They will stock it with fish and plants and stay on the line for size, placement, wildlife, and maintenance. Free estimate.",
+    body: "Limited garden-pond installs each year. Streams, waterfalls, bogs, fountains, lights. We stock it with fish and plants and stay with you on size, placement, wildlife, and maintenance. Free estimate.",
   },
 ];
 
 const SIDE = [
   {
     title: "Sugar gliders",
-    body: "Marsupials, not flying squirrels. Ten to twelve years if you do it honestly. Cage, nest, and diet before money moves. They sell a complete glider diet — not an impulse pet, and not a weekend hamster.",
+    body: "Marsupials, not flying squirrels, and ten to twelve years with good care. Cage, nest, and diet sorted before one goes home. We stock a complete glider diet.",
   },
   {
     title: "Other mammals",
-    body: "Rotating, when they have them. The center of gravity is still herps.",
+    body: "Rotating, when we have them. Call ahead for anything specific.",
   },
   {
     title: "Birds",
-    body: "They can order birds. They no longer keep them on the floor. Call before you drive for a named bird.",
+    body: "We can order birds, but we no longer keep them on the floor. Call before you drive out for a specific bird.",
   },
 ];
 
@@ -61,14 +61,14 @@ function FishPage() {
         />
         <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(11,10,9,0.2)_0%,rgba(11,10,9,0.88)_100%)]" />
         <div className="relative wrap flex min-h-[52svh] flex-col justify-end pb-12 pt-24">
-          <Kicker>Secondary room</Kicker>
+          <Kicker>Freshwater · marine · ponds</Kicker>
           <Display as="h1" className="mt-2 text-display">
             Fish room
           </Display>
           <Lede className="mt-4">
             Harris started as a fish house. Canton still runs freshwater and a dedicated
-            marine room, a limited number of pond installs, and sugar gliders when they
-            have them. The front of the shop is the herp collection.
+            marine room, a limited number of pond installs, and sugar gliders when we have
+            them.
           </Lede>
         </div>
       </section>
@@ -91,7 +91,7 @@ function FishPage() {
             <Display className="mt-2">A limited number each year.</Display>
             <p className="mt-4 max-w-[46ch] text-fg-soft">
               Done properly, a koi or goldfish pond is an ecosystem, not a hole with a
-              pump. Harris will talk size, placement, construction, wildlife, and
+              pump. We will talk through size, placement, construction, wildlife, and
               maintenance, then stock it. Call for a free estimate on the property.
             </p>
             <div className="mt-6 flex flex-wrap gap-3">

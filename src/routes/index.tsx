@@ -34,26 +34,26 @@ const CASES = [
 ];
 
 const LOOK_CLOSER = [
-  { src: "/images/drive-hero.jpg", alt: "Blue-and-green chameleon at Harris in Wonderland", caption: "Blue hour" },
-  { src: "/images/floor/gecko-bark.jpg", alt: "Giant gecko on cork bark at Harris in Wonderland", caption: "Old growth" },
-  { src: "/images/drive-poison-frog.jpg", alt: "Blue poison dart frog at Harris in Wonderland", caption: "Warning colors" },
-  { src: "/images/floor/day-geckos-hand.jpg", alt: "Two day geckos held at Harris in Wonderland", caption: "Regulars" },
-  { src: "/images/drive-color-chameleon.jpg", alt: "Panther chameleon in full color at Harris in Wonderland", caption: "Color study" },
-  { src: "/images/floor/gecko-chainmail.jpg", alt: "Gecko close-up at Harris in Wonderland", caption: "Chainmail" },
-  { src: "/images/floor/dart-frog-yellow.jpg", alt: "Yellow poison dart frog at Harris in Wonderland", caption: "Yellowback" },
-  { src: "/images/floor/gecko-seafoam.jpg", alt: "Teal gecko at Harris in Wonderland", caption: "Seafoam" },
-  { src: "/images/drive-frog.jpg", alt: "White's tree frog at Harris in Wonderland", caption: "Sleepy" },
-  { src: "/images/floor/gecko-pocket.jpg", alt: "Young gecko on a fingertip at Harris in Wonderland", caption: "Pocket-sized" },
-  { src: "/images/floor/chameleon-casque.jpg", alt: "Chameleon portrait at Harris in Wonderland", caption: "Casque" },
-  { src: "/images/floor/day-gecko-neon.jpg", alt: "Day gecko on a plant at Harris in Wonderland", caption: "Neon" },
-  { src: "/images/drive-blue-frog.jpg", alt: "Dyeing poison dart frog at Harris in Wonderland", caption: "Bold as paint" },
-  { src: "/images/floor/gecko-emerald.jpg", alt: "Green gecko at Harris in Wonderland", caption: "Emerald" },
-  { src: "/images/floor/dart-frog-rose.jpg", alt: "Black-and-pink poison frog at Harris in Wonderland", caption: "Ink & rose" },
-  { src: "/images/floor/gecko-hatchling.jpg", alt: "Hatchling gecko on a fingertip at Harris in Wonderland", caption: "Fresh out" },
-  { src: "/images/drive-gecko.jpg", alt: "Gecko eye at Harris in Wonderland", caption: "Eye to eye" },
-  { src: "/images/floor/day-gecko-hand.jpg", alt: "Day gecko on a keeper's hand at Harris in Wonderland", caption: "Hitchhiker" },
-  { src: "/images/floor/lizard-arrival.jpg", alt: "Patterned lizard at Harris in Wonderland", caption: "New arrival" },
-  { src: "/images/floor/gecko-ghost.jpg", alt: "Pale gecko on a leaf at Harris in Wonderland", caption: "Ghost" },
+  { src: "/images/drive-hero.jpg", alt: "Blue-and-green chameleon at Harris in Wonderland", caption: "Chameleon" },
+  { src: "/images/floor/gecko-bark.jpg", alt: "Giant gecko on cork bark at Harris in Wonderland", caption: "Giant gecko" },
+  { src: "/images/drive-poison-frog.jpg", alt: "Blue poison dart frog at Harris in Wonderland", caption: "Blue poison dart frog" },
+  { src: "/images/floor/day-geckos-hand.jpg", alt: "Two day geckos held at Harris in Wonderland", caption: "Day geckos" },
+  { src: "/images/drive-color-chameleon.jpg", alt: "Panther chameleon in full color at Harris in Wonderland", caption: "Panther chameleon" },
+  { src: "/images/floor/gecko-chainmail.jpg", alt: "Gecko close-up at Harris in Wonderland", caption: "Gecko, up close" },
+  { src: "/images/floor/dart-frog-yellow.jpg", alt: "Yellow poison dart frog at Harris in Wonderland", caption: "Yellow poison dart frog" },
+  { src: "/images/floor/gecko-seafoam.jpg", alt: "Teal gecko at Harris in Wonderland", caption: "Teal gecko" },
+  { src: "/images/drive-frog.jpg", alt: "White's tree frog at Harris in Wonderland", caption: "White’s tree frog" },
+  { src: "/images/floor/gecko-pocket.jpg", alt: "Young gecko on a fingertip at Harris in Wonderland", caption: "Young gecko" },
+  { src: "/images/floor/chameleon-casque.jpg", alt: "Chameleon portrait at Harris in Wonderland", caption: "Chameleon portrait" },
+  { src: "/images/floor/day-gecko-neon.jpg", alt: "Day gecko on a plant at Harris in Wonderland", caption: "Day gecko" },
+  { src: "/images/drive-blue-frog.jpg", alt: "Dyeing poison dart frog at Harris in Wonderland", caption: "Dyeing poison dart frog" },
+  { src: "/images/floor/gecko-emerald.jpg", alt: "Green gecko at Harris in Wonderland", caption: "Green gecko" },
+  { src: "/images/floor/dart-frog-rose.jpg", alt: "Black-and-pink poison frog at Harris in Wonderland", caption: "Black-and-pink poison frog" },
+  { src: "/images/floor/gecko-hatchling.jpg", alt: "Hatchling gecko on a fingertip at Harris in Wonderland", caption: "Hatchling gecko" },
+  { src: "/images/drive-gecko.jpg", alt: "Gecko eye at Harris in Wonderland", caption: "Gecko eye" },
+  { src: "/images/floor/day-gecko-hand.jpg", alt: "Day gecko on a keeper's hand at Harris in Wonderland", caption: "Day gecko in hand" },
+  { src: "/images/floor/lizard-arrival.jpg", alt: "Patterned lizard at Harris in Wonderland", caption: "Patterned lizard" },
+  { src: "/images/floor/gecko-ghost.jpg", alt: "Pale gecko on a leaf at Harris in Wonderland", caption: "Pale gecko" },
 ];
 
 function Home() {
@@ -68,11 +68,10 @@ function Home() {
         <div className="wrap grid items-start gap-8 lg:grid-cols-[1.15fr_0.85fr]">
           <div>
             <Kicker>Exhibits</Kicker>
-            <Display className="mt-2">Cases on the floor.</Display>
+            <Display className="mt-2">What is in the cases.</Display>
             <Lede className="mt-4">
-              Walk-ins call it a small-scale zoo. Morphs you will not find at a chain,
-              feeders priced for people who actually feed, staff who shrink a ticket if
-              the setup is not ready.
+              Morphs you will not find at a chain, feeders priced for people who actually
+              feed, and staff who will hold an animal until your setup is ready.
             </Lede>
           </div>
           <HoursTicket />
@@ -114,12 +113,11 @@ function Home() {
       <section className="border-y border-border bg-bg-2 py-16 sm:py-24">
         <div className="wrap flex items-end justify-between gap-6">
           <div>
-            <Kicker>Field notes</Kicker>
+            <Kicker>The floor</Kicker>
             <Display className="mt-2">Look closer.</Display>
             <Lede className="mt-4">
               The collection rewards a second glance: color, texture, tiny feet, watchful
-              eyes. These are the animals that make the front room feel like a small-scale
-              zoo.
+              eyes. These are the animals people come back to stand in front of.
             </Lede>
           </div>
           <p className="hidden shrink-0 pb-1 font-ui text-kicker font-bold uppercase tracking-kicker text-fg-soft sm:block">
@@ -156,9 +154,8 @@ function Home() {
           <Kicker>Beginner chooser</Kicker>
           <Display className="mt-2">The right first animal.</Display>
           <Lede className="mt-4 mb-8">
-            Harris has always steered first-timers toward hardy species. Corn or king. Leo
-            or beardie. Red-foot. White’s. Ask at the counter before you fall for the
-            showy one.
+            We steer first-timers toward hardy species. Corn or king. Leo or beardie.
+            Red-foot. White’s. Ask at the counter before you commit to the showy one.
           </Lede>
           <BeginnerChooser />
         </div>
@@ -166,7 +163,7 @@ function Home() {
       <section className="border-y border-border bg-bg-2 py-16 sm:py-24">
         <div className="wrap grid gap-10 lg:grid-cols-2">
           <div>
-            <Kicker>House rules</Kicker>
+            <Kicker>How we sell</Kicker>
             <Display className="mt-2">Husbandry first.</Display>
             <div className="mt-5 space-y-4 text-fg-soft">
               <p>
@@ -176,11 +173,9 @@ function Home() {
                 high-school biology for 31 years.
               </p>
               <p>
-                Many animals are captive-bred here or by local people the shop will stand
-                behind. They raise their own feeders for the collection and sell the surplus.
-                Frozen rodents, crickets, and roaches are why regulars drive even when they
-                are not adding a new animal. Ask for the care sheet that matches the animal
-                on the rack.
+                Many of the animals are captive-bred here or by local keepers we stand
+                behind, and we raise our own feeders for the collection. Ask for the care
+                sheet that matches the animal you are taking home.
               </p>
             </div>
           </div>
@@ -188,15 +183,15 @@ function Home() {
             <article className="border border-border bg-card p-5">
               <h3 className="font-display text-card italic text-ticket">Honest setups</h3>
               <p className="mt-2 text-sm text-muted-foreground">
-                Enclosures, heat, UV, substrate, plants, food. They size the tub before
-                they size the receipt.
+                Enclosures, heat, UV, substrate, plants, food. We size the enclosure
+                before the total.
               </p>
             </article>
             <article className="border border-border bg-card p-5">
               <h3 className="font-display text-card italic text-ticket">Rare on the wall</h3>
               <p className="mt-2 text-sm text-muted-foreground">
-                Reviewers mention animals they have never seen at a chain — morphs, odd
-                colubrids, well-kept giants.
+                Morphs, odd colubrids, and well-kept giants you will not find in a chain
+                store.
               </p>
             </article>
             <article className="border border-border bg-card p-5">

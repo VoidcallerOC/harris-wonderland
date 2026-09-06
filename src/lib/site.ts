@@ -5,7 +5,7 @@ export const SITE = {
   origin: "https://harrisinwonderland.com",
   ogImage: "/og.jpg",
   description:
-    "A working herp collection in Canton — captive-bred snakes, lizards, frogs, and feeders, run by people who breed the animals and will talk you out of the wrong one.",
+    "A working herp collection in Canton — captive-bred snakes, lizards, frogs, and feeders, kept by the people who breed them. Come in and we will help you pick the right animal for your setup.",
   address: {
     street: "364 Albany Turnpike",
     city: "Canton",
@@ -31,7 +31,7 @@ export const SITE = {
   links: {
     collection: "https://my-hiwsite-6573.square.site/available-animals",
     feeders: "https://my-hiwsite-6573.square.site/shop/feeders-for-pick-up/17",
-    // TODO: swap to the Square merch category URL once Adam stocks it.
+    // Points at the Square store root until there is a merch category to link to.
     merch: "https://my-hiwsite-6573.square.site",
     maps: "https://maps.google.com/?q=364+Albany+Turnpike+Canton+CT+06019",
     mapsEmbed:
@@ -85,7 +85,7 @@ export const KEEPERS = [
   {
     role: "Husbandry",
     name: "Ashlee Carlson",
-    bio: "The person keepers ask whether that animal is actually a good fit. She will shrink a ticket if the setup is not ready.",
+    bio: "The person to ask whether an animal is actually a good fit for you. If your setup is not ready, she will sell you the setup first and hold the animal.",
   },
 ] as const;
 
@@ -104,7 +104,7 @@ export const TIMELINE = [
   {
     when: "1999 · Bloomfield",
     title: "Reopened next to a bar",
-    body: "October 1999: four hundred square feet adjacent to a bar, then 1,800 next door once the smoke got old. Six years of the modern shop.",
+    body: "October 1999: four hundred square feet next to a bar, then 1,800 square feet next door as the collection grew. Six years of the modern shop.",
   },
   {
     when: "Avon",
@@ -169,45 +169,6 @@ export const RENTAL_EVENTS = [
     role: "Production",
     title: "Corporate, expo & events",
     body: "Booth draws, product launches, festivals, team events — a rack of animals people line up to meet.",
-  },
-] as const;
-
-export const MERCH_CATEGORIES = [
-  {
-    role: "Apparel",
-    title: "Tees & hoodies",
-    body: "The wordmark and the snake-handle door on soft cotton. Keeper and kid sizes.",
-    ships: "Coming soon",
-  },
-  {
-    role: "Wall",
-    title: "Prints & posters",
-    body: "Looking-glass animals and specimen plates, framed for the reptile room.",
-    ships: "Coming soon",
-  },
-  {
-    role: "Small goods",
-    title: "Stickers & patches",
-    body: "Day gecko, ball python, the mark. The cheap way to fly the flag.",
-    ships: "Coming soon",
-  },
-  {
-    role: "Give it",
-    title: "Gift cards",
-    body: "For the person building a first enclosure. Any amount, spend in store or online.",
-    ships: "Coming soon",
-  },
-  {
-    role: "Drinkware",
-    title: "Mugs & bottles",
-    body: "Route 44 enamel. Coffee for the morning feed.",
-    ships: "Coming soon",
-  },
-  {
-    role: "Keepers",
-    title: "Hats",
-    body: "Low-profile shop caps. The Saturday feeder-run uniform.",
-    ships: "Coming soon",
   },
 ] as const;
 

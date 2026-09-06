@@ -103,9 +103,9 @@ export function Hero() {
             Snakes, lizards, frogs · Canton, Connecticut
           </p>
           <Lede className="mt-5">
-            Not a pet aisle. A working herp collection — snakes, lizards, frogs, and
-            feeders — run by people who breed the animals and will talk you out of the
-            wrong one.
+            A working herp collection — snakes, lizards, frogs, and feeders — kept by the
+            people who breed them. Come in and we will help you pick the right one for
+            your setup.
           </Lede>
           <div className="mt-7 flex max-w-full flex-wrap gap-3">
             <Button asChild>

@@ -54,9 +54,9 @@ function CarePage() {
             The sheet matches the animal on the rack.
           </Display>
           <Lede className="mt-5">
-            Harris does not publish a generic PDF. These notes get you to the right
-            questions. Ask at the counter for the sheet that goes with the animal you are
-            taking home.
+            Real husbandry for the animals we actually sell — heat, humidity, enclosure,
+            diet. When you take one home we go through it again at the counter, with the
+            sheet for your animal.
           </Lede>
         </div>
       </section>
@@ -178,8 +178,8 @@ function Essentials({
         What goes home with a {speciesName.toLowerCase()}.
       </h3>
       <p className="mt-3 max-w-2xl text-sm text-fg-soft">
-        Setup SKUs from the Canton Square rack — not a generic kit. Pickup at 364 Albany
-        Turnpike.
+        The actual items we stock for this animal, not a generic starter kit. Pickup at
+        364 Albany Turnpike.
       </p>
       <ul className="mt-6 grid gap-2 sm:grid-cols-2">
         {items.map((item) => {

@@ -2,8 +2,15 @@ import { createRootRoute, HeadContent, Outlet, Scripts } from "@tanstack/react-r
 import { AuthProvider } from "@/lib/auth/provider";
 import { PreviewHostBridge } from "@/components/preview-host-bridge";
 import { SITE } from "@/lib/site";
+import { HOURS } from "@/lib/hours";
 import { pageHead } from "@/lib/seo";
 import appCss from "../styles.css?url";
+
+function clockTime(hour: number) {
+  const h = Math.floor(hour);
+  const m = Math.round((hour - h) * 60);
+  return `${String(h).padStart(2, "0")}:${String(m).padStart(2, "0")}`;
+}
 
 const jsonLd = {
   "@context": "https://schema.org",
@@ -23,14 +30,13 @@ const jsonLd = {
   url: `${SITE.origin}/`,
   hasMap: SITE.links.maps,
   sameAs: [SITE.links.facebook, SITE.links.instagram],
-  openingHoursSpecification: [
-    { "@type": "OpeningHoursSpecification", dayOfWeek: "Tuesday", opens: "10:00", closes: "19:30" },
-    { "@type": "OpeningHoursSpecification", dayOfWeek: "Wednesday", opens: "10:00", closes: "19:30" },
-    { "@type": "OpeningHoursSpecification", dayOfWeek: "Thursday", opens: "10:00", closes: "19:30" },
-    { "@type": "OpeningHoursSpecification", dayOfWeek: "Friday", opens: "10:00", closes: "19:00" },
-    { "@type": "OpeningHoursSpecification", dayOfWeek: "Saturday", opens: "10:00", closes: "18:00" },
-    { "@type": "OpeningHoursSpecification", dayOfWeek: "Sunday", opens: "12:00", closes: "16:00" },
-  ],
+  // Derived from HOURS so the shop ticket and Google can never disagree.
+  openingHoursSpecification: HOURS.filter((row) => !row.closed).map((row) => ({
+    "@type": "OpeningHoursSpecification",
+    dayOfWeek: row.name,
+    opens: clockTime(row.open),
+    closes: clockTime(row.close),
+  })),
 };
 
 export const Route = createRootRoute({

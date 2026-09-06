@@ -36,8 +36,8 @@ function CollectionPage() {
           <Lede className="mt-5">
             Ball pythons and designer morphs, corns, kings, western hognose, milks,
             boas, beardies, geckos, red-foots, darts, pacmans. Many are captive-bred here
-            or locally. The named animal lives in Canton — this page is the map, not the
-            inventory.
+            or locally. What is on the rack changes weekly — the shop page is live from
+            our Square inventory.
           </Lede>
           <div className="mt-7 flex flex-wrap gap-3">
             <Button asChild>
@@ -86,11 +86,11 @@ function CollectionPage() {
         <div className="wrap grid gap-8 lg:grid-cols-2">
           <div>
             <Kicker>How to buy here</Kicker>
-            <Display className="mt-2">The right animal. Not the biggest ticket.</Display>
+            <Display className="mt-2">The right animal, not the biggest sale.</Display>
             <p className="mt-4 max-w-[46ch] text-fg-soft">
-              Staff will shrink a purchase if the enclosure or the feeder size is wrong.
-              Bring photos of your setup. If you do not have one, start with the box and
-              the heat.
+              If the enclosure or the feeder size is wrong we will say so, and sell you the
+              setup first. Bring photos of what you have. If you do not have one yet, start
+              with the box and the heat.
             </p>
           </div>
           <div className="border border-border bg-card p-6">
