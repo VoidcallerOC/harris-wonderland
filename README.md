@@ -2,7 +2,7 @@
 
 Canton, Connecticut reptile shop — live Square catalog, on-site cart, pickup on Route 44.
 
-**This repository (`VoidcallerOC/harris-wonderland`) is the current production application.** [`VoidcallerOC/Harris`](https://github.com/VoidcallerOC/Harris) is the reusable client-site template and legacy source. Changes intended for the live Canton site belong here.
+**This repository (`VoidcallerOC/harris-wonderland`) is the current production Harris site.** [`VoidcallerOC/Harris`](https://github.com/VoidcallerOC/Harris) is the reusable template. Changes intended for the live Canton site belong here.
 
 ## Square checkout
 
