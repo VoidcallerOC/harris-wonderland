@@ -21,6 +21,7 @@ export type AuditEntry = {
 
 type RoleRow = { user_id: string; role: RbacRole };
 type UserRow = { id: string; name: string; email: string; role: RbacRole | null; role_updated_at: string | null };
+type CurrentUserRow = { id: string; name: string; email: string; image: string | null };
 type AuditRow = {
   id: string;
   actor_user_id: string;
@@ -62,6 +63,11 @@ export async function getRoleForUser(sql: Sql, userId: string): Promise<RbacRole
   return rows[0]?.role ?? null;
 }
 
+export async function getCurrentUser(sql: Sql, userId: string): Promise<CurrentUserRow | null> {
+  const rows = await sql.query<CurrentUserRow>(`select id, name, email, image from "user" where id = $1`, [userId]);
+  return rows[0] ?? null;
+}
+
 export async function getCurrentPermissions(sql: Sql, userId: string): Promise<readonly Permission[]> {
   return permissionsForRole(await getRoleForUser(sql, userId));
 }
@@ -75,6 +81,9 @@ export async function requirePermissionForUser(sql: Sql, userId: string, permiss
     throw new ForbiddenError(`Permission required: ${permission}`);
   }
 }
+
+export const hasPermission = hasPermissionForUser;
+export const requirePermission = requirePermissionForUser;
 
 export async function requireRoleForUser(sql: Sql, userId: string, role: RbacRole): Promise<void> {
   if ((await getRoleForUser(sql, userId)) !== role) throw new ForbiddenError(`Role required: ${role}`);
