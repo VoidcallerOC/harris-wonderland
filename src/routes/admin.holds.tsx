@@ -40,6 +40,11 @@ function HoldRow({ hold, onUpdate }: { hold: SugarGliderHold; onUpdate: (hold: S
         <p>Balance: {formatMammalPrice(hold.balanceDueCents / 100)}</p>
         <p>Expires: {new Date(hold.holdExpiresAt).toLocaleString()}</p>
       </div>
+      <div className="mt-3 grid gap-1 text-xs font-ui uppercase tracking-kicker text-fg-soft sm:grid-cols-3">
+        <p>Full payment: {hold.fullPaymentStatus}</p>
+        <p>Deposit payment: {hold.depositPaymentStatus}</p>
+        <p>Balance payment: {hold.balancePaymentStatus}</p>
+      </div>
       {hold.notes ? <p className="mt-3 border-l-2 border-brass pl-3 text-sm text-muted-foreground">{hold.notes}</p> : null}
       <div className="mt-4 flex flex-wrap gap-2">
         {HOLD_STATUSES.filter((status) => status !== hold.status).map((status) => (
@@ -62,7 +67,7 @@ function AdminHoldsPage() {
         <div className="wrap">
           <Kicker>Harris administration</Kicker>
           <Display as="h1" className="mt-2 text-display">Sugar Glider holds.</Display>
-          <p className="mt-4 max-w-2xl text-fg-soft">Authenticated staff can review requests, confirm deposits outside this phase, and advance the lifecycle. Expired active holds are marked automatically whenever this page or a new request is opened.</p>
+          <p className="mt-4 max-w-2xl text-fg-soft">Authenticated staff can review requests, see Square payment states, and advance the lifecycle. Expired active holds are marked automatically whenever this page or a new request is opened.</p>
           <div className="mt-8 grid gap-4">
             {holds.length ? holds.map((hold) => <HoldRow key={hold.id} hold={hold} onUpdate={(updated) => setHolds((current) => current.map((item) => item.id === updated.id ? updated : item))} />) : <p className="border border-dashed border-border p-6 text-muted-foreground">No holds yet.</p>}
           </div>

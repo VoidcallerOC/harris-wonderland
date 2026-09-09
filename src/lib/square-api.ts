@@ -202,16 +202,104 @@ function cents(amount: number) {
   return Math.round(amount * 100);
 }
 
+export type SquareChargeResult = {
+  paymentId: string;
+  orderId: string | null;
+  status: "APPROVED" | "COMPLETED";
+};
+
+export async function chargeSquareCard(input: {
+  sourceId: string;
+  amountCents: number;
+  idempotencyKey: string;
+  buyerEmail: string;
+  note: string;
+}): Promise<SquareChargeResult> {
+  const token = process.env.SQUARE_ACCESS_TOKEN;
+  if (!token) throw new Error("Square payments are not configured.");
+  const response = await fetch("https://connect.squareup.com/v2/payments", {
+    method: "POST",
+    headers: {
+      Authorization: `Bearer ${token}`,
+      "Content-Type": "application/json",
+      "Square-Version": "2025-01-23",
+    },
+    body: JSON.stringify({
+      source_id: input.sourceId,
+      idempotency_key: input.idempotencyKey,
+      amount_money: { amount: input.amountCents, currency: "USD" },
+      location_id: process.env.SQUARE_LOCATION_ID || SQUARE.locationId,
+      buyer_email_address: input.buyerEmail,
+      note: input.note.slice(0, 500),
+      autocomplete: true,
+      customer_details: { customer_initiated: true, seller_keyed_in: false },
+    }),
+  });
+  const json = (await response.json()) as {
+    payment?: { id?: string; status?: string; order_id?: string };
+    errors?: Array<{ detail?: string }>;
+  };
+  if (!response.ok || !json.payment?.id) {
+    throw new Error(json.errors?.[0]?.detail || "Square declined the card.");
+  }
+  if (json.payment.status !== "COMPLETED" && json.payment.status !== "APPROVED") {
+    throw new Error(`Square returned an unexpected payment status: ${json.payment.status ?? "unknown"}.`);
+  }
+  return {
+    paymentId: json.payment.id,
+    orderId: json.payment.order_id ?? null,
+    status: json.payment.status,
+  };
+}
+
+export async function refundSquarePayment(paymentId: string, amountCents: number, idempotencyKey: string) {
+  const token = process.env.SQUARE_ACCESS_TOKEN;
+  if (!token) throw new Error("Square payments are not configured.");
+  const response = await fetch("https://connect.squareup.com/v2/refunds", {
+    method: "POST",
+    headers: {
+      Authorization: `Bearer ${token}`,
+      "Content-Type": "application/json",
+      "Square-Version": "2025-01-23",
+    },
+    body: JSON.stringify({
+      idempotency_key: idempotencyKey,
+      payment_id: paymentId,
+      amount_money: { amount: amountCents, currency: "USD" },
+      reason: "Hold became ineligible before payment could be recorded",
+    }),
+  });
+  if (!response.ok) throw new Error("Square payment succeeded but the automatic refund failed; reconcile this payment in Square.");
+}
+
 export const startSquareCheckout = createServerFn({ method: "POST" })
   .validator(CheckoutInput)
   .handler(async ({ data }) => {
-    const total = data.items.reduce((sum, item) => sum + item.price * item.qty, 0);
+    const catalog = await getSquareCatalog();
+    const items = data.items.map((item) => {
+      const product = catalog.products.find((candidate) =>
+        candidate.id === item.id || candidate.id === item.siteProductId || candidate.siteProductId === item.siteProductId,
+      );
+      const sku = product?.skus?.find((candidate) => candidate.id === item.id);
+      const authoritativePrice = sku?.price ?? product?.priceLow;
+      if (!product || authoritativePrice == null || authoritativePrice <= 0 || product.soldOut || sku?.soldOut) {
+        throw new Error("One of the items in your cart is no longer available at that price. Refresh and try again.");
+      }
+      return {
+        ...item,
+        name: sku ? `${product.name} · ${sku.name}` : product.name,
+        price: authoritativePrice,
+        url: product.url,
+        siteProductId: product.siteProductId,
+      };
+    });
+    const total = items.reduce((sum, item) => sum + item.price * item.qty, 0);
     const token = process.env.SQUARE_ACCESS_TOKEN;
     const locationId = process.env.SQUARE_LOCATION_ID || SQUARE.locationId;
     const note = [
       `Pickup · Harris in Wonderland · ${data.buyer.name} · ${data.buyer.phone}`,
       data.buyer.note?.trim(),
-      ...data.items.map((item) => `${item.qty}× ${item.name}`),
+      ...items.map((item) => `${item.qty}× ${item.name}`),
     ]
       .filter(Boolean)
       .join(" · ");
@@ -253,7 +341,7 @@ export const startSquareCheckout = createServerFn({ method: "POST" })
           idempotency_key: crypto.randomUUID(),
           order: {
             location_id: locationId,
-            line_items: data.items.map((item) => ({
+            line_items: items.map((item) => ({
               name: item.name.slice(0, 120),
               quantity: String(item.qty),
               base_price_money: { amount: cents(item.price), currency: "USD" },
@@ -283,6 +371,6 @@ export const startSquareCheckout = createServerFn({ method: "POST" })
     return {
       mode: "square-online" as const,
       total,
-      urls: data.items.map((item) => item.url),
+      urls: items.map((item) => item.url),
     };
   });

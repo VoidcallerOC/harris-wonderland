@@ -1,5 +1,5 @@
 import { Link } from "@tanstack/react-router";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { ArrowRight, Phone } from "lucide-react";
 import { SITE } from "@/lib/site";
 import { formatMammalPrice, mammalDeposit, MAMMAL_AVAILABILITY, SUGAR_GLIDERS, type MammalListing } from "@/lib/mammals";
@@ -7,6 +7,9 @@ import { Button } from "@/components/ui/button";
 import { Kicker, Display, Lede } from "@/components/type";
 import { cn } from "@/lib/utils";
 import { createSugarGliderHold, type SugarGliderHold } from "@/lib/sugar-glider-holds";
+import { HOLD_PAYMENT_MODES, paySugarGliderHold, type HoldPaymentMode } from "@/lib/sugar-glider-holds";
+import { getSquarePayConfig } from "@/lib/square-api";
+import { SquarePay } from "@/components/square-pay";
 
 function HoldRequestForm({ listing, onComplete }: { listing: MammalListing; onComplete: (hold: SugarGliderHold) => void }) {
   const [error, setError] = useState<string | null>(null);
@@ -45,13 +48,54 @@ function HoldRequestForm({ listing, onComplete }: { listing: MammalListing; onCo
   );
 }
 
-function HoldConfirmation({ hold }: { hold: SugarGliderHold }) {
+function HoldPaymentPanel({ hold, onPaid }: { hold: SugarGliderHold; onPaid: (hold: SugarGliderHold) => void }) {
+  const [mode, setMode] = useState<HoldPaymentMode>(hold.depositAmountCents > 0 ? "deposit" : "full");
+  const [config, setConfig] = useState<{ applicationId: string | null; locationId: string; canCharge: boolean } | null>(null);
+  const [error, setError] = useState<string | null>(null);
+  const storageKey = `hiw-hold-payment:${hold.id}:${mode}`;
+  const [idempotencyKey, setIdempotencyKey] = useState(() => {
+    if (typeof window === "undefined") return crypto.randomUUID();
+    return window.sessionStorage.getItem(storageKey) ?? crypto.randomUUID();
+  });
+  useEffect(() => { void getSquarePayConfig().then(setConfig); }, []);
+  useEffect(() => {
+    if (typeof window !== "undefined") window.sessionStorage.setItem(storageKey, idempotencyKey);
+  }, [idempotencyKey, storageKey]);
+  const amount = mode === "full" ? hold.totalAmountCents : mode === "deposit" ? hold.depositAmountCents : hold.balanceDueCents;
+  const alreadyPaid = mode === "full" ? hold.fullPaymentStatus === "succeeded" : mode === "deposit" ? hold.depositPaymentStatus === "succeeded" : hold.balancePaymentStatus === "succeeded";
+  if (alreadyPaid) return <p className="mt-4 text-sm text-moss">{mode === "full" ? "Paid in full." : mode === "deposit" ? "Deposit paid." : "Balance paid."}</p>;
+  return (
+    <div className="mt-4 border-t border-border pt-4">
+      <p className="font-ui text-kicker font-bold uppercase tracking-kicker text-brass">Payment options</p>
+      <div className="mt-2 flex flex-wrap gap-2">
+        {HOLD_PAYMENT_MODES.filter((candidate) => candidate !== "balance" || hold.depositPaymentStatus === "succeeded").map((candidate) => (
+          <Button key={candidate} type="button" size="sm" variant={mode === candidate ? "brass" : "ghost"} onClick={() => { setMode(candidate); const nextKey = crypto.randomUUID(); setIdempotencyKey(nextKey); window.sessionStorage.setItem(`hiw-hold-payment:${hold.id}:${candidate}`, nextKey); setError(null); }}>
+            {candidate === "full" ? "Pay in full" : candidate === "deposit" ? "Pay 50% deposit" : "Pay remaining balance"}
+          </Button>
+        ))}
+      </div>
+      <p className="mt-2 text-sm text-fg-soft">{mode === "full" ? "Full amount" : mode === "deposit" ? "50% deposit" : "Remaining balance"}: {formatMammalPrice(amount / 100)}</p>
+      {config?.canCharge && config.applicationId ? (
+        <div className="mt-3"><SquarePay applicationId={config.applicationId} locationId={config.locationId} onToken={async (sourceId) => {
+          setError(null);
+          const result = await paySugarGliderHold({ data: { holdId: hold.id, mode, sourceId, idempotencyKey } });
+          window.sessionStorage.removeItem(storageKey);
+          onPaid(result.hold ?? hold);
+        }} onError={(message) => { setError(message); const nextKey = crypto.randomUUID(); setIdempotencyKey(nextKey); window.sessionStorage.setItem(storageKey, nextKey); }} /></div>
+      ) : <p className="mt-3 text-sm text-muted-foreground">Square card payments are not configured in this preview. Call the shop to arrange payment.</p>}
+      {error ? <p role="alert" className="mt-2 text-sm text-ember-2">{error}</p> : null}
+    </div>
+  );
+}
+
+function HoldConfirmation({ hold, onPaid }: { hold: SugarGliderHold; onPaid: (hold: SugarGliderHold) => void }) {
   return (
     <div role="status" className="mt-4 border border-moss bg-moss/10 p-4">
       <p className="font-ui text-kicker font-bold uppercase tracking-kicker text-moss">Request received</p>
       <h4 className="mt-1 font-display text-xl italic text-ticket">Reference {hold.id.slice(0, 8).toUpperCase()}</h4>
       <p className="mt-2 text-sm text-fg-soft">We saved your request for {hold.animalDescription}. The shop will contact you at {hold.customerEmail} to review the animal, deposit, and next steps.</p>
       <p className="mt-2 text-xs text-muted-foreground">This request expires {new Date(hold.holdExpiresAt).toLocaleString()} if the shop does not confirm it.</p>
+      <HoldPaymentPanel hold={hold} onPaid={onPaid} />
     </div>
   );
 }
@@ -102,7 +146,7 @@ function SugarGliderCard({ listing }: { listing: MammalListing }) {
             </Button>
           ) : null}
         </div>
-        {confirmation ? <HoldConfirmation hold={confirmation} /> : requesting ? <HoldRequestForm listing={listing} onComplete={setConfirmation} /> : null}
+        {confirmation ? <HoldConfirmation hold={confirmation} onPaid={setConfirmation} /> : requesting ? <HoldRequestForm listing={listing} onComplete={setConfirmation} /> : null}
       </div>
     </article>
   );
