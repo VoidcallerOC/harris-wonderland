@@ -13,6 +13,7 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as CareRouteImport } from './routes/care'
 import { Route as CollectionRouteImport } from './routes/collection'
 import { Route as FishRouteImport } from './routes/fish'
+import { Route as LoginRouteImport } from './routes/login'
 import { Route as MerchRouteImport } from './routes/merch'
 import { Route as RentalsRouteImport } from './routes/rentals'
 import { Route as ShopRouteImport } from './routes/shop'
@@ -27,6 +28,7 @@ import { Route as AdminSettingsRouteImport } from './routes/admin.settings'
 import { Route as AdminUsersRouteImport } from './routes/admin.users'
 import { Route as CollectionIndexRouteImport } from './routes/collection.index'
 import { Route as CollectionCategoryRouteImport } from './routes/collection.$category'
+import { Route as ApiAuthSplatRouteImport } from './routes/api/auth/$'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -46,6 +48,11 @@ const CollectionRoute = CollectionRouteImport.update({
 const FishRoute = FishRouteImport.update({
   id: '/fish',
   path: '/fish',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LoginRoute = LoginRouteImport.update({
+  id: '/login',
+  path: '/login',
   getParentRoute: () => rootRouteImport,
 } as any)
 const MerchRoute = MerchRouteImport.update({
@@ -118,12 +125,18 @@ const CollectionCategoryRoute = CollectionCategoryRouteImport.update({
   path: '/$category',
   getParentRoute: () => CollectionRoute,
 } as any)
+const ApiAuthSplatRoute = ApiAuthSplatRouteImport.update({
+  id: '/api/auth/$',
+  path: '/api/auth/$',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/care': typeof CareRoute
   '/collection': typeof CollectionRouteWithChildren
   '/fish': typeof FishRoute
+  '/login': typeof LoginRoute
   '/merch': typeof MerchRoute
   '/rentals': typeof RentalsRoute
   '/shop': typeof ShopRoute
@@ -138,11 +151,13 @@ export interface FileRoutesByFullPath {
   '/collection/$category': typeof CollectionCategoryRoute
   '/admin/': typeof AdminIndexRoute
   '/collection/': typeof CollectionIndexRoute
+  '/api/auth/$': typeof ApiAuthSplatRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/care': typeof CareRoute
   '/fish': typeof FishRoute
+  '/login': typeof LoginRoute
   '/merch': typeof MerchRoute
   '/rentals': typeof RentalsRoute
   '/shop': typeof ShopRoute
@@ -157,6 +172,7 @@ export interface FileRoutesByTo {
   '/collection/$category': typeof CollectionCategoryRoute
   '/admin': typeof AdminIndexRoute
   '/collection': typeof CollectionIndexRoute
+  '/api/auth/$': typeof ApiAuthSplatRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -164,6 +180,7 @@ export interface FileRoutesById {
   '/care': typeof CareRoute
   '/collection': typeof CollectionRouteWithChildren
   '/fish': typeof FishRoute
+  '/login': typeof LoginRoute
   '/merch': typeof MerchRoute
   '/rentals': typeof RentalsRoute
   '/shop': typeof ShopRoute
@@ -178,6 +195,7 @@ export interface FileRoutesById {
   '/collection/$category': typeof CollectionCategoryRoute
   '/admin/': typeof AdminIndexRoute
   '/collection/': typeof CollectionIndexRoute
+  '/api/auth/$': typeof ApiAuthSplatRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -186,6 +204,7 @@ export interface FileRouteTypes {
     | '/care'
     | '/collection'
     | '/fish'
+    | '/login'
     | '/merch'
     | '/rentals'
     | '/shop'
@@ -200,11 +219,13 @@ export interface FileRouteTypes {
     | '/collection/$category'
     | '/admin/'
     | '/collection/'
+    | '/api/auth/$'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
     | '/care'
     | '/fish'
+    | '/login'
     | '/merch'
     | '/rentals'
     | '/shop'
@@ -219,12 +240,14 @@ export interface FileRouteTypes {
     | '/collection/$category'
     | '/admin'
     | '/collection'
+    | '/api/auth/$'
   id:
     | '__root__'
     | '/'
     | '/care'
     | '/collection'
     | '/fish'
+    | '/login'
     | '/merch'
     | '/rentals'
     | '/shop'
@@ -239,6 +262,7 @@ export interface FileRouteTypes {
     | '/collection/$category'
     | '/admin/'
     | '/collection/'
+    | '/api/auth/$'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -246,6 +270,7 @@ export interface RootRouteChildren {
   CareRoute: typeof CareRoute
   CollectionRoute: typeof CollectionRouteWithChildren
   FishRoute: typeof FishRoute
+  LoginRoute: typeof LoginRoute
   MerchRoute: typeof MerchRoute
   RentalsRoute: typeof RentalsRoute
   ShopRoute: typeof ShopRoute
@@ -258,6 +283,7 @@ export interface RootRouteChildren {
   AdminSettingsRoute: typeof AdminSettingsRoute
   AdminUsersRoute: typeof AdminUsersRoute
   AdminIndexRoute: typeof AdminIndexRoute
+  ApiAuthSplatRoute: typeof ApiAuthSplatRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -288,6 +314,13 @@ declare module '@tanstack/react-router' {
       path: '/fish'
       fullPath: '/fish'
       preLoaderRoute: typeof FishRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/login': {
+      id: '/login'
+      path: '/login'
+      fullPath: '/login'
+      preLoaderRoute: typeof LoginRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/merch': {
@@ -388,6 +421,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof CollectionCategoryRouteImport
       parentRoute: typeof CollectionRoute
     }
+    '/api/auth/$': {
+      id: '/api/auth/$'
+      path: '/api/auth/$'
+      fullPath: '/api/auth/$'
+      preLoaderRoute: typeof ApiAuthSplatRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -410,6 +450,7 @@ const rootRouteChildren: RootRouteChildren = {
   CareRoute: CareRoute,
   CollectionRoute: CollectionRouteWithChildren,
   FishRoute: FishRoute,
+  LoginRoute: LoginRoute,
   MerchRoute: MerchRoute,
   RentalsRoute: RentalsRoute,
   ShopRoute: ShopRoute,
@@ -422,6 +463,7 @@ const rootRouteChildren: RootRouteChildren = {
   AdminSettingsRoute: AdminSettingsRoute,
   AdminUsersRoute: AdminUsersRoute,
   AdminIndexRoute: AdminIndexRoute,
+  ApiAuthSplatRoute: ApiAuthSplatRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

@@ -1,10 +1,19 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, redirect } from "@tanstack/react-router";
 import { getAdminDashboard } from "@/lib/auth/rbac";
 import { AdminPanel, Can } from "@/components/admin/admin-panel";
 import { SiteShell } from "@/components/site-shell";
 
 export const Route = createFileRoute("/admin/")({
-  loader: () => getAdminDashboard(),
+  loader: async () => {
+    try {
+      return await getAdminDashboard();
+    } catch (error) {
+      if (error instanceof Error && error.message === "Unauthorized") {
+        throw redirect({ to: "/login" });
+      }
+      throw error;
+    }
+  },
   component: AdminDashboardPage,
 });
 
