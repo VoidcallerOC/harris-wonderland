@@ -148,7 +148,10 @@ async function expireStaleHolds(sql: Awaited<ReturnType<typeof getSql>>) {
     `update sugar_glider_holds
      set status = 'expired', updated_at = now()
      where status in ('requested', 'deposit_pending', 'held', 'ready')
-       and hold_expires_at <= now()`,
+       and hold_expires_at <= now()
+       and full_payment_status not in ('processing', 'succeeded')
+       and deposit_payment_status not in ('processing', 'succeeded')
+       and balance_payment_status not in ('processing', 'succeeded')`,
   );
 }
 
@@ -213,14 +216,14 @@ export const paySugarGliderHold = createServerFn({ method: "POST" })
     if (data.mode === "deposit" && hold.full_payment_status === "succeeded") throw new Error("This hold is already paid in full.");
     if (data.mode === "balance" && hold.deposit_payment_status !== "succeeded") throw new Error("The deposit must be completed before the balance can be paid.");
 
-    const existing = await sql.query<{ id: string; amount_cents: number; payment_mode: HoldPaymentMode; status: "pending" | "succeeded" | "failed"; square_payment_id: string | null }>(
-      `select id, amount_cents, payment_mode, status, square_payment_id from sugar_glider_payment_attempts where idempotency_key = $1`,
+    const existing = await sql.query<{ id: string; hold_id: string; amount_cents: number; payment_mode: HoldPaymentMode; status: "pending" | "succeeded" | "failed"; square_payment_id: string | null }>(
+      `select id, hold_id, amount_cents, payment_mode, status, square_payment_id from sugar_glider_payment_attempts where idempotency_key = $1`,
       [data.idempotencyKey],
     );
     let attemptId: string;
     if (existing[0]) {
       const attempt = existing[0];
-      if (attempt.payment_mode !== data.mode || Number(attempt.amount_cents) !== amountCents) throw new Error("This payment retry does not match the original amount.");
+      if (attempt.hold_id !== data.holdId || attempt.payment_mode !== data.mode || Number(attempt.amount_cents) !== amountCents) throw new Error("This payment retry does not match the original hold or amount.");
       if (attempt.status === "succeeded") return { ok: true as const, paymentId: attempt.square_payment_id };
       if (attempt.status === "failed") throw new Error("This payment attempt failed. Start a new attempt.");
       attemptId = attempt.id;
@@ -338,8 +341,22 @@ export const updateSugarGliderHold = createServerFn({ method: "POST" })
   .validator(AdminStatusInput)
   .handler(async ({ context, data }) => {
     const sql = await getSql();
-    const current = await sql.query<Pick<HoldDbRow, "status">>(`select status from sugar_glider_holds where id = $1`, [data.holdId]);
+    const current = await sql.query<Pick<HoldDbRow, "status" | "full_payment_status" | "deposit_payment_status" | "balance_payment_status">>(
+      `select status, full_payment_status, deposit_payment_status, balance_payment_status from sugar_glider_holds where id = $1`,
+      [data.holdId],
+    );
     if (!current[0]) throw new Error("Hold not found.");
+    const hasPaidOrProcessingPayment = [current[0].full_payment_status, current[0].deposit_payment_status, current[0].balance_payment_status]
+      .some((status) => status === "processing" || status === "succeeded");
+    if ((data.status === "cancelled" || data.status === "expired") && hasPaidOrProcessingPayment) {
+      throw new Error("This hold has a payment in progress or completed. Reconcile or refund the payment before releasing it.");
+    }
+    if (data.status === "held" && current[0].deposit_payment_status !== "succeeded" && current[0].full_payment_status !== "succeeded") {
+      throw new Error("A deposit or full payment is required before marking this hold held.");
+    }
+    if (data.status === "completed" && current[0].full_payment_status !== "succeeded" && !(current[0].deposit_payment_status === "succeeded" && current[0].balance_payment_status === "succeeded")) {
+      throw new Error("Full payment or deposit plus balance payment is required before completing this hold.");
+    }
     const override = data.status === "expired" || current[0].status === "expired" || current[0].status === "cancelled";
     await requirePermissionForUser(sql, context.userId, holdTransitionPermission(data.status, override));
     await expireStaleHolds(sql);

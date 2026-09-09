@@ -1,10 +1,11 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { getAdminDashboard, listAuditLog } from "@/lib/auth/rbac";
+import { requireAdminRoute } from "@/lib/auth/admin-route";
 import { AdminPanel } from "@/components/admin/admin-panel";
 import { SiteShell } from "@/components/site-shell";
 
 export const Route = createFileRoute("/admin/audit-log")({
-  loader: async () => ({ access: await getAdminDashboard(), entries: await listAuditLog() }),
+  loader: () => requireAdminRoute(async () => ({ access: await getAdminDashboard(), entries: await listAuditLog() })),
   component: AuditLogPage,
 });
 

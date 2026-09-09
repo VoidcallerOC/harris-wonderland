@@ -2,6 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
 import { listSugarGliderHolds, updateSugarGliderHold, HOLD_STATUSES, type HoldStatus, type SugarGliderHold } from "@/lib/sugar-glider-holds";
 import { getAdminDashboard } from "@/lib/auth/rbac";
+import { requireAdminRoute } from "@/lib/auth/admin-route";
 import { AdminPanel, type AdminAccess } from "@/components/admin/admin-panel";
 import { SiteShell } from "@/components/site-shell";
 import { Kicker } from "@/components/type";
@@ -9,7 +10,7 @@ import { Button } from "@/components/ui/button";
 import { formatMammalPrice } from "@/lib/mammals";
 
 export const Route = createFileRoute("/admin/holds")({
-  loader: async () => ({ access: await getAdminDashboard(), holds: await listSugarGliderHolds() }),
+  loader: () => requireAdminRoute(async () => ({ access: await getAdminDashboard(), holds: await listSugarGliderHolds() })),
   component: AdminHoldsPage,
 });
 

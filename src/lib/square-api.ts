@@ -4,6 +4,7 @@ import fallbackJson from "./square-catalog.json";
 import fallbackSkus from "./feeder-skus.json";
 import { withFeederSkus } from "./feeders";
 import { SQUARE, isFeeder, stripHtml, type CatalogPayload, type SquareProduct, type SquareSku } from "./square";
+import { SITE } from "./site";
 
 type FallbackFile = {
   fetchedAt: string;
@@ -198,6 +199,19 @@ const CheckoutInput = z.object({
   sourceId: z.string().optional(),
 });
 
+export function isAllowedCheckoutReturnUrl(value: string): boolean {
+  try {
+    const url = new URL(value);
+    return url.protocol === "https:" && url.origin === SITE.origin && url.pathname === "/shop" && url.searchParams.get("paid") === "1";
+  } catch {
+    return false;
+  }
+}
+
+export function isCompletedSquarePayment(status: string | undefined): status is "COMPLETED" {
+  return status === "COMPLETED";
+}
+
 function cents(amount: number) {
   return Math.round(amount * 100);
 }
@@ -242,7 +256,7 @@ export async function chargeSquareCard(input: {
   if (!response.ok || !json.payment?.id) {
     throw new Error(json.errors?.[0]?.detail || "Square declined the card.");
   }
-  if (json.payment.status !== "COMPLETED" && json.payment.status !== "APPROVED") {
+  if (!isCompletedSquarePayment(json.payment.status)) {
     throw new Error(`Square returned an unexpected payment status: ${json.payment.status ?? "unknown"}.`);
   }
   return {
@@ -275,6 +289,9 @@ export async function refundSquarePayment(paymentId: string, amountCents: number
 export const startSquareCheckout = createServerFn({ method: "POST" })
   .validator(CheckoutInput)
   .handler(async ({ data }) => {
+    if (!isAllowedCheckoutReturnUrl(data.returnUrl)) {
+      throw new Error("Checkout return URL is not allowed.");
+    }
     const catalog = await getSquareCatalog();
     const items = data.items.map((item) => {
       const product = catalog.products.find((candidate) =>
@@ -305,28 +322,14 @@ export const startSquareCheckout = createServerFn({ method: "POST" })
       .join(" · ");
 
     if (token && data.sourceId) {
-      const payment = await fetch("https://connect.squareup.com/v2/payments", {
-        method: "POST",
-        headers: {
-          Authorization: `Bearer ${token}`,
-          "Content-Type": "application/json",
-          "Square-Version": "2025-01-23",
-        },
-        body: JSON.stringify({
-          source_id: data.sourceId,
-          idempotency_key: crypto.randomUUID(),
-          amount_money: { amount: cents(total), currency: "USD" },
-          location_id: locationId,
-          buyer_email_address: data.buyer.email,
-          note,
-          autocomplete: true,
-        }),
+      const payment = await chargeSquareCard({
+        sourceId: data.sourceId,
+        amountCents: cents(total),
+        idempotencyKey: crypto.randomUUID(),
+        buyerEmail: data.buyer.email,
+        note,
       });
-      const json = (await payment.json()) as { payment?: { id?: string }; errors?: Array<{ detail?: string }> };
-      if (!payment.ok) {
-        throw new Error(json.errors?.[0]?.detail || "Square declined the card.");
-      }
-      return { mode: "charged" as const, paymentId: json.payment?.id ?? "ok", total };
+      return { mode: "charged" as const, paymentId: payment.paymentId, total };
     }
 
     if (token) {

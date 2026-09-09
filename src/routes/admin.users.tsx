@@ -1,12 +1,13 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
 import { assignRole, deleteAdminUser, getAdminDashboard, listAdminUsers, RBAC_ROLES } from "@/lib/auth/rbac";
+import { requireAdminRoute } from "@/lib/auth/admin-route";
 import { AdminPanel } from "@/components/admin/admin-panel";
 import { SiteShell } from "@/components/site-shell";
 import { Button } from "@/components/ui/button";
 
 export const Route = createFileRoute("/admin/users")({
-  loader: async () => ({ access: await getAdminDashboard(), users: await listAdminUsers() }),
+  loader: () => requireAdminRoute(async () => ({ access: await getAdminDashboard(), users: await listAdminUsers() })),
   component: AdminUsersPage,
 });
 
