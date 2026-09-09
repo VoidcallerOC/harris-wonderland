@@ -36,7 +36,8 @@ export type CatalogPayload = {
 
 import { ANIMAL_ROOT_CATEGORIES, ANIMAL_TAXONOMY, type AnimalCategoryId } from "@/lib/species";
 
-export type ShopFilter = "animals" | "pythons" | "colubrids" | "feeders" | "supplies" | "all" | AnimalCategoryId;
+export type ShopFilter =
+  "animals" | "pythons" | "colubrids" | "feeders" | "supplies" | "all" | AnimalCategoryId;
 
 export const SHOP_FILTERS: { id: ShopFilter; label: string }[] = [
   { id: "animals", label: "On the rack" },
@@ -107,9 +108,9 @@ function categoryDepth(category: AnimalCategoryId) {
 export function inventoryCategory(product: SquareProduct): AnimalCategoryId | undefined {
   if (isFeeder(product)) return undefined;
   const blob = blobOf(product);
-  return ANIMAL_TAXONOMY
-    .filter((category) => category.inventoryKeywords?.some((keyword) => blob.includes(keyword)))
-    .sort((a, b) => categoryDepth(b.id) - categoryDepth(a.id))[0]?.id;
+  return ANIMAL_TAXONOMY.filter((category) =>
+    category.inventoryKeywords?.some((keyword) => blob.includes(keyword)),
+  ).sort((a, b) => categoryDepth(b.id) - categoryDepth(a.id))[0]?.id;
 }
 
 function belongsToCategory(product: SquareProduct, categoryId: AnimalCategoryId) {
@@ -118,7 +119,9 @@ function belongsToCategory(product: SquareProduct, categoryId: AnimalCategoryId)
   let current = ANIMAL_TAXONOMY.find((category) => category.id === matched);
   while (current) {
     if (current.id === categoryId) return true;
-    current = current.parentId ? ANIMAL_TAXONOMY.find((category) => category.id === current?.parentId) : undefined;
+    current = current.parentId
+      ? ANIMAL_TAXONOMY.find((category) => category.id === current?.parentId)
+      : undefined;
   }
   return false;
 }
@@ -141,11 +144,17 @@ export function matchesFilter(product: SquareProduct, filter: ShopFilter) {
   if (filter === "animals") return isAnimal(product);
   if (filter === "pythons") {
     if (!isAnimal(product)) return false;
-    return cats.includes("python") || name.includes("python") || cats.includes("boa") || name.startsWith("boa");
+    return (
+      cats.includes("python") ||
+      name.includes("python") ||
+      cats.includes("boa") ||
+      name.startsWith("boa")
+    );
   }
   if (filter === "colubrids") return isColubrid(product);
   if (filter === "feeders") return isFeeder(product);
-  if (ANIMAL_TAXONOMY.some((category) => category.id === filter)) return belongsToCategory(product, filter as AnimalCategoryId);
+  if (ANIMAL_TAXONOMY.some((category) => category.id === filter))
+    return belongsToCategory(product, filter as AnimalCategoryId);
   return !isAnimal(product) && !isFeeder(product);
 }
 
@@ -238,46 +247,6 @@ export function skuCartName(product: SquareProduct, sku: SquareSku) {
   return n;
 }
 
-const BALL_PYTHON_MORPH_PHOTOS: { test: RegExp; src: string }[] = [
-  { test: /banana.*enchi.*pied|banana.*pied/i, src: "/images/morphs/banana-enchi-pied.jpg" },
-  { test: /pastel.*clown.*super\s*enchi|super\s*enchi.*clown/i, src: "/images/morphs/pastel-clown-super-enchi.jpg" },
-  { test: /coral\s*glow/i, src: "/images/morphs/coral-glow-specter-yb.jpg" },
-  { test: /leopard.*pinstripe|pinstripe.*leopard/i, src: "/images/morphs/leopard-pinstripe-clean.jpg" },
-  { test: /blackhead|black\s*head/i, src: "/images/morphs/blackhead-mojave.jpg" },
-  { test: /fire.*calico|calico.*fire/i, src: "/images/morphs/fire-calico.jpg" },
-  { test: /fire.*yellow\s*belly|yellow\s*belly.*fire/i, src: "/images/morphs/fire-yellowbelly.jpg" },
-  { test: /orange\s*dream.*enchi|enchi.*orange\s*dream/i, src: "/images/morphs/orange-dream-enchi.jpg" },
-  { test: /mojave.*yellow\s*belly|yellow\s*belly.*mojave/i, src: "/images/morphs/mojave-yellowbelly.jpg" },
-  { test: /\bpastel\b/i, src: "/images/morphs/pastel.jpg" },
-];
-
-function ballPythonMorphPhoto(name: string) {
-  const rest = name.replace(/^ball\s*python\s*[-–]\s*\d+\s*/i, "").trim();
-  if (!rest) return null;
-  for (const row of BALL_PYTHON_MORPH_PHOTOS) {
-    if (row.test.test(rest)) return row.src;
-  }
-  return null;
-}
-
-function pickBurmesePhoto(text: string) {
-  if (/(?<!(?:het|heterozygous)(?:\s+for)?\s+)\balbino\b/.test(text) || /\bpearl\b/.test(text)) {
-    return "/images/morphs/burmese-albino.jpg";
-  }
-  if (/\bhypo\b/.test(text)) return "/images/morphs/burmese-hypo.jpg";
-  if (/\bnormal\b/.test(text)) return "/images/morphs/burmese-normal.jpg";
-  return null;
-}
-
-function burmeseMorphPhoto(product: SquareProduct) {
-  const named = product.name.replace(/^burmese\s*python\s*[-–]\s*\d+\s*/i, "").trim().toLowerCase();
-  return (
-    pickBurmesePhoto(named) ??
-    pickBurmesePhoto(stripHtml(product.description).toLowerCase()) ??
-    "/images/morphs/burmese-normal.jpg"
-  );
-}
-
 function supplyImage(product: SquareProduct) {
   const blob = blobOf(product);
   if (blob.includes("vine")) return "/images/supplies/enclosure.jpg";
@@ -289,9 +258,11 @@ function supplyImage(product: SquareProduct) {
   if (blob.includes("basking")) return "/images/supplies/basking.jpg";
   if (blob.includes("daylight")) return "/images/supplies/daylight-blue.jpg";
   if (blob.includes("t5") && blob.includes("5.0")) return "/images/supplies/t5-5.jpg";
-  if (blob.includes("t8") || (blob.includes("10.0") && blob.includes("uvb"))) return "/images/supplies/t8-10.jpg";
+  if (blob.includes("t8") || (blob.includes("10.0") && blob.includes("uvb")))
+    return "/images/supplies/t8-10.jpg";
   if (blob.includes("ceramic") || blob.includes("emitter")) return "/images/supplies/ceramic.jpg";
-  if (blob.includes("heat mat") || blob.includes("heat pad")) return "/images/supplies/heat-mat.jpg";
+  if (blob.includes("heat mat") || blob.includes("heat pad"))
+    return "/images/supplies/heat-mat.jpg";
   if (blob.includes("thermostat")) return "/images/supplies/heat.jpg";
   if (
     blob.includes("uvb") ||
@@ -313,7 +284,12 @@ function supplyImage(product: SquareProduct) {
   if (blob.includes("sphagnum") || blob.includes("moss")) return "/images/supplies/sphagnum.jpg";
   if (blob.includes("soil")) return "/images/supplies/reptisoil.jpg";
   if (blob.includes("husk") || blob.includes("coco")) return "/images/supplies/coco-husk.jpg";
-  if (blob.includes("forest") || blob.includes("cypress") || blob.includes("bedding") || blob.includes("substrate")) {
+  if (
+    blob.includes("forest") ||
+    blob.includes("cypress") ||
+    blob.includes("bedding") ||
+    blob.includes("substrate")
+  ) {
     return "/images/supplies/forest-floor.jpg";
   }
   if (
@@ -333,6 +309,36 @@ function supplyImage(product: SquareProduct) {
 }
 
 const REPTIBARK_STOCK = "G4MYJQAAS2TX5NRSUGF7L5HQ";
+export const STOCK_ANIMAL_PLACEHOLDER = "/images/animal-image-placeholder.png";
+
+function isHusbandryProduct(product: SquareProduct) {
+  const blob = blobOf(product);
+  return [
+    "bedding",
+    "substrate",
+    "diet",
+    "bulb",
+    "lamp",
+    "terrarium",
+    "cage",
+    "equipment",
+    "moss",
+    "aspen",
+    "heat mat",
+    "thermostat",
+  ].some((term) => blob.includes(term));
+}
+
+function hasUsableSquareImage(product: SquareProduct) {
+  return (
+    Boolean(product.image) &&
+    !(product.image?.includes(REPTIBARK_STOCK) && !product.name.toLowerCase().includes("reptibark"))
+  );
+}
+
+export function usesStockAnimalPlaceholder(product: SquareProduct) {
+  return !hasUsableSquareImage(product) && isAnimal(product) && !isHusbandryProduct(product);
+}
 
 export function productImage(product: SquareProduct) {
   if (isFeeder(product)) {
@@ -343,29 +349,9 @@ export function productImage(product: SquareProduct) {
     if (blob.includes("rabbit") || blob.includes("guinea")) return "/images/feeders/mammals.jpg";
     return "/images/feeders/other.jpg";
   }
-  const raw = product.image;
-  const reptibarkOnWrongSku =
-    Boolean(raw?.includes(REPTIBARK_STOCK)) && !product.name.toLowerCase().includes("reptibark");
-  if (raw && !reptibarkOnWrongSku) return raw;
-  if (!isAnimal(product)) return supplyImage(product);
-  const morph = ballPythonMorphPhoto(product.name);
-  if (morph) return morph;
-  const blob = blobOf(product);
-  if (blob.includes("hognose")) return "/images/hognose.jpg";
-  if (blob.includes("corn") || blob.includes("rat snake")) return "/images/corn-snake.jpg";
-  if (blob.includes("gecko")) return "/images/hero.jpg";
-  if (blob.includes("lizard")) return "/images/case-lizards.jpg";
-  if (blob.includes("frog") || blob.includes("amphib")) return "/images/case-amphibians.jpg";
-  if (blob.includes("milk")) return "/images/milk-snake.jpg";
-  if (blob.includes("kingsnake") || blob.includes("king snake")) return "/images/kingsnake.jpg";
-  if (blob.includes("burmese") || (blob.includes("python") && !blob.includes("ball"))) {
-    return burmeseMorphPhoto(product);
-  }
-  if (blob.includes("dumeril")) return "/images/dumerils-boa.jpg";
-  if (hasWord(blob, "boa")) return "/images/boa.jpg";
-  if (blob.includes("ball python")) return "/images/ball-python.jpg";
-  if (blob.includes("snake")) return "/images/corn-snake.jpg";
-  return "/images/ball-python.jpg";
+  if (hasUsableSquareImage(product)) return product.image!;
+  if (usesStockAnimalPlaceholder(product)) return STOCK_ANIMAL_PLACEHOLDER;
+  return supplyImage(product);
 }
 
 export function productByName(products: SquareProduct[], name: string) {
