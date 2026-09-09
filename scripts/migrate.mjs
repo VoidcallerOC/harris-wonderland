@@ -9,8 +9,9 @@
  * The read is non-recursive, so the opt-in auth schema under migrations/auth/
  * is not applied to an app that never asked for sign-in.
  *
- * No DATABASE_URL (local / preview builds) -> skip; the PGLite fallback applies
- * the same files at startup instead (see src/lib/db.ts).
+ * No DATABASE_URL in local / preview builds -> skip; the PGLite fallback applies
+ * the same files at startup instead (see src/lib/db.ts). Production builds fail
+ * clearly rather than producing a deployment that can fall back to PGlite.
  */
 import { readdir, readFile } from "node:fs/promises";
 import { fileURLToPath } from "node:url";
@@ -20,6 +21,12 @@ import { pendingMigrations } from "./migration-plan.mjs";
 
 const databaseUrl = process.env.DATABASE_URL;
 if (!databaseUrl) {
+  if (process.env.NODE_ENV === "production" || process.env.VERCEL_ENV === "production") {
+    console.error(
+      "[migrate] Production database configuration error: DATABASE_URL is required.",
+    );
+    process.exit(1);
+  }
   console.log(
     "[migrate] DATABASE_URL not set — skipping (the PGLite fallback migrates itself).",
   );
