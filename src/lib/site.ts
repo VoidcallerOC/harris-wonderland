@@ -18,11 +18,6 @@ export const SITE = {
     "Grey building on Route 44, attached to BreMar Rentals. Snake-handle door toward the right side of the building.",
   phones: {
     shop: { display: "(860) 674-0160", href: "tel:+18606740160" },
-    booking: {
-      display: "(860) 888-5130",
-      href: "tel:+18608885130",
-      note: "If you have trouble getting through, or to make an appointment.",
-    },
   },
   emails: {
     adam: "Adam@harrisinwonderland.com",

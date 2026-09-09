@@ -18,7 +18,7 @@ const jsonLd = {
   "@type": "PetStore",
   name: SITE.name,
   description: SITE.description,
-  telephone: ["+1-860-674-0160", "+1-860-888-5130"],
+  telephone: "+1-860-674-0160",
   email: SITE.emails.adam,
   address: {
     "@type": "PostalAddress",

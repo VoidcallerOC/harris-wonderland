@@ -39,18 +39,15 @@ export function RentalForm() {
   }
 
   return (
-    <form
-      onSubmit={onSubmit}
-      className="grid gap-4 border border-border bg-card p-5 sm:p-6"
-    >
+    <form onSubmit={onSubmit} className="grid gap-4 border border-border bg-card p-5 sm:p-6">
       <div>
         <Kicker>Request a booking</Kicker>
         <Display as="h2" className="mt-2 text-3xl">
           Tell us about the event
         </Display>
         <p className="mt-2 text-sm text-muted-foreground">
-          This opens a pre-filled email to Adam. Nothing is booked until he confirms
-          animals, price, and any permits by phone or email.
+          This opens a pre-filled email to Adam. Nothing is booked until he confirms animals, price,
+          and any permits by phone or email.
         </p>
       </div>
       <div className="grid gap-4 sm:grid-cols-2">
@@ -117,14 +114,7 @@ export function RentalForm() {
         {status}
       </p>
       <p className="text-sm text-muted-foreground">
-        Prefer to talk it through? Booking line{" "}
-        <a
-          className="text-brass underline-offset-4 hover:underline"
-          href={SITE.phones.booking.href}
-        >
-          {SITE.phones.booking.display}
-        </a>
-        .
+        Prefer to talk it through? Call the shop or send the request by email.
       </p>
     </form>
   );

@@ -18,23 +18,27 @@ export function SiteFooter() {
             Harris in Wonderland
           </p>
           <p className="mt-3 max-w-md text-muted-foreground">
-            Harris in Wonderland is a reptile specialty shop in Canton, Connecticut, with captive-bred snakes, lizards, frogs, tropical fish, and husbandry help for the animals we keep.
-            <br /><br />
+            Harris in Wonderland is a reptile specialty shop in Canton, Connecticut, with
+            captive-bred snakes, lizards, frogs, tropical fish, and husbandry help for the animals
+            we keep.
+            <br />
+            <br />
             {SITE.address.line}
             <br />
             {SITE.landmark}
             <br />
             Shop{" "}
-            <a className="text-fg-soft underline-offset-4 hover:text-brass" href={SITE.phones.shop.href}>
+            <a
+              className="text-fg-soft underline-offset-4 hover:text-brass"
+              href={SITE.phones.shop.href}
+            >
               {SITE.phones.shop.display}
             </a>
-            {" · "}
-            Booking{" "}
-            <a className="text-fg-soft underline-offset-4 hover:text-brass" href={SITE.phones.booking.href}>
-              {SITE.phones.booking.display}
-            </a>
             <br />
-            <a className="text-fg-soft underline-offset-4 hover:text-brass" href={`mailto:${SITE.emails.adam}`}>
+            <a
+              className="text-fg-soft underline-offset-4 hover:text-brass"
+              href={`mailto:${SITE.emails.adam}`}
+            >
               {SITE.emails.adam}
             </a>
           </p>
@@ -43,31 +47,58 @@ export function SiteFooter() {
           </p>
         </div>
         <div className="grid grid-cols-2 gap-x-6 gap-y-2 content-start">
-          <Link className="font-ui text-kicker font-bold uppercase tracking-kicker text-muted-foreground no-underline hover:text-brass" to="/">
+          <Link
+            className="font-ui text-kicker font-bold uppercase tracking-kicker text-muted-foreground no-underline hover:text-brass"
+            to="/"
+          >
             Home
           </Link>
-          <Link className="font-ui text-kicker font-bold uppercase tracking-kicker text-muted-foreground no-underline hover:text-brass" to="/shop">
+          <Link
+            className="font-ui text-kicker font-bold uppercase tracking-kicker text-muted-foreground no-underline hover:text-brass"
+            to="/shop"
+          >
             Shop
           </Link>
-          <Link className="font-ui text-kicker font-bold uppercase tracking-kicker text-muted-foreground no-underline hover:text-brass" to="/collection">
+          <Link
+            className="font-ui text-kicker font-bold uppercase tracking-kicker text-muted-foreground no-underline hover:text-brass"
+            to="/collection"
+          >
             Collection
           </Link>
-          <Link className="font-ui text-kicker font-bold uppercase tracking-kicker text-muted-foreground no-underline hover:text-brass" to="/care">
+          <Link
+            className="font-ui text-kicker font-bold uppercase tracking-kicker text-muted-foreground no-underline hover:text-brass"
+            to="/care"
+          >
             Care sheets
           </Link>
-          <Link className="font-ui text-kicker font-bold uppercase tracking-kicker text-muted-foreground no-underline hover:text-brass" to="/story">
+          <Link
+            className="font-ui text-kicker font-bold uppercase tracking-kicker text-muted-foreground no-underline hover:text-brass"
+            to="/story"
+          >
             Story
           </Link>
-          <Link className="font-ui text-kicker font-bold uppercase tracking-kicker text-muted-foreground no-underline hover:text-brass" to="/visit">
+          <Link
+            className="font-ui text-kicker font-bold uppercase tracking-kicker text-muted-foreground no-underline hover:text-brass"
+            to="/visit"
+          >
             Visit
           </Link>
-          <Link className="font-ui text-kicker font-bold uppercase tracking-kicker text-muted-foreground no-underline hover:text-brass" to="/rentals">
+          <Link
+            className="font-ui text-kicker font-bold uppercase tracking-kicker text-muted-foreground no-underline hover:text-brass"
+            to="/rentals"
+          >
             Rentals
           </Link>
-          <Link className="font-ui text-kicker font-bold uppercase tracking-kicker text-muted-foreground no-underline hover:text-brass" to="/merch">
+          <Link
+            className="font-ui text-kicker font-bold uppercase tracking-kicker text-muted-foreground no-underline hover:text-brass"
+            to="/merch"
+          >
             Merch
           </Link>
-          <Link className="font-ui text-kicker font-bold uppercase tracking-kicker text-muted-foreground no-underline hover:text-brass" to="/fish">
+          <Link
+            className="font-ui text-kicker font-bold uppercase tracking-kicker text-muted-foreground no-underline hover:text-brass"
+            to="/fish"
+          >
             Tropical Fish
           </Link>
           <Link
