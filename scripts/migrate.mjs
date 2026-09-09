@@ -17,6 +17,7 @@ import { readdir, readFile } from "node:fs/promises";
 import { fileURLToPath } from "node:url";
 import { dirname, join } from "node:path";
 import pg from "pg";
+import { inspectDatabaseUrl } from "./database-url.mjs";
 import { pendingMigrations } from "./migration-plan.mjs";
 
 const databaseUrl = process.env.DATABASE_URL;
@@ -31,6 +32,14 @@ if (!databaseUrl) {
     "[migrate] DATABASE_URL not set — skipping (the PGLite fallback migrates itself).",
   );
   process.exit(0);
+}
+
+let databaseMetadata;
+try {
+  databaseMetadata = inspectDatabaseUrl(databaseUrl);
+} catch (err) {
+  console.error(`[migrate] ${err.message}`);
+  process.exit(1);
 }
 
 const migrationsDir = join(dirname(fileURLToPath(import.meta.url)), "..", "migrations");
@@ -50,7 +59,16 @@ async function main() {
   }
 
   const pool = new pg.Pool({ connectionString: databaseUrl, max: 1 });
-  const client = await pool.connect();
+  let client;
+  try {
+    client = await pool.connect();
+  } catch (err) {
+    console.error(
+      "[migrate] database connection failed; sanitized connection metadata:",
+      JSON.stringify(databaseMetadata),
+    );
+    throw err;
+  }
   try {
     await client.query(
       "CREATE TABLE IF NOT EXISTS _migrations (name TEXT PRIMARY KEY, applied_at TIMESTAMPTZ NOT NULL DEFAULT now())",
@@ -88,10 +106,8 @@ async function main() {
 }
 
 main().catch((err) => {
-  console.error("[migrate] failed:", err?.message || err);
-  // pg errors carry the context needed to debug a bad SQL file.
-  for (const key of ["code", "detail", "hint", "position", "where"]) {
-    if (err?.[key] != null) console.error(`[migrate]   ${key}: ${err[key]}`);
-  }
+  // Never print the driver message: connection errors can contain connection
+  // details. The code plus sanitized metadata above are sufficient.
+  console.error(`[migrate] failed${err?.code ? ` (code ${err.code})` : ""}.`);
   process.exit(1);
 });
