@@ -1,4 +1,4 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute } from "@tanstack/react-router";
 import { pageHead } from "@/lib/seo";
 import { SiteShell } from "@/components/site-shell";
 import { MapPin, Phone } from "lucide-react";
@@ -122,17 +122,6 @@ function VisitPage() {
                     <p className="mt-2 text-sm text-muted-foreground">{program.body}</p>
                   </article>
                 ))}
-                <article className="border border-border bg-card p-5">
-                  <h3 className="font-display text-card italic text-ticket">Pond estimate</h3>
-                  <p className="mt-2 text-sm text-muted-foreground">
-                    Limited garden-pond installs each year — streams, waterfalls, bogs, lights. Free
-                    estimate.{" "}
-                    <Link to="/fish" className="text-brass underline-offset-4 hover:underline">
-                      Fish room & ponds
-                    </Link>
-                    .
-                  </p>
-                </article>
               </div>
             </div>
             <ContactForm />

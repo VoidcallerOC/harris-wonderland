@@ -42,14 +42,6 @@ export const ESSENTIALS: Record<string, CareEssential[]> = {
     { label: "Aspen bedding", product: "ZM Aspen Snake Bedding" },
     { label: "Frozen mice", product: "Frozen Mice" },
   ],
-  "bearded-dragon": [
-    { label: "Thermostat", product: "Thermostats" },
-    { label: "Basking lamp", product: "ZM Repti Basking Spot Lamp" },
-    { label: "Desert UVB", product: "ExoTerra Reptile UVB 150 Desert" },
-    { label: "Calcium / vitamins", product: "Vitamin And Mineral Suppliments" },
-    { label: "Dubia roaches", product: "Dubia Roaches On Line Purchasing" },
-    { label: "Enclosure", product: "ZooMed Terrariums & Screen Cages" },
-  ],
   "leopard-gecko": [
     { label: "Enclosure", product: "ZooMed Terrariums & Screen Cages" },
     { label: "Thermostat", product: "Thermostats" },
@@ -92,15 +84,6 @@ export const ESSENTIALS: Record<string, CareEssential[]> = {
     { label: "Sphagnum", product: "ZM Sphagnum Moss" },
     { label: "Sprayer", product: "ExoTerra Hand Sprayers" },
     { label: "Tortoise diet", product: "Reptile Specialty Diets" },
-  ],
-  "whites-frog": [
-    { label: "Enclosure", product: "ExoTerra Terrariums" },
-    { label: "Hydro balls", product: "ZM Hydro Balls VC-10" },
-    { label: "Eco Earth", product: "ZM Eco Earth" },
-    { label: "Frog moss", product: "ZM Frog Moss 80 cu in CF3-FM" },
-    { label: "Sprayer", product: "ExoTerra Hand Sprayers" },
-    { label: "Vines", product: "ExoTerra Jungle And Moss Vines" },
-    { label: "Feeders", product: "Mealworms" },
   ],
   "horned-frog": [
     { label: "Enclosure", product: "ExoTerra Terrariums" },

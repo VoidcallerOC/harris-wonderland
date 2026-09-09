@@ -43,11 +43,17 @@ export const SHOP_FILTERS: { id: ShopFilter; label: string }[] = [
   { id: "animals", label: "On the rack" },
   ...ANIMAL_ROOT_CATEGORIES.map((category) => ({ id: category.id, label: category.name })),
   { id: "pythons", label: "Pythons" },
-  { id: "colubrids", label: "Colubrids" },
+  { id: "colubrids", label: "Colubrids (Snakes)" },
   { id: "feeders", label: "Feeders" },
   { id: "supplies", label: "Husbandry" },
   { id: "all", label: "Everything" },
 ];
+
+export function displayCategoryName(name: string) {
+  if (name.toLowerCase() === "other colubrids") return "Other Colubrids (Snakes)";
+  if (name.toLowerCase() === "colubrids") return "Colubrids (Snakes)";
+  return name;
+}
 
 function blobOf(product: SquareProduct) {
   return `${product.name} ${product.categories.join(" ")}`.toLowerCase();
@@ -131,7 +137,12 @@ export function isPlaceholderName(name: string) {
   return !n || /^\d+$/.test(n) || /^sku[:\s-]/i.test(n);
 }
 
+export function isUnavailableAnimal(product: SquareProduct) {
+  return /\bdragons?\b|white['’]s\b/i.test(`${product.name} ${product.description} ${product.categories.join(" ")}`);
+}
+
 export function isListableProduct(product: SquareProduct) {
+  if (isUnavailableAnimal(product)) return false;
   if (isPlaceholderName(product.name)) return false;
   return true;
 }

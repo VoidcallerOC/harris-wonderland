@@ -59,9 +59,8 @@ function StoryPage() {
           <div className="space-y-5 text-fg-soft">
             <p>
               The shop is first and foremost an exotic reptile and amphibian house. It
-              still earns a place on any Connecticut fishkeeper’s map — freshwater, a
-              dedicated marine room, pond installs — but the front of the room is the herp
-              collection.
+              still earns a place on any Connecticut fishkeeper’s map for freshwater and
+              marine livestock, but the front of the shop is the herp collection.
             </p>
             <p>
               Dedicated parking, handicapped access, road frontage, and a facility built

@@ -54,17 +54,13 @@ export const MARQUEE = [
   "Hognose",
   "Corns",
   "Kings",
-  "Dragons",
   "Dart frogs",
-  "Red-foots",
+  "Red-Footed Tortoises",
   "Feeders they raise",
   "Birthday programs",
-  "Pond installs",
-  "Marine room",
   "Captive-bred",
   "Care sheets",
   "Giant day gecko",
-  "White's",
 ] as const;
 
 export const KEEPERS = [
@@ -184,6 +180,5 @@ export const CONTACT_TOPICS = [
   "Care sheet / husbandry",
   "Supplies / feeders",
   "Fish room / marine",
-  "Pond estimate",
   "Sugar glider / mammal",
 ] as const;

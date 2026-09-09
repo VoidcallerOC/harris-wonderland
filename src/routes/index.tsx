@@ -42,7 +42,6 @@ const LOOK_CLOSER = [
   { src: "/images/floor/gecko-chainmail.jpg", alt: "Gecko close-up at Harris in Wonderland", caption: "Gecko, up close" },
   { src: "/images/floor/dart-frog-yellow.jpg", alt: "Yellow poison dart frog at Harris in Wonderland", caption: "Yellow poison dart frog" },
   { src: "/images/floor/gecko-seafoam.jpg", alt: "Teal gecko at Harris in Wonderland", caption: "Teal gecko" },
-  { src: "/images/drive-frog.jpg", alt: "White's tree frog at Harris in Wonderland", caption: "White’s tree frog" },
   { src: "/images/floor/gecko-pocket.jpg", alt: "Young gecko on a fingertip at Harris in Wonderland", caption: "Young gecko" },
   { src: "/images/floor/chameleon-casque.jpg", alt: "Chameleon portrait at Harris in Wonderland", caption: "Chameleon portrait" },
   { src: "/images/floor/day-gecko-neon.jpg", alt: "Day gecko on a plant at Harris in Wonderland", caption: "Day gecko" },
@@ -154,8 +153,8 @@ function Home() {
           <Kicker>Beginner chooser</Kicker>
           <Display className="mt-2">The right first animal.</Display>
           <Lede className="mt-4 mb-8">
-            We steer first-timers toward hardy species. Corn or king. Leo or beardie.
-            Red-foot. White’s. Ask at the counter before you commit to the showy one.
+            We steer first-timers toward hardy species. Corn or king. Leopard gecko.
+            Red-Footed Tortoises. Ask at the counter before you commit to the showy one.
           </Lede>
           <BeginnerChooser />
         </div>
@@ -190,7 +189,7 @@ function Home() {
             <article className="border border-border bg-card p-5">
               <h3 className="font-display text-card italic text-ticket">Rare on the wall</h3>
               <p className="mt-2 text-sm text-muted-foreground">
-                Morphs, odd colubrids, and well-kept giants you will not find in a chain
+                Morphs, Colubrids (Snakes), and well-kept giants you will not find in a chain
                 store.
               </p>
             </article>
