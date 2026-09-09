@@ -12,9 +12,9 @@ export type HoursRow = {
 export const HOURS: HoursRow[] = [
   { day: 0, name: "Sunday", label: "12:00 PM – 4:00 PM", open: 12, close: 16 },
   { day: 1, name: "Monday", label: "Closed", open: 0, close: 0, closed: true },
-  { day: 2, name: "Tuesday", label: "10:00 AM – 7:30 PM", open: 10, close: 19.5 },
-  { day: 3, name: "Wednesday", label: "10:00 AM – 7:30 PM", open: 10, close: 19.5 },
-  { day: 4, name: "Thursday", label: "10:00 AM – 7:30 PM", open: 10, close: 19.5 },
+  { day: 2, name: "Tuesday", label: "10:00 AM – 7:00 PM", open: 10, close: 19 },
+  { day: 3, name: "Wednesday", label: "10:00 AM – 7:00 PM", open: 10, close: 19 },
+  { day: 4, name: "Thursday", label: "10:00 AM – 7:00 PM", open: 10, close: 19 },
   { day: 5, name: "Friday", label: "10:00 AM – 7:00 PM", open: 10, close: 19 },
   { day: 6, name: "Saturday", label: "10:00 AM – 6:00 PM", open: 10, close: 18 },
 ];

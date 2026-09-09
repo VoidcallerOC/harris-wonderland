@@ -9,7 +9,6 @@ import { cn } from "@/lib/utils";
 type HeroFrame = {
   src: string;
   alt: string;
-  caption: string;
   /** object-position override; the day gecko is framed off-center on the crop */
   position?: string;
 };
@@ -20,24 +19,20 @@ const HERO_FRAMES: HeroFrame[] = [
   {
     src: "/images/hero.jpg",
     alt: speciesById("giant-day-gecko")!.alt,
-    caption: "Giant day gecko · looking glass · Route 44",
     position: "object-[28%_48%] md:object-center",
   },
   {
     // No care sheet of its own — a floor showpiece, so the alt is literal.
     src: "/images/drive-hero.jpg",
     alt: "Chameleon on the floor at Harris in Wonderland",
-    caption: "Chameleon · on the floor · Route 44",
   },
   {
     src: "/images/ball-python.jpg",
     alt: speciesById("ball-python")!.alt,
-    caption: "Ball python · captive-bred · Route 44",
   },
   {
     src: "/images/case-lizards.jpg",
     alt: speciesById("frilled-lizard")!.alt,
-    caption: "Frilled lizard · on the floor · Route 44",
     // Portrait shot, head up top-left — pull the crop up so the desktop
     // (wide) frame keeps the head instead of centering on the body.
     position: "object-[42%_18%]",
@@ -45,12 +40,10 @@ const HERO_FRAMES: HeroFrame[] = [
   {
     src: "/images/redfoot.jpg",
     alt: speciesById("red-foot")!.alt,
-    caption: "Red-foot tortoise · captive-bred · Route 44",
   },
   {
     src: "/images/case-amphibians.jpg",
     alt: speciesById("red-eyed")!.alt,
-    caption: "Red-eyed tree frog · damp room · Route 44",
   },
 ];
 
@@ -110,8 +103,7 @@ export function Hero() {
           <div className="mt-7 flex max-w-full flex-wrap gap-3">
             <Button asChild>
               <a href="#rack">
-                <span className="sm:hidden">Shop the rack</span>
-                <span className="hidden sm:inline">Shop the live rack</span>
+                <span>View current animals</span>
                 <ArrowRight className="hidden sm:block" />
               </a>
             </Button>
@@ -123,12 +115,6 @@ export function Hero() {
             </Button>
           </div>
         </div>
-        <p
-          className="font-ui text-kicker font-bold uppercase tracking-kicker text-ticket/80 transition-opacity duration-500"
-          aria-live="off"
-        >
-          {HERO_FRAMES[active].caption}
-        </p>
       </div>
     </section>
   );

@@ -107,9 +107,3 @@ export function AnimalBrowser({
     </section>
   );
 }
-
-export function categoryFromSlug(slug: string | undefined) {
-  return animalCategory(slug);
-}
-
-export const availableAnimalCategorySlugs = ANIMAL_TAXONOMY.map((category) => category.slug);

@@ -94,7 +94,7 @@ function Home() {
               <div className="p-4">
                 <Kicker>Case 0{index + 1}</Kicker>
                 <h3 className="mt-1 font-display text-card italic text-ticket">
-                  {index === 0 ? "Snakes" : index === 1 ? "Lizards & shells" : "Amphibians"}
+                  {index === 0 ? "Snakes" : index === 1 ? "Lizards" : "Amphibians"}
                 </h3>
                 <p className="mt-2 text-sm text-muted-foreground">{species.blurb}</p>
               </div>

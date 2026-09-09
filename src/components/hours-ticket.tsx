@@ -65,8 +65,7 @@ export function HoursTicket({ className }: { className?: string }) {
         })}
       </ul>
       <p className="mt-4 border border-dashed border-ticket-ink/30 bg-ticket-ink/10 px-3 py-2 text-sm leading-snug">
-        Confirm around holidays. Feeders are pickup at the shop, not shipped. If the
-        shop line is busy, try {SITE.phones.booking.display}.
+        Confirm around holidays. If the shop line is busy, try {SITE.phones.booking.display}.
       </p>
     </aside>
   );

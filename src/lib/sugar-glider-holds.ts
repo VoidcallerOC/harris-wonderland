@@ -227,6 +227,10 @@ export const paySugarGliderHold = createServerFn({ method: "POST" })
     }
 
     try {
+      await sql.query(
+        `update sugar_glider_holds set ${column.status} = 'processing', updated_at = now() where id = $1 and ${column.status} = 'unpaid'`,
+        [data.holdId],
+      );
       const payment = await chargeSquareCard({
         sourceId: data.sourceId,
         amountCents,
@@ -242,6 +246,20 @@ export const paySugarGliderHold = createServerFn({ method: "POST" })
         [data.holdId, payment.paymentId],
       );
       if (!updated[0]) {
+        const current = await sql.query<Pick<HoldDbRow, "status" | "full_payment_status" | "deposit_payment_status" | "balance_payment_status" | "full_payment_id" | "deposit_payment_id" | "balance_payment_id">>(
+          `select status, full_payment_status, deposit_payment_status, balance_payment_status, full_payment_id, deposit_payment_id, balance_payment_id from sugar_glider_holds where id = $1`,
+          [data.holdId],
+        );
+        const currentRow = current[0];
+        const currentStatus = currentRow?.[column.status as keyof typeof currentRow];
+        const currentPaymentId = currentRow?.[column.id as keyof typeof currentRow];
+        if (currentStatus === "succeeded" && currentPaymentId) {
+          await sql.query(
+            `update sugar_glider_payment_attempts set status = 'succeeded', square_payment_id = $2, completed_at = coalesce(completed_at, now()) where id = $1`,
+            [attemptId, currentPaymentId],
+          );
+          return { ok: true as const, paymentId: currentPaymentId };
+        }
         await refundSquarePayment(payment.paymentId, amountCents, `hold-${data.holdId}-${data.mode}-reconcile`);
         throw new Error("The hold changed before payment could be recorded. The Square payment was refunded.");
       }
@@ -255,7 +273,7 @@ export const paySugarGliderHold = createServerFn({ method: "POST" })
         `update sugar_glider_payment_attempts set status = 'failed', error_message = $2, completed_at = now() where id = $1`,
         [attemptId, error instanceof Error ? error.message.slice(0, 500) : "Square payment failed."],
       );
-      await sql.query(`update sugar_glider_holds set ${column.status} = 'failed', updated_at = now() where id = $1 and ${column.status} = 'unpaid'`, [data.holdId]);
+      await sql.query(`update sugar_glider_holds set ${column.status} = 'failed', updated_at = now() where id = $1 and ${column.status} = 'processing'`, [data.holdId]);
       throw error;
     }
   });

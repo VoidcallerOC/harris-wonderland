@@ -1,13 +1,14 @@
 import { createFileRoute, notFound } from "@tanstack/react-router";
 import { pageHead } from "@/lib/seo";
-import { AnimalBrowser, categoryFromSlug } from "@/components/animal-browser";
+import { AnimalBrowser } from "@/components/animal-browser";
+import { animalCategory } from "@/lib/species";
 import { AnimalCollectionIntro } from "@/components/animal-collection-intro";
 import { MammalsSection } from "@/components/mammals-section";
 
 export const Route = createFileRoute("/collection/$category")({
   component: CategoryCollectionPage,
   loader: ({ params }) => {
-    const category = categoryFromSlug(params.category);
+    const category = animalCategory(params.category);
     if (!category) throw notFound();
     return category;
   },

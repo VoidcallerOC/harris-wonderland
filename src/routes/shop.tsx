@@ -14,9 +14,9 @@ export const Route = createFileRoute("/shop")({
   component: ShopPage,
   head: () =>
     pageHead({
-      title: "Shop the rack — Harris in Wonderland",
+      title: "Current inventory — Harris in Wonderland",
       description:
-        "Live Square inventory from Harris in Wonderland in Canton, CT. Snakes, lizards, feeders, and husbandry — pickup at 364 Albany Turnpike.",
+        "Current Square catalog from Harris in Wonderland in Canton, CT. Snakes, lizards, feeders, and husbandry — pickup at 364 Albany Turnpike.",
       path: "/shop",
     }),
 });

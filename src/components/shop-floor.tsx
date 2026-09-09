@@ -193,7 +193,7 @@ function RackRail({ children }: { children: ReactNode }) {
 export function ShopFloor({
   catalog,
   heading = "Animals for sale now.",
-  lede = "Live from our Square inventory — animals and feeders, priced. Pickup at 364 Albany Turnpike.",
+  lede = "Current inventory from our Square catalog — animals and feeders, priced. Pickup at 364 Albany Turnpike.",
   headingAs = "h2",
   focusId,
   tease,
@@ -242,7 +242,7 @@ export function ShopFloor({
   return (
     <section id="rack" className="border-y border-border bg-bg-2 py-16 sm:py-24">
       <div className="wrap">
-        <Kicker>{catalog.live ? "Live from Square" : "Square catalog"}</Kicker>
+        <Kicker>{catalog.live ? "Current inventory" : "Square catalog"}</Kicker>
         <Display as={headingAs} className="mt-2">
           {heading}
         </Display>
