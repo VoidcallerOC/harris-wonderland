@@ -18,6 +18,8 @@ export function SiteFooter() {
             Harris in Wonderland
           </p>
           <p className="mt-3 max-w-md text-muted-foreground">
+            Harris in Wonderland is a reptile specialty shop in Canton, Connecticut, with captive-bred snakes, lizards, frogs, tropical fish, and husbandry help for the animals we keep.
+            <br /><br />
             {SITE.address.line}
             <br />
             {SITE.landmark}
@@ -66,7 +68,7 @@ export function SiteFooter() {
             Merch
           </Link>
           <Link className="font-ui text-kicker font-bold uppercase tracking-kicker text-muted-foreground no-underline hover:text-brass" to="/fish">
-            Fish room
+            Tropical Fish
           </Link>
           <Link
             className="font-ui text-kicker font-bold uppercase tracking-kicker text-muted-foreground no-underline hover:text-brass"

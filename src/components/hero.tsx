@@ -103,7 +103,7 @@ export function Hero() {
           <div className="mt-7 flex max-w-full flex-wrap gap-3">
             <Button asChild>
               <a href="#rack">
-                <span>View current animals</span>
+                <span>Available Animals</span>
                 <ArrowRight className="hidden sm:block" />
               </a>
             </Button>
