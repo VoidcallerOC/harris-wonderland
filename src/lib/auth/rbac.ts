@@ -32,6 +32,18 @@ type AuditRow = {
   new_value: JsonValue;
   created_at: string;
 };
+type PaymentAttemptRow = {
+  id: string;
+  hold_id: string;
+  payment_mode: "full" | "deposit" | "balance";
+  amount_cents: number;
+  status: "pending" | "succeeded" | "failed";
+  square_payment_id: string | null;
+  square_order_id: string | null;
+  error_message: string | null;
+  created_at: string;
+  completed_at: string | null;
+};
 
 export class ForbiddenError extends Error {
   status = 403 as const;
@@ -242,6 +254,30 @@ export const listAuditLog = createServerFn({ method: "GET" })
        from app_audit_log order by created_at desc limit 200`,
     );
     return rows.map(toAudit);
+  });
+
+export const listAdminPayments = createServerFn({ method: "GET" })
+  .middleware([authMiddleware])
+  .handler(async ({ context }) => {
+    const sql = await getSql();
+    await requirePermissionForUser(sql, context.userId, "payments.view");
+    const rows = await sql.query<PaymentAttemptRow>(
+      `select id, hold_id, payment_mode, amount_cents, status, square_payment_id, square_order_id, error_message, created_at, completed_at
+       from sugar_glider_payment_attempts order by created_at desc limit 200`,
+    );
+    const staff = await getRoleForUser(sql, context.userId) === "staff";
+    return rows.map((row) => ({
+      id: row.id,
+      holdId: row.hold_id,
+      paymentMode: row.payment_mode,
+      amountCents: Number(row.amount_cents),
+      status: row.status,
+      squarePaymentId: staff ? null : row.square_payment_id,
+      squareOrderId: staff ? null : row.square_order_id,
+      errorMessage: row.error_message,
+      createdAt: new Date(row.created_at).toISOString(),
+      completedAt: row.completed_at ? new Date(row.completed_at).toISOString() : null,
+    }));
   });
 
 export async function requireAdminPermission(permission: Permission, userId: string): Promise<Sql> {
