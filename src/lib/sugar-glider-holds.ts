@@ -3,6 +3,7 @@ import { z } from "zod";
 import { getSql } from "@/lib/db";
 import { authMiddleware } from "@/lib/auth/middleware";
 import { getRoleForUser, recordAudit, requirePermissionForUser } from "@/lib/auth/rbac";
+import { holdTransitionPermission } from "@/lib/auth/rbac-guards";
 import { SUGAR_GLIDERS, mammalDeposit, type MammalAvailability } from "@/lib/mammals";
 import { chargeSquareCard, refundSquarePayment } from "@/lib/square-api";
 
@@ -151,6 +152,14 @@ async function expireStaleHolds(sql: Awaited<ReturnType<typeof getSql>>) {
   );
 }
 
+async function recordAuditBestEffort(sql: Awaited<ReturnType<typeof getSql>>, input: Parameters<typeof recordAudit>[1]) {
+  try {
+    await recordAudit(sql, input);
+  } catch (error) {
+    console.error("[audit] unable to record event", error);
+  }
+}
+
 export const createSugarGliderHold = createServerFn({ method: "POST" })
   .validator(CustomerHoldInput)
   .handler(async ({ data }) => {
@@ -170,6 +179,14 @@ export const createSugarGliderHold = createServerFn({ method: "POST" })
          returning *`,
         [crypto.randomUUID(), data.customerName, data.customerEmail.toLowerCase(), data.customerPhone, listing.id, `${listing.name} · ${listing.morph}`, totalAmountCents, depositAmountCents, balanceDueCents, holdExpiresAt.toISOString(), data.notes?.trim() || null],
       );
+      await recordAuditBestEffort(sql, {
+        actorUserId: "customer",
+        action: "hold_created",
+        resourceType: "sugar_glider_hold",
+        resourceId: rows[0].id,
+        previousValue: null,
+        newValue: { animalId: listing.id, status: "requested", totalAmountCents, depositAmountCents, balanceDueCents },
+      });
       return { ok: true as const, hold: toHold(rows[0]) };
     } catch (error) {
       if (String(error).toLowerCase().includes("sugar_glider_holds_active_animal_idx") || String(error).toLowerCase().includes("duplicate key")) {
@@ -220,6 +237,15 @@ export const paySugarGliderHold = createServerFn({ method: "POST" })
       }
     }
 
+    await recordAuditBestEffort(sql, {
+      actorUserId: "customer",
+      action: "payment_initiated",
+      resourceType: "sugar_glider_payment_attempt",
+      resourceId: attemptId,
+      previousValue: null,
+      newValue: { holdId: data.holdId, mode: data.mode, amountCents },
+    });
+
     try {
       await sql.query(
         `update sugar_glider_holds set ${column.status} = 'processing', updated_at = now() where id = $1 and ${column.status} = 'unpaid'`,
@@ -255,12 +281,28 @@ export const paySugarGliderHold = createServerFn({ method: "POST" })
           return { ok: true as const, paymentId: currentPaymentId };
         }
         await refundSquarePayment(payment.paymentId, amountCents, `hold-${data.holdId}-${data.mode}-reconcile`);
+        await recordAuditBestEffort(sql, {
+          actorUserId: "customer",
+          action: "refund_created",
+          resourceType: "sugar_glider_payment_attempt",
+          resourceId: attemptId,
+          previousValue: { paymentId: payment.paymentId },
+          newValue: { amountCents, reason: "hold_changed_before_payment_record" },
+        });
         throw new Error("The hold changed before payment could be recorded. The Square payment was refunded.");
       }
       await sql.query(
         `update sugar_glider_payment_attempts set status = 'succeeded', square_payment_id = $2, square_order_id = $3, completed_at = now() where id = $1`,
         [attemptId, payment.paymentId, payment.orderId],
       );
+      await recordAuditBestEffort(sql, {
+        actorUserId: "customer",
+        action: data.mode === "deposit" ? "deposit_created" : data.mode === "balance" ? "balance_recorded" : "payment_initiated",
+        resourceType: "sugar_glider_payment_attempt",
+        resourceId: attemptId,
+        previousValue: { status: "pending" },
+        newValue: { status: "succeeded", mode: data.mode, amountCents },
+      });
       return { ok: true as const, paymentId: payment.paymentId, hold: toHold(updated[0]) };
     } catch (error) {
       await sql.query(
@@ -299,7 +341,7 @@ export const updateSugarGliderHold = createServerFn({ method: "POST" })
     const current = await sql.query<Pick<HoldDbRow, "status">>(`select status from sugar_glider_holds where id = $1`, [data.holdId]);
     if (!current[0]) throw new Error("Hold not found.");
     const override = data.status === "expired" || current[0].status === "expired" || current[0].status === "cancelled";
-    await requirePermissionForUser(sql, context.userId, override ? "holds.override" : data.status === "cancelled" ? "holds.release" : "holds.edit");
+    await requirePermissionForUser(sql, context.userId, holdTransitionPermission(data.status, override));
     await expireStaleHolds(sql);
     if (!canTransitionHold(current[0].status, data.status)) throw new Error(`A ${current[0].status.replace("_", " ")} hold cannot be marked ${data.status.replace("_", " ")}.`);
     const rows = await sql.query<HoldDbRow>(

@@ -1,12 +1,14 @@
 import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
-import { getSql, type Sql } from "@/lib/db";
-import { authMiddleware } from "./middleware";
-import { canChangeRoleSafely, canDeleteUserSafely, RBAC_ROLES, ROLE_PERMISSIONS, type AuditAction, type JsonValue, type Permission, type RbacRole } from "./rbac-policy";
+import { getSql, type Sql } from "../db.ts";
+import { authMiddleware } from "./middleware.ts";
+import { RBAC_ROLES, type AuditAction, type JsonValue, type Permission, type RbacRole } from "./rbac-policy.ts";
+import { authorizeRoleAssignment, authorizeUserDeletion, ForbiddenError, getCurrentPermissions, getRoleForUser, hasPermissionForUser, ownerCount, requirePermissionForUser } from "./rbac-guards.ts";
 
-export { RBAC_ROLES, RBAC_PERMISSIONS, ROLE_PERMISSIONS } from "./rbac-policy";
-export { canChangeRoleSafely, canDeleteUserSafely } from "./rbac-policy";
-export type { AuditAction, JsonValue, Permission, RbacRole } from "./rbac-policy";
+export { RBAC_ROLES, RBAC_PERMISSIONS, ROLE_PERMISSIONS } from "./rbac-policy.ts";
+export { authorizeRoleAssignment, authorizeUserDeletion, ForbiddenError, getCurrentPermissions, getRoleForUser, hasPermissionForUser, ownerCount, requirePermissionForUser, requireRoleForUser } from "./rbac-guards.ts";
+export { canChangeRoleSafely, canDeleteUserSafely } from "./rbac-policy.ts";
+export type { AuditAction, JsonValue, Permission, RbacRole } from "./rbac-policy.ts";
 
 export type AuditEntry = {
   id: string;
@@ -19,7 +21,6 @@ export type AuditEntry = {
   createdAt: string;
 };
 
-type RoleRow = { user_id: string; role: RbacRole };
 type UserRow = { id: string; name: string; email: string; role: RbacRole | null; role_updated_at: string | null };
 type CurrentUserRow = { id: string; name: string; email: string; image: string | null };
 type AuditRow = {
@@ -45,18 +46,6 @@ type PaymentAttemptRow = {
   completed_at: string | null;
 };
 
-export class ForbiddenError extends Error {
-  status = 403 as const;
-  constructor(message = "You do not have permission to perform this action.") {
-    super(message);
-    this.name = "ForbiddenError";
-  }
-}
-
-function permissionsForRole(role: RbacRole | null): readonly Permission[] {
-  return role ? ROLE_PERMISSIONS[role] : [];
-}
-
 function toAudit(row: AuditRow): AuditEntry {
   return {
     id: row.id,
@@ -70,36 +59,13 @@ function toAudit(row: AuditRow): AuditEntry {
   };
 }
 
-export async function getRoleForUser(sql: Sql, userId: string): Promise<RbacRole | null> {
-  const rows = await sql.query<RoleRow>("select user_id, role from app_user_roles where user_id = $1", [userId]);
-  return rows[0]?.role ?? null;
-}
-
 export async function getCurrentUser(sql: Sql, userId: string): Promise<CurrentUserRow | null> {
   const rows = await sql.query<CurrentUserRow>(`select id, name, email, image from "user" where id = $1`, [userId]);
   return rows[0] ?? null;
 }
 
-export async function getCurrentPermissions(sql: Sql, userId: string): Promise<readonly Permission[]> {
-  return permissionsForRole(await getRoleForUser(sql, userId));
-}
-
-export async function hasPermissionForUser(sql: Sql, userId: string, permission: Permission): Promise<boolean> {
-  return (await getCurrentPermissions(sql, userId)).includes(permission);
-}
-
-export async function requirePermissionForUser(sql: Sql, userId: string, permission: Permission): Promise<void> {
-  if (!(await hasPermissionForUser(sql, userId, permission))) {
-    throw new ForbiddenError(`Permission required: ${permission}`);
-  }
-}
-
 export const hasPermission = hasPermissionForUser;
 export const requirePermission = requirePermissionForUser;
-
-export async function requireRoleForUser(sql: Sql, userId: string, role: RbacRole): Promise<void> {
-  if ((await getRoleForUser(sql, userId)) !== role) throw new ForbiddenError(`Role required: ${role}`);
-}
 
 export async function recordAudit(
   sql: Sql,
@@ -127,11 +93,6 @@ export async function recordAudit(
   );
 }
 
-async function ownerCount(sql: Sql): Promise<number> {
-  const rows = await sql.query<{ count: number }>("select count(*)::int as count from app_user_roles where role = 'owner'");
-  return Number(rows[0]?.count ?? 0);
-}
-
 const RoleInput = z.object({
   userId: z.string().trim().min(1).max(200),
   role: z.enum(RBAC_ROLES),
@@ -143,6 +104,7 @@ export const getAdminDashboard = createServerFn({ method: "GET" })
   .middleware([authMiddleware])
   .handler(async ({ context }) => {
     const sql = await getSql();
+    await requirePermissionForUser(sql, context.userId, "dashboard.view");
     const role = await getRoleForUser(sql, context.userId);
     const permissions = await getCurrentPermissions(sql, context.userId);
     return { userId: context.userId, role, permissions };
@@ -180,16 +142,7 @@ export const assignRole = createServerFn({ method: "POST" })
   .validator(RoleInput)
   .handler(async ({ context, data }) => {
     const sql = await getSql();
-    await requirePermissionForUser(sql, context.userId, "roles.manage");
-    const existing = await sql.query<{ role: RbacRole | null }>(
-      `select r.role from "user" u left join app_user_roles r on r.user_id = u.id where u.id = $1`,
-      [data.userId],
-    );
-    if (!existing[0]) throw new Error("User not found.");
-    const previousRole = existing[0].role;
-    if (!canChangeRoleSafely(previousRole, data.role, await ownerCount(sql))) {
-      throw new Error("The final Owner cannot be demoted.");
-    }
+    const previousRole = await authorizeRoleAssignment(sql, context.userId, data.userId, data.role);
     await sql.query(
       `insert into app_user_roles (user_id, role, assigned_by) values ($1, $2, $3)
        on conflict (user_id) do update set role = excluded.role, assigned_by = excluded.assigned_by, updated_at = now()`,
@@ -223,21 +176,13 @@ export const deleteAdminUser = createServerFn({ method: "POST" })
   .validator(UserIdInput)
   .handler(async ({ context, data }) => {
     const sql = await getSql();
-    await requirePermissionForUser(sql, context.userId, "users.delete");
-    const target = await sql.query<{ role: RbacRole | null }>(
-      `select r.role from "user" u left join app_user_roles r on r.user_id = u.id where u.id = $1`,
-      [data.userId],
-    );
-    if (!target[0]) throw new Error("User not found.");
-    if (!canDeleteUserSafely(target[0].role, await ownerCount(sql))) {
-      throw new Error("The final Owner cannot be deleted.");
-    }
+    const targetRole = await authorizeUserDeletion(sql, context.userId, data.userId);
     await recordAudit(sql, {
       actorUserId: context.userId,
       action: "user_deleted",
       resourceType: "user",
       resourceId: data.userId,
-      previousValue: { role: target[0].role },
+      previousValue: { role: targetRole },
       newValue: { deleted: true },
     });
     await sql.query(`delete from "user" where id = $1`, [data.userId]);
@@ -279,9 +224,3 @@ export const listAdminPayments = createServerFn({ method: "GET" })
       completedAt: row.completed_at ? new Date(row.completed_at).toISOString() : null,
     }));
   });
-
-export async function requireAdminPermission(permission: Permission, userId: string): Promise<Sql> {
-  const sql = await getSql();
-  await requirePermissionForUser(sql, userId, permission);
-  return sql;
-}
