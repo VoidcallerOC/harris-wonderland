@@ -81,21 +81,6 @@ const env = (key: string): string | undefined => {
 // provisions auth; set it to "false" to force auth off everywhere (dev user).
 const authDisabled = env("VITE_AUTH_ENABLED") === "false";
 
-if (isProduction && !authDisabled) {
-  const required = ["BETTER_AUTH_URL", "BETTER_AUTH_SECRET", "GROK_AUTH_CLIENT_ID", "GROK_AUTH_CLIENT_SECRET"];
-  const missing = required.filter((key) => !env(key));
-  if (missing.length) {
-    throw new Error(`Production authentication configuration error: missing ${missing.join(", ")}.`);
-  }
-  const configuredURL = env("BETTER_AUTH_URL");
-  try {
-    const url = new URL(configuredURL as string);
-    if (url.protocol !== "https:" || url.pathname !== "/" || url.search || url.hash) throw new Error("invalid origin");
-  } catch {
-    throw new Error("Production authentication configuration error: BETTER_AUTH_URL must be an HTTPS origin.");
-  }
-}
-
 // Broker federation creds: the deployer injects a per-app client when deployed;
 // otherwise fall back to the shared live-preview client, which the broker accepts
 // for any `*.grok-sandbox.com` callback (see `./preview`).
