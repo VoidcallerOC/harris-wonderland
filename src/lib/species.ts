@@ -16,18 +16,19 @@ export type AnimalCategory = {
   name: string;
   parentId?: AnimalCategoryId;
   description: string;
+  inventoryKeywords?: readonly string[];
 };
 
 export const ANIMAL_TAXONOMY: AnimalCategory[] = [
-  { id: "reptiles", slug: "reptiles", name: "Reptiles", description: "Snakes, lizards, turtles, and tortoises." },
-  { id: "snakes", slug: "snakes", name: "Snakes", parentId: "reptiles", description: "Corn snakes, kings, boas, pythons, and more." },
-  { id: "lizards", slug: "lizards", name: "Lizards", parentId: "reptiles", description: "Geckos, dragons, chameleons, and other lizards." },
-  { id: "turtles-tortoises", slug: "turtles-tortoises", name: "Turtles & Tortoises", parentId: "reptiles", description: "Long-lived shelled animals with serious husbandry needs." },
-  { id: "amphibians", slug: "amphibians", name: "Amphibians", parentId: "reptiles", description: "Frogs and other amphibians from the collection." },
-  { id: "mammals", slug: "mammals", name: "Mammals", description: "Small mammals and marsupials, when available." },
-  { id: "sugar-gliders", slug: "sugar-gliders", name: "Sugar Gliders", parentId: "mammals", description: "Sugar gliders and the supplies for keeping them well." },
-  { id: "birds", slug: "birds", name: "Birds", description: "Birds available by order or when they are on the floor." },
-  { id: "tropical-fish", slug: "tropical-fish", name: "Tropical Fish", description: "Freshwater, marine, and pond life from the fish room." },
+  { id: "reptiles", slug: "reptiles", name: "Reptiles", description: "Snakes, lizards, turtles, and tortoises.", inventoryKeywords: ["available animals", "snake", "python", "boa", "hognose", "gecko", "lizard", "turtle", "tortoise"] },
+  { id: "snakes", slug: "snakes", name: "Snakes", parentId: "reptiles", description: "Corn snakes, kings, boas, pythons, and more.", inventoryKeywords: ["snake", "python", "boa", "hognose"] },
+  { id: "lizards", slug: "lizards", name: "Lizards", parentId: "reptiles", description: "Geckos, dragons, chameleons, and other lizards.", inventoryKeywords: ["lizard", "gecko", "dragon", "chameleon"] },
+  { id: "turtles-tortoises", slug: "turtles-tortoises", name: "Turtles & Tortoises", parentId: "reptiles", description: "Long-lived shelled animals with serious husbandry needs.", inventoryKeywords: ["turtle", "tortoise"] },
+  { id: "amphibians", slug: "amphibians", name: "Amphibians", parentId: "reptiles", description: "Frogs and other amphibians from the collection.", inventoryKeywords: ["frog", "amphibian", "newt", "salamander"] },
+  { id: "mammals", slug: "mammals", name: "Mammals", description: "Small mammals and marsupials, when available.", inventoryKeywords: ["mammal", "sugar glider", "hedgehog", "rabbit", "guinea pig", "hamster"] },
+  { id: "sugar-gliders", slug: "sugar-gliders", name: "Sugar Gliders", parentId: "mammals", description: "Sugar gliders and the supplies for keeping them well.", inventoryKeywords: ["sugar glider"] },
+  { id: "birds", slug: "birds", name: "Birds", description: "Birds available by order or when they are on the floor.", inventoryKeywords: ["bird", "parrot", "parakeet", "cockatiel", "conure", "finch", "canary"] },
+  { id: "tropical-fish", slug: "tropical-fish", name: "Tropical Fish", description: "Freshwater, marine, and pond life from the fish room.", inventoryKeywords: ["tropical fish", "freshwater fish", "marine fish", "aquarium fish", "fish"] },
 ];
 
 export const ANIMAL_ROOT_CATEGORIES = ANIMAL_TAXONOMY.filter((category) => !category.parentId);

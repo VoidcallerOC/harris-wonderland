@@ -23,7 +23,12 @@ export const Route = createFileRoute("/collection/$category")({
 function CategoryCollectionPage() {
   const { category: categorySlug } = Route.useParams();
   if (categorySlug === "mammals" || categorySlug === "sugar-gliders") {
-    return <MammalsSection sugarGlidersOnly={categorySlug === "sugar-gliders"} />;
+    return (
+      <>
+        <AnimalBrowser selectedSlug={categorySlug} />
+        <MammalsSection sugarGlidersOnly={categorySlug === "sugar-gliders"} />
+      </>
+    );
   }
   return (
     <>

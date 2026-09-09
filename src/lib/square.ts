@@ -34,34 +34,18 @@ export type CatalogPayload = {
   categories: SquareCategory[];
 };
 
-export type ShopFilter =
-  | "animals"
-  | "pythons"
-  | "colubrids"
-  | "feeders"
-  | "supplies"
-  | "all";
+import { ANIMAL_ROOT_CATEGORIES, ANIMAL_TAXONOMY, type AnimalCategoryId } from "@/lib/species";
+
+export type ShopFilter = "animals" | "pythons" | "colubrids" | "feeders" | "supplies" | "all" | AnimalCategoryId;
 
 export const SHOP_FILTERS: { id: ShopFilter; label: string }[] = [
   { id: "animals", label: "On the rack" },
+  ...ANIMAL_ROOT_CATEGORIES.map((category) => ({ id: category.id, label: category.name })),
   { id: "pythons", label: "Pythons" },
   { id: "colubrids", label: "Colubrids" },
   { id: "feeders", label: "Feeders" },
   { id: "supplies", label: "Husbandry" },
   { id: "all", label: "Everything" },
-];
-
-const ANIMAL_CATS = [
-  "available animals",
-  "ball pythons",
-  "burmese pythons",
-  "boas",
-  "hognose",
-  "geckos",
-  "corn and rat snakes",
-  "kingsnakes",
-  "milksnakes",
-  "colubrids",
 ];
 
 function blobOf(product: SquareProduct) {
@@ -74,21 +58,7 @@ function hasWord(haystack: string, word: string) {
 }
 
 export function isAnimal(product: SquareProduct) {
-  const blob = blobOf(product);
-  if (ANIMAL_CATS.some((c) => blob.includes(c))) return true;
-  const n = product.name.toLowerCase();
-  return (
-    n.includes("ball python") ||
-    n.includes("burmese") ||
-    hasWord(n, "boa") ||
-    n.includes("hognose") ||
-    n.includes("kingsnake") ||
-    n.includes("milksnake") ||
-    n.includes("milk snake") ||
-    n.includes("corn snake") ||
-    n.includes("rat snake") ||
-    n.includes("gecko")
-  );
+  return Boolean(inventoryCategory(product));
 }
 
 export function isFeeder(product: SquareProduct) {
@@ -124,6 +94,35 @@ export function isColubrid(product: SquareProduct) {
   );
 }
 
+function categoryDepth(category: AnimalCategoryId) {
+  let depth = 0;
+  let current = ANIMAL_TAXONOMY.find((item) => item.id === category);
+  while (current?.parentId) {
+    depth += 1;
+    current = ANIMAL_TAXONOMY.find((item) => item.id === current?.parentId);
+  }
+  return depth;
+}
+
+export function inventoryCategory(product: SquareProduct): AnimalCategoryId | undefined {
+  if (isFeeder(product)) return undefined;
+  const blob = blobOf(product);
+  return ANIMAL_TAXONOMY
+    .filter((category) => category.inventoryKeywords?.some((keyword) => blob.includes(keyword)))
+    .sort((a, b) => categoryDepth(b.id) - categoryDepth(a.id))[0]?.id;
+}
+
+function belongsToCategory(product: SquareProduct, categoryId: AnimalCategoryId) {
+  const matched = inventoryCategory(product);
+  if (!matched) return false;
+  let current = ANIMAL_TAXONOMY.find((category) => category.id === matched);
+  while (current) {
+    if (current.id === categoryId) return true;
+    current = current.parentId ? ANIMAL_TAXONOMY.find((category) => category.id === current?.parentId) : undefined;
+  }
+  return false;
+}
+
 export function isPlaceholderName(name: string) {
   const n = name.trim();
   return !n || /^\d+$/.test(n) || /^sku[:\s-]/i.test(n);
@@ -146,6 +145,7 @@ export function matchesFilter(product: SquareProduct, filter: ShopFilter) {
   }
   if (filter === "colubrids") return isColubrid(product);
   if (filter === "feeders") return isFeeder(product);
+  if (ANIMAL_TAXONOMY.some((category) => category.id === filter)) return belongsToCategory(product, filter as AnimalCategoryId);
   return !isAnimal(product) && !isFeeder(product);
 }
 
