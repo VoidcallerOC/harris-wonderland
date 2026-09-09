@@ -26,7 +26,6 @@ export const SITE = {
   },
   emails: {
     adam: "Adam@harrisinwonderland.com",
-    seth: "Seth@harrisinwonderland.com",
   },
   links: {
     collection: "https://my-hiwsite-6573.square.site/available-animals",
@@ -39,18 +38,20 @@ export const SITE = {
     facebook: "https://www.facebook.com/profile.php?id=100063473713270",
     facebookShop: "https://www.facebook.com/harris.wonderland/",
     instagram: "https://www.instagram.com/harris_in_wonderland_pets/",
+    morphMarket: "https://www.morphmarket.com/stores/harris_in_wonderland/",
   },
   timezone: "America/New_York",
 } as const;
 
 export const NAV = [
   { to: "/", label: "Home" },
-  { to: "/shop", label: "Shop" },
+  { to: "/shop", label: "Current Inventory" },
   { to: "/collection", label: "Collection" },
   { to: "/care", label: "Care" },
   { to: "/rentals", label: "Rentals" },
   { to: "/story", label: "Story" },
   { to: "/visit", label: "Visit" },
+  { to: "/fish", label: "Tropical Fish" },
 ] as const;
 
 export const MARQUEE = [

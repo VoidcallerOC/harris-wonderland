@@ -1,4 +1,43 @@
-export type SpeciesCategory = "snakes" | "lizards" | "shells" | "amphibians";
+export type AnimalCategoryId =
+  | "reptiles"
+  | "snakes"
+  | "lizards"
+  | "turtles-tortoises"
+  | "amphibians"
+  | "mammals"
+  | "sugar-gliders"
+  | "birds"
+  | "tropical-fish";
+export type SpeciesCategory = Exclude<AnimalCategoryId, "reptiles" | "mammals"> | "amphibians";
+
+export type AnimalCategory = {
+  id: AnimalCategoryId;
+  slug: string;
+  name: string;
+  parentId?: AnimalCategoryId;
+  description: string;
+};
+
+export const ANIMAL_TAXONOMY: AnimalCategory[] = [
+  { id: "reptiles", slug: "reptiles", name: "Reptiles", description: "Snakes, lizards, turtles, and tortoises." },
+  { id: "snakes", slug: "snakes", name: "Snakes", parentId: "reptiles", description: "Corn snakes, kings, boas, pythons, and more." },
+  { id: "lizards", slug: "lizards", name: "Lizards", parentId: "reptiles", description: "Geckos, dragons, chameleons, and other lizards." },
+  { id: "turtles-tortoises", slug: "turtles-tortoises", name: "Turtles & Tortoises", parentId: "reptiles", description: "Long-lived shelled animals with serious husbandry needs." },
+  { id: "amphibians", slug: "amphibians", name: "Amphibians", parentId: "reptiles", description: "Frogs and other amphibians from the collection." },
+  { id: "mammals", slug: "mammals", name: "Mammals", description: "Small mammals and marsupials, when available." },
+  { id: "sugar-gliders", slug: "sugar-gliders", name: "Sugar Gliders", parentId: "mammals", description: "Sugar gliders and the supplies for keeping them well." },
+  { id: "birds", slug: "birds", name: "Birds", description: "Birds available by order or when they are on the floor." },
+  { id: "tropical-fish", slug: "tropical-fish", name: "Tropical Fish", description: "Freshwater, marine, and pond life from the fish room." },
+];
+
+export const ANIMAL_ROOT_CATEGORIES = ANIMAL_TAXONOMY.filter((category) => !category.parentId);
+export const ANIMAL_LEAF_CATEGORIES = ANIMAL_TAXONOMY.filter((category) => category.parentId);
+export function animalCategory(idOrSlug: string | undefined) {
+  return ANIMAL_TAXONOMY.find((category) => category.id === idOrSlug || category.slug === idOrSlug);
+}
+export function childAnimalCategories(parentId: AnimalCategoryId) {
+  return ANIMAL_TAXONOMY.filter((category) => category.parentId === parentId);
+}
 
 export type Species = {
   id: string;
@@ -21,10 +60,10 @@ export type Species = {
 export const CATEGORIES: { id: SpeciesCategory | "all" | "beginner"; label: string }[] = [
   { id: "all", label: "All" },
   { id: "beginner", label: "First animal" },
-  { id: "snakes", label: "Snakes" },
-  { id: "lizards", label: "Lizards" },
-  { id: "shells", label: "Shells" },
-  { id: "amphibians", label: "Amphibians" },
+  ...ANIMAL_LEAF_CATEGORIES.filter((category) => category.id !== "sugar-gliders").map((category) => ({
+    id: category.id as SpeciesCategory,
+    label: category.name,
+  })),
 ];
 
 export const SPECIES: Species[] = [
@@ -202,7 +241,7 @@ export const SPECIES: Species[] = [
     id: "red-foot",
     name: "Red-foot tortoise",
     latin: "Chelonoidis carbonarius",
-    category: "shells",
+    category: "turtles-tortoises",
     beginner: true,
     floor: false,
     image: "/images/redfoot.jpg",
@@ -288,13 +327,19 @@ export const SPECIES: Species[] = [
 export function speciesById(id: string | undefined) {
   return SPECIES.find((s) => s.id === id);
 }
-
 export function filterSpecies(filter: string) {
   if (filter === "beginner") return SPECIES.filter((s) => s.beginner);
-  if (filter === "snakes" || filter === "lizards" || filter === "shells" || filter === "amphibians") {
+  if (filter === "snakes" || filter === "lizards" || filter === "turtles-tortoises" || filter === "amphibians") {
     return SPECIES.filter((s) => s.category === filter);
   }
   return SPECIES;
+}
+export function speciesForCategory(category: AnimalCategory | undefined) {
+  if (!category) return [];
+  if (category.id === "reptiles") {
+    return SPECIES.filter((species) => ["snakes", "lizards", "turtles-tortoises", "amphibians"].includes(species.category));
+  }
+  return SPECIES.filter((species) => species.category === category.id);
 }
 
 export const CHOOSER = [
@@ -314,7 +359,7 @@ export const CHOOSER = [
   },
   {
     id: "shell",
-    role: "Shells",
+    role: "Turtles & Tortoises",
     title: "Red-foot",
     body: "Personable and long-lived. They eat every day and they are messy. Be honest about the maintenance. Russians are the other beginner tortoise they will name.",
     speciesId: "red-foot",

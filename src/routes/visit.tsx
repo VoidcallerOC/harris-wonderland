@@ -65,10 +65,6 @@ function VisitPage() {
               <a className="text-brass underline-offset-4 hover:underline" href={`mailto:${SITE.emails.adam}`}>
                 {SITE.emails.adam}
               </a>
-              <br />
-              <a className="text-brass underline-offset-4 hover:underline" href={`mailto:${SITE.emails.seth}`}>
-                {SITE.emails.seth}
-              </a>
             </p>
             <div className="mt-6 flex flex-wrap gap-3">
               <Button asChild>

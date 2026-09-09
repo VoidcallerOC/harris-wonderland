@@ -1,12 +1,13 @@
 import { useEffect, useState } from "react";
 import { Link, useRouterState } from "@tanstack/react-router";
 import * as Dialog from "@radix-ui/react-dialog";
-import { Menu, ShoppingBag, X, Phone } from "lucide-react";
+import { Facebook, Instagram, Menu, ShoppingBag, X, Phone } from "lucide-react";
 import { NAV, SITE } from "@/lib/site";
 import { Button } from "@/components/ui/button";
 import { OpenBadge } from "@/components/open-badge";
 import { cartCount, useCart } from "@/lib/cart-store";
 import { cn } from "@/lib/utils";
+import { DesktopAnimalNav, MobileAnimalNav } from "@/components/animal-nav";
 
 function NavLinks({
   pathname,
@@ -79,6 +80,14 @@ export function SiteHeader() {
               <span className="hidden sm:inline">Call</span>
             </a>
           </Button>
+          <div className="hidden items-center gap-1 sm:flex" aria-label="Social links">
+            <a href={SITE.links.instagram} target="_blank" rel="noopener noreferrer" aria-label="Instagram" className="inline-flex size-10 items-center justify-center text-ticket hover:text-brass">
+              <Instagram className="size-4" />
+            </a>
+            <a href={SITE.links.facebook} target="_blank" rel="noopener noreferrer" aria-label="Facebook" className="inline-flex size-10 items-center justify-center text-ticket hover:text-brass">
+              <Facebook className="size-4" />
+            </a>
+          </div>
           <button
             type="button"
             onClick={() => setCartOpen(true)}
@@ -135,6 +144,15 @@ export function SiteHeader() {
                       </Link>
                     </Dialog.Close>
                   ))}
+                  <MobileAnimalNav onNavigate={() => setOpen(false)} />
+                  <a
+                    href={SITE.links.morphMarket}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex min-h-12 items-center font-display text-3xl italic text-ticket no-underline"
+                  >
+                    MorphMarket
+                  </a>
                 </nav>
                 <div className="mt-auto grid gap-3 pt-8">
                   <OpenBadge />
@@ -144,6 +162,14 @@ export function SiteHeader() {
                       {SITE.phones.shop.display}
                     </a>
                   </Button>
+                  <div className="grid grid-cols-2 gap-2">
+                    <Button asChild variant="ghost">
+                      <a href={SITE.links.instagram} target="_blank" rel="noopener noreferrer"><Instagram /> Instagram</a>
+                    </Button>
+                    <Button asChild variant="ghost">
+                      <a href={SITE.links.facebook} target="_blank" rel="noopener noreferrer"><Facebook /> Facebook</a>
+                    </Button>
+                  </div>
                   <Button
                     variant="ghost"
                     onClick={() => {
@@ -164,6 +190,15 @@ export function SiteHeader() {
       <nav className="hidden border-t border-border lg:block">
         <div className="wrap flex items-center justify-center gap-x-5 py-2.5 2xl:gap-x-8">
           <NavLinks pathname={pathname} />
+          <DesktopAnimalNav pathname={pathname} />
+          <a
+            href={SITE.links.morphMarket}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="font-ui text-kicker font-bold uppercase tracking-kicker text-fg-soft no-underline transition-colors duration-quick hover:text-ticket"
+          >
+            MorphMarket
+          </a>
         </div>
       </nav>
     </header>

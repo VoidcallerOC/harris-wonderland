@@ -19,7 +19,7 @@ const jsonLd = {
   name: SITE.name,
   description: SITE.description,
   telephone: ["+1-860-674-0160", "+1-860-888-5130"],
-  email: [SITE.emails.adam, SITE.emails.seth],
+  email: SITE.emails.adam,
   address: {
     "@type": "PostalAddress",
     streetAddress: SITE.address.street,
@@ -30,7 +30,7 @@ const jsonLd = {
   },
   url: `${SITE.origin}/`,
   hasMap: SITE.links.maps,
-  sameAs: [SITE.links.facebook, SITE.links.instagram],
+  sameAs: [SITE.links.facebook, SITE.links.instagram, SITE.links.morphMarket],
   // Derived from HOURS so the shop ticket and Google can never disagree.
   openingHoursSpecification: HOURS.filter((row) => !row.closed).map((row) => ({
     "@type": "OpeningHoursSpecification",

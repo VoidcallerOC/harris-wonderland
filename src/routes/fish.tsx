@@ -61,7 +61,7 @@ function FishPage() {
         />
         <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(11,10,9,0.2)_0%,rgba(11,10,9,0.88)_100%)]" />
         <div className="relative wrap flex min-h-[52svh] flex-col justify-end pb-12 pt-24">
-          <Kicker>Freshwater · marine · ponds</Kicker>
+          <Kicker>Tropical fish · freshwater · marine · ponds</Kicker>
           <Display as="h1" className="mt-2 text-display">
             Fish room
           </Display>
@@ -70,6 +70,10 @@ function FishPage() {
             marine room, a limited number of pond installs, and sugar gliders when we have
             them.
           </Lede>
+          <div className="mt-6 flex flex-wrap gap-3">
+            <Button asChild><Link to="/shop">Browse available animals</Link></Button>
+            <Button asChild variant="ghost"><a href={SITE.links.morphMarket} target="_blank" rel="noopener noreferrer">Shop MorphMarket</a></Button>
+          </div>
         </div>
       </section>
 
@@ -99,7 +103,7 @@ function FishPage() {
                 <a href={SITE.phones.shop.href}>Ask for a pond estimate</a>
               </Button>
               <Button asChild variant="ghost">
-                <a href={`mailto:${SITE.emails.seth}`}>Write Seth</a>
+                <a href={`mailto:${SITE.emails.adam}`}>Email the shop</a>
               </Button>
             </div>
           </div>

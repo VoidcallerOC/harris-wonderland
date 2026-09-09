@@ -18,6 +18,9 @@ import { Route as RentalsRouteImport } from './routes/rentals'
 import { Route as ShopRouteImport } from './routes/shop'
 import { Route as StoryRouteImport } from './routes/story'
 import { Route as VisitRouteImport } from './routes/visit'
+import { Route as AdminHoldsRouteImport } from './routes/admin.holds'
+import { Route as CollectionIndexRouteImport } from './routes/collection.index'
+import { Route as CollectionCategoryRouteImport } from './routes/collection.$category'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -64,40 +67,63 @@ const VisitRoute = VisitRouteImport.update({
   path: '/visit',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AdminHoldsRoute = AdminHoldsRouteImport.update({
+  id: '/admin/holds',
+  path: '/admin/holds',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CollectionIndexRoute = CollectionIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => CollectionRoute,
+} as any)
+const CollectionCategoryRoute = CollectionCategoryRouteImport.update({
+  id: '/$category',
+  path: '/$category',
+  getParentRoute: () => CollectionRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/care': typeof CareRoute
-  '/collection': typeof CollectionRoute
+  '/collection': typeof CollectionRouteWithChildren
   '/fish': typeof FishRoute
   '/merch': typeof MerchRoute
   '/rentals': typeof RentalsRoute
   '/shop': typeof ShopRoute
   '/story': typeof StoryRoute
   '/visit': typeof VisitRoute
+  '/admin/holds': typeof AdminHoldsRoute
+  '/collection/$category': typeof CollectionCategoryRoute
+  '/collection/': typeof CollectionIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/care': typeof CareRoute
-  '/collection': typeof CollectionRoute
   '/fish': typeof FishRoute
   '/merch': typeof MerchRoute
   '/rentals': typeof RentalsRoute
   '/shop': typeof ShopRoute
   '/story': typeof StoryRoute
   '/visit': typeof VisitRoute
+  '/admin/holds': typeof AdminHoldsRoute
+  '/collection/$category': typeof CollectionCategoryRoute
+  '/collection': typeof CollectionIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/care': typeof CareRoute
-  '/collection': typeof CollectionRoute
+  '/collection': typeof CollectionRouteWithChildren
   '/fish': typeof FishRoute
   '/merch': typeof MerchRoute
   '/rentals': typeof RentalsRoute
   '/shop': typeof ShopRoute
   '/story': typeof StoryRoute
   '/visit': typeof VisitRoute
+  '/admin/holds': typeof AdminHoldsRoute
+  '/collection/$category': typeof CollectionCategoryRoute
+  '/collection/': typeof CollectionIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -111,17 +137,22 @@ export interface FileRouteTypes {
     | '/shop'
     | '/story'
     | '/visit'
+    | '/admin/holds'
+    | '/collection/$category'
+    | '/collection/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
     | '/care'
-    | '/collection'
     | '/fish'
     | '/merch'
     | '/rentals'
     | '/shop'
     | '/story'
     | '/visit'
+    | '/admin/holds'
+    | '/collection/$category'
+    | '/collection'
   id:
     | '__root__'
     | '/'
@@ -133,18 +164,22 @@ export interface FileRouteTypes {
     | '/shop'
     | '/story'
     | '/visit'
+    | '/admin/holds'
+    | '/collection/$category'
+    | '/collection/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   CareRoute: typeof CareRoute
-  CollectionRoute: typeof CollectionRoute
+  CollectionRoute: typeof CollectionRouteWithChildren
   FishRoute: typeof FishRoute
   MerchRoute: typeof MerchRoute
   RentalsRoute: typeof RentalsRoute
   ShopRoute: typeof ShopRoute
   StoryRoute: typeof StoryRoute
   VisitRoute: typeof VisitRoute
+  AdminHoldsRoute: typeof AdminHoldsRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -212,19 +247,55 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof VisitRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/admin/holds': {
+      id: '/admin/holds'
+      path: '/admin/holds'
+      fullPath: '/admin/holds'
+      preLoaderRoute: typeof AdminHoldsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/collection/': {
+      id: '/collection/'
+      path: '/'
+      fullPath: '/collection/'
+      preLoaderRoute: typeof CollectionIndexRouteImport
+      parentRoute: typeof CollectionRoute
+    }
+    '/collection/$category': {
+      id: '/collection/$category'
+      path: '/$category'
+      fullPath: '/collection/$category'
+      preLoaderRoute: typeof CollectionCategoryRouteImport
+      parentRoute: typeof CollectionRoute
+    }
   }
 }
+
+interface CollectionRouteChildren {
+  CollectionCategoryRoute: typeof CollectionCategoryRoute
+  CollectionIndexRoute: typeof CollectionIndexRoute
+}
+
+const CollectionRouteChildren: CollectionRouteChildren = {
+  CollectionCategoryRoute: CollectionCategoryRoute,
+  CollectionIndexRoute: CollectionIndexRoute,
+}
+
+const CollectionRouteWithChildren = CollectionRoute._addFileChildren(
+  CollectionRouteChildren,
+)
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   CareRoute: CareRoute,
-  CollectionRoute: CollectionRoute,
+  CollectionRoute: CollectionRouteWithChildren,
   FishRoute: FishRoute,
   MerchRoute: MerchRoute,
   RentalsRoute: RentalsRoute,
   ShopRoute: ShopRoute,
   StoryRoute: StoryRoute,
   VisitRoute: VisitRoute,
+  AdminHoldsRoute: AdminHoldsRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
