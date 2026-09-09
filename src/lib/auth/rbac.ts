@@ -2,7 +2,7 @@ import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
 import { getSql, type Sql } from "../db.ts";
 import { authMiddleware } from "./middleware.ts";
-import { RBAC_ROLES, type AuditAction, type JsonValue, type Permission, type RbacRole } from "./rbac-policy.ts";
+import { RBAC_ROLES, type AuditAction, type JsonValue, type RbacRole } from "./rbac-policy.ts";
 import { authorizeRoleAssignment, authorizeUserDeletion, ForbiddenError, getCurrentPermissions, getRoleForUser, hasPermissionForUser, ownerCount, requirePermissionForUser } from "./rbac-guards.ts";
 
 export { RBAC_ROLES, RBAC_PERMISSIONS, ROLE_PERMISSIONS } from "./rbac-policy.ts";
