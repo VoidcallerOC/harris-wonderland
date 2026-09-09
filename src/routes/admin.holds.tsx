@@ -1,17 +1,19 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
 import { listSugarGliderHolds, updateSugarGliderHold, HOLD_STATUSES, type HoldStatus, type SugarGliderHold } from "@/lib/sugar-glider-holds";
+import { getAdminDashboard } from "@/lib/auth/rbac";
+import { AdminPanel, type AdminAccess } from "@/components/admin/admin-panel";
 import { SiteShell } from "@/components/site-shell";
-import { Kicker, Display } from "@/components/type";
+import { Kicker } from "@/components/type";
 import { Button } from "@/components/ui/button";
 import { formatMammalPrice } from "@/lib/mammals";
 
 export const Route = createFileRoute("/admin/holds")({
-  loader: () => listSugarGliderHolds(),
+  loader: async () => ({ access: await getAdminDashboard(), holds: await listSugarGliderHolds() }),
   component: AdminHoldsPage,
 });
 
-function HoldRow({ hold, onUpdate }: { hold: SugarGliderHold; onUpdate: (hold: SugarGliderHold) => void }) {
+function HoldRow({ access, hold, onUpdate }: { access: AdminAccess; hold: SugarGliderHold; onUpdate: (hold: SugarGliderHold) => void }) {
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
   async function update(status: HoldStatus) {
@@ -47,7 +49,15 @@ function HoldRow({ hold, onUpdate }: { hold: SugarGliderHold; onUpdate: (hold: S
       </div>
       {hold.notes ? <p className="mt-3 border-l-2 border-brass pl-3 text-sm text-muted-foreground">{hold.notes}</p> : null}
       <div className="mt-4 flex flex-wrap gap-2">
-        {HOLD_STATUSES.filter((status) => status !== hold.status).map((status) => (
+        {HOLD_STATUSES.filter((status) => status !== hold.status && (
+          status === "expired" || hold.status === "expired" || hold.status === "cancelled"
+            ? access.permissions.includes("holds.override")
+            : status === "cancelled"
+              ? access.permissions.includes("holds.release")
+              : status === "ready"
+                ? access.permissions.includes("holds.extend")
+                : access.permissions.includes("holds.edit")
+        )).map((status) => (
           <Button key={status} size="sm" variant="ghost" disabled={busy} onClick={() => update(status)}>
             Mark {status.replace("_", " ")}
           </Button>
@@ -60,19 +70,14 @@ function HoldRow({ hold, onUpdate }: { hold: SugarGliderHold; onUpdate: (hold: S
 
 function AdminHoldsPage() {
   const initial = Route.useLoaderData();
-  const [holds, setHolds] = useState(initial);
+  const [holds, setHolds] = useState(initial.holds);
   return (
     <SiteShell>
-      <main className="py-14 sm:py-20">
-        <div className="wrap">
-          <Kicker>Harris administration</Kicker>
-          <Display as="h1" className="mt-2 text-display">Sugar Glider holds.</Display>
-          <p className="mt-4 max-w-2xl text-fg-soft">Authenticated staff can review requests, see Square payment states, and advance the lifecycle. Expired active holds are marked automatically whenever this page or a new request is opened.</p>
+      <AdminPanel access={initial.access} title="Sugar Glider holds." description="Authorized staff can review requests, see the payment state appropriate to their role, and advance the hold lifecycle. Expired active holds are marked automatically whenever this page or a new request is opened.">
           <div className="mt-8 grid gap-4">
-            {holds.length ? holds.map((hold) => <HoldRow key={hold.id} hold={hold} onUpdate={(updated) => setHolds((current) => current.map((item) => item.id === updated.id ? updated : item))} />) : <p className="border border-dashed border-border p-6 text-muted-foreground">No holds yet.</p>}
+            {holds.length ? holds.map((hold) => <HoldRow key={hold.id} access={initial.access} hold={hold} onUpdate={(updated) => setHolds((current) => current.map((item) => item.id === updated.id ? updated : item))} />) : <p className="border border-dashed border-border p-6 text-muted-foreground">No holds yet.</p>}
           </div>
-        </div>
-      </main>
+      </AdminPanel>
     </SiteShell>
   );
 }

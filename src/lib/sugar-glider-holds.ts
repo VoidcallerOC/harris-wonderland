@@ -2,6 +2,7 @@ import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
 import { getSql } from "@/lib/db";
 import { authMiddleware } from "@/lib/auth/middleware";
+import { getRoleForUser, recordAudit, requirePermissionForUser } from "@/lib/auth/rbac";
 import { SUGAR_GLIDERS, mammalDeposit, type MammalAvailability } from "@/lib/mammals";
 import { chargeSquareCard, refundSquarePayment } from "@/lib/square-api";
 
@@ -130,13 +131,6 @@ function paymentColumn(mode: HoldPaymentMode) {
     deposit: { status: "deposit_payment_status", id: "deposit_payment_id", at: "deposit_payment_at" },
     balance: { status: "balance_payment_status", id: "balance_payment_id", at: "balance_payment_at" },
   }[mode];
-}
-
-function adminUserIds() {
-  return (process.env.ADMIN_USER_IDS ?? "").split(",").map((id) => id.trim()).filter(Boolean);
-}
-async function requireAdmin(userId: string) {
-  if (!adminUserIds().includes(userId)) throw new Error("Administrator access is required.");
 }
 
 function listingForHold(animalId: string) {
@@ -281,27 +275,46 @@ export const paySugarGliderHold = createServerFn({ method: "POST" })
 export const listSugarGliderHolds = createServerFn({ method: "GET" })
   .middleware([authMiddleware])
   .handler(async ({ context }) => {
-    await requireAdmin(context.userId);
     const sql = await getSql();
+    await requirePermissionForUser(sql, context.userId, "holds.view");
     await expireStaleHolds(sql);
     const rows = await sql.query<HoldDbRow>(`select * from sugar_glider_holds order by created_at desc limit 200`);
-    return rows.map(toHold);
+    const holds = rows.map(toHold);
+    if (await getRoleForUser(sql, context.userId) === "staff") {
+      return holds.map((hold) => ({
+        ...hold,
+        fullPaymentId: null,
+        depositPaymentId: null,
+        balancePaymentId: null,
+      }));
+    }
+    return holds;
   });
 
 export const updateSugarGliderHold = createServerFn({ method: "POST" })
   .middleware([authMiddleware])
   .validator(AdminStatusInput)
   .handler(async ({ context, data }) => {
-    await requireAdmin(context.userId);
     const sql = await getSql();
-    await expireStaleHolds(sql);
     const current = await sql.query<Pick<HoldDbRow, "status">>(`select status from sugar_glider_holds where id = $1`, [data.holdId]);
     if (!current[0]) throw new Error("Hold not found.");
+    const override = data.status === "expired" || current[0].status === "expired" || current[0].status === "cancelled";
+    await requirePermissionForUser(sql, context.userId, override ? "holds.override" : data.status === "cancelled" ? "holds.release" : "holds.edit");
+    await expireStaleHolds(sql);
     if (!canTransitionHold(current[0].status, data.status)) throw new Error(`A ${current[0].status.replace("_", " ")} hold cannot be marked ${data.status.replace("_", " ")}.`);
     const rows = await sql.query<HoldDbRow>(
       `update sugar_glider_holds set status = $2, notes = coalesce($3, notes), updated_at = now() where id = $1 and status = $4 returning *`,
       [data.holdId, data.status, data.notes?.trim() || null, current[0].status],
     );
     if (!rows[0]) throw new Error("That hold changed in another request. Refresh and try again.");
+    const action = override ? "hold_overridden" : data.status === "cancelled" ? "hold_released" : data.status === "ready" ? "hold_extended" : "hold_updated";
+    await recordAudit(sql, {
+      actorUserId: context.userId,
+      action,
+      resourceType: "sugar_glider_hold",
+      resourceId: data.holdId,
+      previousValue: { status: current[0].status },
+      newValue: { status: data.status, notes: data.notes?.trim() || null },
+    });
     return toHold(rows[0]);
   });

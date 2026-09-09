@@ -64,6 +64,7 @@ test("the auth schema ships outside the globbed directory", () => {
       { name: "0001_sugar_glider_holds.sql", path: "0001_sugar_glider_holds.sql" },
       { name: "0002_hold_payments.sql", path: "0002_hold_payments.sql" },
       { name: "0003_payment_attempt_concurrency.sql", path: "0003_payment_attempt_concurrency.sql" },
+      { name: "0004_rbac.sql", path: "0004_rbac.sql" },
     ],
   );
   assert.ok(readdirSync(join(migrationsDir, "auth")).includes("0001_auth.sql"));

@@ -18,7 +18,13 @@ import { Route as RentalsRouteImport } from './routes/rentals'
 import { Route as ShopRouteImport } from './routes/shop'
 import { Route as StoryRouteImport } from './routes/story'
 import { Route as VisitRouteImport } from './routes/visit'
+import { Route as AdminIndexRouteImport } from './routes/admin.index'
+import { Route as AdminAnimalsRouteImport } from './routes/admin.animals'
+import { Route as AdminAuditLogRouteImport } from './routes/admin.audit-log'
 import { Route as AdminHoldsRouteImport } from './routes/admin.holds'
+import { Route as AdminPaymentsRouteImport } from './routes/admin.payments'
+import { Route as AdminSettingsRouteImport } from './routes/admin.settings'
+import { Route as AdminUsersRouteImport } from './routes/admin.users'
 import { Route as CollectionIndexRouteImport } from './routes/collection.index'
 import { Route as CollectionCategoryRouteImport } from './routes/collection.$category'
 
@@ -67,9 +73,39 @@ const VisitRoute = VisitRouteImport.update({
   path: '/visit',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AdminIndexRoute = AdminIndexRouteImport.update({
+  id: '/admin/',
+  path: '/admin/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AdminAnimalsRoute = AdminAnimalsRouteImport.update({
+  id: '/admin/animals',
+  path: '/admin/animals',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AdminAuditLogRoute = AdminAuditLogRouteImport.update({
+  id: '/admin/audit-log',
+  path: '/admin/audit-log',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AdminHoldsRoute = AdminHoldsRouteImport.update({
   id: '/admin/holds',
   path: '/admin/holds',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AdminPaymentsRoute = AdminPaymentsRouteImport.update({
+  id: '/admin/payments',
+  path: '/admin/payments',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AdminSettingsRoute = AdminSettingsRouteImport.update({
+  id: '/admin/settings',
+  path: '/admin/settings',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AdminUsersRoute = AdminUsersRouteImport.update({
+  id: '/admin/users',
+  path: '/admin/users',
   getParentRoute: () => rootRouteImport,
 } as any)
 const CollectionIndexRoute = CollectionIndexRouteImport.update({
@@ -93,8 +129,14 @@ export interface FileRoutesByFullPath {
   '/shop': typeof ShopRoute
   '/story': typeof StoryRoute
   '/visit': typeof VisitRoute
+  '/admin/animals': typeof AdminAnimalsRoute
+  '/admin/audit-log': typeof AdminAuditLogRoute
   '/admin/holds': typeof AdminHoldsRoute
+  '/admin/payments': typeof AdminPaymentsRoute
+  '/admin/settings': typeof AdminSettingsRoute
+  '/admin/users': typeof AdminUsersRoute
   '/collection/$category': typeof CollectionCategoryRoute
+  '/admin/': typeof AdminIndexRoute
   '/collection/': typeof CollectionIndexRoute
 }
 export interface FileRoutesByTo {
@@ -106,8 +148,14 @@ export interface FileRoutesByTo {
   '/shop': typeof ShopRoute
   '/story': typeof StoryRoute
   '/visit': typeof VisitRoute
+  '/admin/animals': typeof AdminAnimalsRoute
+  '/admin/audit-log': typeof AdminAuditLogRoute
   '/admin/holds': typeof AdminHoldsRoute
+  '/admin/payments': typeof AdminPaymentsRoute
+  '/admin/settings': typeof AdminSettingsRoute
+  '/admin/users': typeof AdminUsersRoute
   '/collection/$category': typeof CollectionCategoryRoute
+  '/admin': typeof AdminIndexRoute
   '/collection': typeof CollectionIndexRoute
 }
 export interface FileRoutesById {
@@ -121,8 +169,14 @@ export interface FileRoutesById {
   '/shop': typeof ShopRoute
   '/story': typeof StoryRoute
   '/visit': typeof VisitRoute
+  '/admin/animals': typeof AdminAnimalsRoute
+  '/admin/audit-log': typeof AdminAuditLogRoute
   '/admin/holds': typeof AdminHoldsRoute
+  '/admin/payments': typeof AdminPaymentsRoute
+  '/admin/settings': typeof AdminSettingsRoute
+  '/admin/users': typeof AdminUsersRoute
   '/collection/$category': typeof CollectionCategoryRoute
+  '/admin/': typeof AdminIndexRoute
   '/collection/': typeof CollectionIndexRoute
 }
 export interface FileRouteTypes {
@@ -137,8 +191,14 @@ export interface FileRouteTypes {
     | '/shop'
     | '/story'
     | '/visit'
+    | '/admin/animals'
+    | '/admin/audit-log'
     | '/admin/holds'
+    | '/admin/payments'
+    | '/admin/settings'
+    | '/admin/users'
     | '/collection/$category'
+    | '/admin/'
     | '/collection/'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -150,8 +210,14 @@ export interface FileRouteTypes {
     | '/shop'
     | '/story'
     | '/visit'
+    | '/admin/animals'
+    | '/admin/audit-log'
     | '/admin/holds'
+    | '/admin/payments'
+    | '/admin/settings'
+    | '/admin/users'
     | '/collection/$category'
+    | '/admin'
     | '/collection'
   id:
     | '__root__'
@@ -164,8 +230,14 @@ export interface FileRouteTypes {
     | '/shop'
     | '/story'
     | '/visit'
+    | '/admin/animals'
+    | '/admin/audit-log'
     | '/admin/holds'
+    | '/admin/payments'
+    | '/admin/settings'
+    | '/admin/users'
     | '/collection/$category'
+    | '/admin/'
     | '/collection/'
   fileRoutesById: FileRoutesById
 }
@@ -179,7 +251,13 @@ export interface RootRouteChildren {
   ShopRoute: typeof ShopRoute
   StoryRoute: typeof StoryRoute
   VisitRoute: typeof VisitRoute
+  AdminAnimalsRoute: typeof AdminAnimalsRoute
+  AdminAuditLogRoute: typeof AdminAuditLogRoute
   AdminHoldsRoute: typeof AdminHoldsRoute
+  AdminPaymentsRoute: typeof AdminPaymentsRoute
+  AdminSettingsRoute: typeof AdminSettingsRoute
+  AdminUsersRoute: typeof AdminUsersRoute
+  AdminIndexRoute: typeof AdminIndexRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -247,11 +325,53 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof VisitRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/admin/': {
+      id: '/admin/'
+      path: '/admin'
+      fullPath: '/admin/'
+      preLoaderRoute: typeof AdminIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/admin/animals': {
+      id: '/admin/animals'
+      path: '/admin/animals'
+      fullPath: '/admin/animals'
+      preLoaderRoute: typeof AdminAnimalsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/admin/audit-log': {
+      id: '/admin/audit-log'
+      path: '/admin/audit-log'
+      fullPath: '/admin/audit-log'
+      preLoaderRoute: typeof AdminAuditLogRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/admin/holds': {
       id: '/admin/holds'
       path: '/admin/holds'
       fullPath: '/admin/holds'
       preLoaderRoute: typeof AdminHoldsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/admin/payments': {
+      id: '/admin/payments'
+      path: '/admin/payments'
+      fullPath: '/admin/payments'
+      preLoaderRoute: typeof AdminPaymentsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/admin/settings': {
+      id: '/admin/settings'
+      path: '/admin/settings'
+      fullPath: '/admin/settings'
+      preLoaderRoute: typeof AdminSettingsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/admin/users': {
+      id: '/admin/users'
+      path: '/admin/users'
+      fullPath: '/admin/users'
+      preLoaderRoute: typeof AdminUsersRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/collection/': {
@@ -295,7 +415,13 @@ const rootRouteChildren: RootRouteChildren = {
   ShopRoute: ShopRoute,
   StoryRoute: StoryRoute,
   VisitRoute: VisitRoute,
+  AdminAnimalsRoute: AdminAnimalsRoute,
+  AdminAuditLogRoute: AdminAuditLogRoute,
   AdminHoldsRoute: AdminHoldsRoute,
+  AdminPaymentsRoute: AdminPaymentsRoute,
+  AdminSettingsRoute: AdminSettingsRoute,
+  AdminUsersRoute: AdminUsersRoute,
+  AdminIndexRoute: AdminIndexRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
