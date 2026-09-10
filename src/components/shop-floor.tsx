@@ -49,19 +49,28 @@ function ProductCard({
         focused ? "border-brass" : "border-border",
       )}
     >
-      <div data-photo className="relative aspect-[4/5] overflow-hidden bg-surface">
-        <img
-          src={productImage(product)}
-          alt={product.name}
-          width={640}
-          height={800}
-          loading="lazy"
-          className="h-full w-full object-cover transition-transform duration-slow ease-out-smooth group-hover:scale-[1.04]"
-        />
-        <p className="pointer-events-none absolute left-3 top-3 bg-ticket-ink/75 px-2 py-1 font-ui text-kicker font-bold uppercase tracking-kicker text-ticket">
-          {buyable ? cat : "Sold"}
-        </p>
-      </div>
+      <a
+        href={product.url}
+        target="_blank"
+        rel="noopener noreferrer"
+        aria-label={`View ${product.name} on Square`}
+        data-square-product-image={product.id}
+        className="block focus-visible:outline-2 focus-visible:outline-offset-3 focus-visible:outline-brass"
+      >
+        <div data-photo className="relative aspect-[4/5] overflow-hidden bg-surface">
+          <img
+            src={productImage(product)}
+            alt={product.name}
+            width={640}
+            height={800}
+            loading="lazy"
+            className="h-full w-full object-cover transition-transform duration-slow ease-out-smooth group-hover:scale-[1.04]"
+          />
+          <p className="pointer-events-none absolute left-3 top-3 bg-ticket-ink/75 px-2 py-1 font-ui text-kicker font-bold uppercase tracking-kicker text-ticket">
+            {buyable ? cat : "Sold"}
+          </p>
+        </div>
+      </a>
       <div className="flex flex-1 flex-col p-4">
         {kind ? <Kicker>{kind}</Kicker> : feeder ? <Kicker>Feeder</Kicker> : null}
         <h3 className="mt-1 font-display text-card italic text-ticket">{title}</h3>

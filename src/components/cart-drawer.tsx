@@ -110,7 +110,15 @@ export function CartDrawer() {
                   <ul className="grid gap-4">
                     {items.map((item) => (
                       <li key={item.id} className="grid grid-cols-[4.5rem_1fr] gap-3">
-                        <img src={item.image} alt="" className="size-[4.5rem] object-cover" />
+                        <a
+                          href={item.url}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          aria-label={`View ${item.name} on Square`}
+                          className="block size-[4.5rem] focus-visible:outline-2 focus-visible:outline-offset-3 focus-visible:outline-brass"
+                        >
+                          <img src={item.image} alt="" className="size-[4.5rem] object-cover" />
+                        </a>
                         <div>
                           {item.tag ? (
                             <p className="font-ui text-kicker font-bold uppercase tracking-kicker text-brass">

@@ -27,7 +27,16 @@ function FeederCard({ product, eager }: { product: SquareProduct; eager?: boolea
   if (!selected) {
     return (
       <article className="flex min-w-0 w-full flex-col overflow-hidden border border-border bg-card">
-        <SpecimenPhoto src={meta.image} alt={meta.title} caption="Call the shop" className="aspect-[16/10]" />
+        <a
+          href={product.url}
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-label={`View ${meta.title} on Square`}
+          data-square-product-image={product.id}
+          className="block focus-visible:outline-2 focus-visible:outline-offset-3 focus-visible:outline-brass"
+        >
+          <SpecimenPhoto src={meta.image} alt={meta.title} caption="Call the shop" className="aspect-[16/10]" />
+        </a>
         <div className="flex min-w-0 flex-1 flex-col p-4">
           <Kicker>{meta.kicker}</Kicker>
           <h3 className="mt-1 font-display text-card italic text-ticket">{meta.title}</h3>
@@ -40,13 +49,22 @@ function FeederCard({ product, eager }: { product: SquareProduct; eager?: boolea
 
   return (
     <article className="group flex min-w-0 w-full flex-col overflow-hidden border border-border bg-card">
-      <SpecimenPhoto
-        src={meta.image}
-        alt={meta.title}
-        caption={`${packs.length} packs`}
-        className="aspect-[16/10]"
-        eager={eager}
-      />
+      <a
+        href={product.url}
+        target="_blank"
+        rel="noopener noreferrer"
+        aria-label={`View ${meta.title} on Square`}
+        data-square-product-image={product.id}
+        className="block focus-visible:outline-2 focus-visible:outline-offset-3 focus-visible:outline-brass"
+      >
+        <SpecimenPhoto
+          src={meta.image}
+          alt={meta.title}
+          caption={`${packs.length} packs`}
+          className="aspect-[16/10]"
+          eager={eager}
+        />
+      </a>
       <div className="flex min-w-0 flex-1 flex-col p-4">
         <Kicker>{meta.kicker}</Kicker>
         <h3 className="mt-1 font-display text-card italic text-ticket">{meta.title}</h3>

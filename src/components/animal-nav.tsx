@@ -7,6 +7,13 @@ import { cn } from "@/lib/utils";
 const childCategories = (parentId: string) =>
   ANIMAL_TAXONOMY.filter((category) => category.parentId === parentId);
 
+const VISIT_LINKS = [
+  { to: "/visit", label: "Visit the shop" },
+  { to: "/fish", label: "Tropical fish" },
+  { to: "/rentals", label: "Rentals" },
+  { to: "/story", label: "Our story" },
+] as const;
+
 export function DesktopAnimalNav({ pathname }: { pathname: string }) {
   const active = pathname.startsWith("/collection") || pathname === "/shop";
   return (
@@ -46,6 +53,41 @@ export function DesktopAnimalNav({ pathname }: { pathname: string }) {
                 </DropdownMenu.Item>
               ))}
             </div>
+          ))}
+        </DropdownMenu.Content>
+      </DropdownMenu.Portal>
+    </DropdownMenu.Root>
+  );
+}
+
+export function DesktopVisitNav({ pathname }: { pathname: string }) {
+  const active = VISIT_LINKS.some((item) => pathname.startsWith(item.to));
+  return (
+    <DropdownMenu.Root>
+      <DropdownMenu.Trigger
+        className={cn(
+          "inline-flex items-center gap-1 whitespace-nowrap font-ui text-kicker font-bold uppercase tracking-kicker text-fg-soft outline-none transition-colors duration-quick hover:text-ticket",
+          active && "text-ticket",
+        )}
+      >
+        Visit the shop
+        <ChevronDown className="size-3.5" />
+      </DropdownMenu.Trigger>
+      <DropdownMenu.Portal>
+        <DropdownMenu.Content
+          align="center"
+          sideOffset={10}
+          className="z-50 min-w-56 border border-brass bg-card p-2 shadow-[6px_6px_0_0_var(--color-brass)]"
+        >
+          {VISIT_LINKS.map((item) => (
+            <DropdownMenu.Item asChild key={item.to}>
+              <Link
+                to={item.to}
+                className="block px-3 py-2 font-ui text-kicker font-bold uppercase tracking-kicker text-ticket no-underline hover:bg-brass hover:text-ticket-ink"
+              >
+                {item.label}
+              </Link>
+            </DropdownMenu.Item>
           ))}
         </DropdownMenu.Content>
       </DropdownMenu.Portal>

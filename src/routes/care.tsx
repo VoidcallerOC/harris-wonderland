@@ -214,13 +214,16 @@ function Essentials({
           return (
             <li key={item.label}>
               {product ? (
-                <Link
-                  to="/shop"
-                  search={{ item: product.id }}
+                <a
+                  href={product.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label={`View ${product.name} on Square`}
+                  data-square-product-image={product.id}
                   className="flex gap-3 border border-border bg-background p-2 no-underline transition-colors hover:border-brass"
                 >
                   {inner}
-                </Link>
+                </a>
               ) : (
                 <div className="flex gap-3 border border-border bg-background p-2">{inner}</div>
               )}

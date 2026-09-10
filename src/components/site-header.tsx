@@ -1,24 +1,26 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Link, useRouterState } from "@tanstack/react-router";
 import * as Dialog from "@radix-ui/react-dialog";
-import { Facebook, Instagram, Menu, ShoppingBag, X, Phone } from "lucide-react";
+import { ExternalLink, Facebook, Instagram, Menu, Phone, ShoppingBag, X } from "lucide-react";
 import { NAV, SITE } from "@/lib/site";
 import { Button } from "@/components/ui/button";
 import { OpenBadge } from "@/components/open-badge";
 import { cartCount, useCart } from "@/lib/cart-store";
 import { cn } from "@/lib/utils";
-import { DesktopAnimalNav, MobileAnimalNav } from "@/components/animal-nav";
+import { DesktopAnimalNav, DesktopVisitNav, MobileAnimalNav } from "@/components/animal-nav";
 
 function NavLinks({
   pathname,
   className,
+  items = NAV,
 }: {
   pathname: string;
   className?: string;
+  items?: readonly (typeof NAV)[number][];
 }) {
   return (
     <>
-      {NAV.map((item) => {
+      {items.map((item) => {
         const current = item.to === "/" ? pathname === "/" : pathname.startsWith(item.to);
         return (
           <Link
@@ -42,28 +44,33 @@ function NavLinks({
 export function SiteHeader() {
   const pathname = useRouterState({ select: (s) => s.location.pathname });
   const [open, setOpen] = useState(false);
+  const menuButtonRef = useRef<HTMLButtonElement>(null);
   const items = useCart((s) => s.items);
   const setCartOpen = useCart((s) => s.setOpen);
   const [hydrated, setHydrated] = useState(false);
   useEffect(() => setHydrated(true), []);
   const count = hydrated ? cartCount(items) : 0;
+  const closeMenu = () => {
+    setOpen(false);
+    requestAnimationFrame(() => menuButtonRef.current?.focus());
+  };
 
   return (
     <header className="sticky top-0 z-40 border-b border-border bg-background/90 pt-[env(safe-area-inset-top)] backdrop-blur-xl">
-      <div className="wrap flex h-[4.25rem] min-w-0 items-center justify-between gap-3 sm:h-[4.5rem]">
+      <div className="wrap flex h-16 min-w-0 items-center justify-between gap-2 sm:h-[4.5rem] sm:gap-3">
         <Link
           to="/"
-          className="flex min-w-0 shrink-0 items-center gap-2.5 text-foreground no-underline hover:text-ticket"
+          className="flex min-h-11 min-w-0 items-center gap-2 text-foreground no-underline hover:text-ticket max-[359px]:min-w-11 sm:gap-2.5"
         >
           <img
             src="/images/logo-192.png"
             alt=""
             width={192}
             height={192}
-            className="size-11 shrink-0 rounded-full ring-1 ring-brass/50 sm:size-12"
+            className="size-10 shrink-0 rounded-full ring-1 ring-brass/50 sm:size-12"
           />
-          <span className="block min-w-0">
-            <span className="block whitespace-nowrap font-display text-base font-semibold italic leading-none sm:text-xl">
+          <span className="block min-w-0 max-[359px]:hidden">
+            <span className="block whitespace-nowrap font-display text-sm font-semibold italic leading-none sm:text-xl">
               Harris in Wonderland
             </span>
             <span className="mt-1 hidden font-ui text-kicker font-bold uppercase tracking-kicker text-brass sm:block">
@@ -72,9 +79,9 @@ export function SiteHeader() {
           </span>
         </Link>
 
-        <div className="flex shrink-0 items-center gap-2 sm:gap-3">
+        <div className="flex shrink-0 items-center gap-1 sm:gap-3">
           <OpenBadge className="hidden md:inline-flex" />
-          <Button asChild size="sm" variant="ghost" className="inline-flex">
+          <Button asChild size="sm" variant="ghost" className="max-sm:size-11 max-sm:p-0">
             <a href={SITE.phones.shop.href} aria-label={`Call the shop at ${SITE.phones.shop.display}`}>
               <Phone />
               <span className="hidden sm:inline">Call</span>
@@ -101,18 +108,26 @@ export function SiteHeader() {
               </span>
             ) : null}
           </button>
-          <Dialog.Root open={open} onOpenChange={setOpen}>
-            <Dialog.Trigger asChild>
-              <button
-                className="inline-flex size-11 shrink-0 items-center justify-center border border-brass/40 text-ticket lg:hidden"
-                aria-label="Open menu"
-              >
-                <Menu className="size-5" />
-              </button>
-            </Dialog.Trigger>
+          <Dialog.Root open={open} onOpenChange={(nextOpen) => (nextOpen ? setOpen(true) : closeMenu())}>
+            <button
+              ref={menuButtonRef}
+              type="button"
+              onClick={() => setOpen(true)}
+              className="inline-flex size-11 shrink-0 items-center justify-center border border-brass/40 text-ticket lg:hidden"
+              aria-label="Open menu"
+              aria-expanded={open}
+              aria-haspopup="dialog"
+              aria-controls="mobile-navigation"
+            >
+              <Menu className="size-5" />
+            </button>
             <Dialog.Portal>
               <Dialog.Overlay className="fixed inset-0 z-50 bg-background/80" />
-              <Dialog.Content className="fixed inset-y-0 right-0 z-50 flex w-[min(20rem,100%)] flex-col border-l border-brass bg-card p-6 shadow-none">
+              <Dialog.Content
+                id="mobile-navigation"
+                aria-describedby={undefined}
+                className="fixed inset-y-0 right-0 z-50 flex w-full max-w-[22rem] flex-col overflow-y-auto border-l border-brass bg-card p-5 pb-[calc(1.25rem+env(safe-area-inset-bottom))] pt-[calc(1.25rem+env(safe-area-inset-top))] shadow-none sm:p-6"
+              >
                 <div className="flex items-center justify-between">
                   <Dialog.Title className="flex items-center gap-2 font-display text-2xl italic text-ticket">
                     <img
@@ -133,28 +148,69 @@ export function SiteHeader() {
                     </button>
                   </Dialog.Close>
                 </div>
-                <nav className="mt-8 flex flex-col gap-1">
-                  {NAV.map((item) => (
-                    <Dialog.Close asChild key={item.to}>
-                      <Link
-                        to={item.to}
-                        className="flex min-h-12 items-center font-display text-3xl italic text-ticket no-underline"
-                      >
-                        {item.label}
-                      </Link>
-                    </Dialog.Close>
-                  ))}
-                  <MobileAnimalNav onNavigate={() => setOpen(false)} />
+
+                <nav aria-label="Mobile navigation" className="mt-6 grid gap-5">
+                  <div>
+                    <p className="font-ui text-kicker font-bold uppercase tracking-kicker text-brass">Start here</p>
+                    <div className="mt-2 grid border-y border-border">
+                      {NAV.filter((item) => item.to === "/" || item.to === "/shop").map((item) => {
+                        const current = item.to === "/" ? pathname === "/" : pathname.startsWith(item.to);
+                        return (
+                          <Link
+                            key={item.to}
+                            to={item.to}
+                            onClick={closeMenu}
+                            aria-current={current ? "page" : undefined}
+                            className={cn(
+                              "flex min-h-12 items-center justify-between border-b border-border px-1 font-display text-2xl italic text-ticket no-underline last:border-0",
+                              current && "text-brass",
+                            )}
+                          >
+                            {item.label}
+                          </Link>
+                        );
+                      })}
+                    </div>
+                  </div>
+
                   <a
                     href={SITE.links.morphMarket}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="flex min-h-12 items-center font-display text-3xl italic text-ticket no-underline"
+                    onClick={closeMenu}
+                    className="flex min-h-14 items-center justify-between border border-brass bg-brass/10 px-4 font-display text-2xl italic text-ticket no-underline transition-colors hover:bg-brass hover:text-ticket-ink"
                   >
-                    MorphMarket
+                    <span>MorphMarket</span>
+                    <ExternalLink className="size-5" aria-hidden="true" />
                   </a>
+
+                  <MobileAnimalNav onNavigate={closeMenu} />
+
+                  <div>
+                    <p className="font-ui text-kicker font-bold uppercase tracking-kicker text-brass">Shop & visit</p>
+                    <div className="mt-2 grid border-y border-border">
+                      {NAV.filter((item) => !["/", "/shop", "/collection"].includes(item.to)).map((item) => {
+                        const current = pathname.startsWith(item.to);
+                        return (
+                          <Link
+                            key={item.to}
+                            to={item.to}
+                            onClick={closeMenu}
+                            aria-current={current ? "page" : undefined}
+                            className={cn(
+                              "flex min-h-12 items-center justify-between border-b border-border px-1 font-display text-2xl italic text-ticket no-underline last:border-0",
+                              current && "text-brass",
+                            )}
+                          >
+                            {item.label}
+                          </Link>
+                        );
+                      })}
+                    </div>
+                  </div>
                 </nav>
-                <div className="mt-auto grid gap-3 pt-8">
+
+                <div className="mt-6 grid gap-3 border-t border-border pt-5">
                   <OpenBadge />
                   <Button asChild>
                     <a href={SITE.phones.shop.href}>
@@ -173,7 +229,7 @@ export function SiteHeader() {
                   <Button
                     variant="ghost"
                     onClick={() => {
-                      setOpen(false);
+                      closeMenu();
                       setCartOpen(true);
                     }}
                   >
@@ -189,8 +245,12 @@ export function SiteHeader() {
 
       <nav className="hidden border-t border-border lg:block">
         <div className="wrap flex items-center justify-center gap-x-5 py-2.5 2xl:gap-x-8">
-          <NavLinks pathname={pathname} />
+          <NavLinks
+            pathname={pathname}
+            items={NAV.filter((item) => !["/rentals", "/story", "/visit", "/fish"].includes(item.to))}
+          />
           <DesktopAnimalNav pathname={pathname} />
+          <DesktopVisitNav pathname={pathname} />
           <a
             href={SITE.links.morphMarket}
             target="_blank"
