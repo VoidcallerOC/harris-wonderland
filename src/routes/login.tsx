@@ -1,7 +1,9 @@
 import { useState } from "react";
 import { createFileRoute, Navigate } from "@tanstack/react-router";
 import { SiteShell } from "@/components/site-shell";
-import { GROK_PROVIDERS, authClient, authEnabled, signIn, signOut } from "@/lib/auth/client";
+import { authClient, authEnabled, signOut } from "@/lib/auth/client";
+
+const BUILDER_EMAIL = "nickhsousa96@gmail.com";
 
 export const Route = createFileRoute("/login")({
   validateSearch: (search: Record<string, unknown>) => ({
@@ -13,20 +15,61 @@ export const Route = createFileRoute("/login")({
 function LoginPage() {
   const session = authClient.useSession();
   const { reason } = Route.useSearch();
-  const [pendingProvider, setPendingProvider] = useState<string | null>(null);
+  const [email, setEmail] = useState(BUILDER_EMAIL);
+  const [password, setPassword] = useState("");
+  const [pending, setPending] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const denied = reason === "denied";
 
   if (session.data?.user && !denied) return <Navigate to="/admin" />;
 
-  async function handleSignIn(providerId: string) {
-    setPendingProvider(providerId);
+  async function handleSubmit(event: React.FormEvent) {
+    event.preventDefault();
+    setPending(true);
     setErrorMessage(null);
+    const normalized = email.trim().toLowerCase();
+    if (normalized !== BUILDER_EMAIL) {
+      setErrorMessage("Use the studio Gmail for now. Shop accounts are assigned later.");
+      setPending(false);
+      return;
+    }
+    if (password.length < 8) {
+      setErrorMessage("Password must be at least 8 characters.");
+      setPending(false);
+      return;
+    }
     try {
-      await signIn(providerId, { callbackURL: "/admin", errorCallbackURL: "/login" });
+      const signedIn = await authClient.signIn.email({
+        email: normalized,
+        password,
+        callbackURL: "/admin",
+      });
+      if (!signedIn.error) {
+        window.location.href = "/admin";
+        return;
+      }
+      const message = signedIn.error.message ?? "";
+      const unknownUser = /not found|invalid email or password|invalid password|no user/i.test(message);
+      if (!unknownUser) {
+        setErrorMessage(message || "Sign-in failed.");
+        setPending(false);
+        return;
+      }
+      const signedUp = await authClient.signUp.email({
+        email: normalized,
+        password,
+        name: "Nick Sousa",
+        callbackURL: "/admin",
+      });
+      if (signedUp.error) {
+        setErrorMessage(signedUp.error.message ?? "Could not create the studio account.");
+        setPending(false);
+        return;
+      }
+      window.location.href = "/admin";
     } catch (error) {
       setErrorMessage(error instanceof Error ? error.message : "Sign-in failed. Please try again.");
-      setPendingProvider(null);
+      setPending(false);
     }
   }
 
@@ -39,7 +82,7 @@ function LoginPage() {
             Sign in.
           </h1>
           <p className="mt-4 leading-snug text-fg-soft">
-            Sign in with Google. Only accounts that have already been assigned a desk role can enter administration.
+            Use the studio Gmail and a password. First time here, that password creates the account.
           </p>
 
           {!session.isPending && !authEnabled && (
@@ -65,19 +108,35 @@ function LoginPage() {
               </button>
             </div>
           ) : (
-            <div className="mt-8 grid gap-3">
-              {GROK_PROVIDERS.map((provider) => (
-                <button
-                  key={provider.providerId}
-                  type="button"
-                  disabled={pendingProvider !== null || !authEnabled}
-                  onClick={() => void handleSignIn(provider.providerId)}
-                  className="min-h-12 border border-brass/50 bg-transparent px-5 py-3 text-center font-ui font-bold uppercase tracking-kicker text-ticket transition-colors hover:border-brass hover:bg-brass/10 disabled:cursor-wait disabled:opacity-50"
-                >
-                  {pendingProvider === provider.providerId ? "Opening sign-in…" : `Continue with ${provider.label}`}
-                </button>
-              ))}
-            </div>
+            <form className="mt-8 grid gap-3" onSubmit={(event) => void handleSubmit(event)}>
+              <label className="grid gap-1 text-sm text-fg-soft">
+                Email
+                <input
+                  type="email"
+                  autoComplete="username"
+                  value={email}
+                  onChange={(event) => setEmail(event.target.value)}
+                  className="min-h-12 border border-border bg-transparent px-3 text-ticket outline-none focus:border-brass"
+                />
+              </label>
+              <label className="grid gap-1 text-sm text-fg-soft">
+                Password
+                <input
+                  type="password"
+                  autoComplete="current-password"
+                  value={password}
+                  onChange={(event) => setPassword(event.target.value)}
+                  className="min-h-12 border border-border bg-transparent px-3 text-ticket outline-none focus:border-brass"
+                />
+              </label>
+              <button
+                type="submit"
+                disabled={pending || !authEnabled}
+                className="mt-2 min-h-12 border border-brass/50 bg-transparent px-5 py-3 text-center font-ui font-bold uppercase tracking-kicker text-ticket transition-colors hover:border-brass hover:bg-brass/10 disabled:cursor-wait disabled:opacity-50"
+              >
+                {pending ? "Signing in…" : "Sign in"}
+              </button>
+            </form>
           )}
         </section>
       </main>
