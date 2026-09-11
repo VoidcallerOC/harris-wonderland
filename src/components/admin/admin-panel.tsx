@@ -24,12 +24,12 @@ const roleLabels: Record<RbacRole, string> = {
 export function AdminPanel({ access, title, description, children }: { access: AdminAccess; title: string; description: string; children?: ReactNode }) {
   const items = [
     { href: "/admin", label: "Dashboard", permission: "dashboard.view" as const },
+    { href: "/admin/settings", label: "Site copy", permission: "content.view" as const },
     { href: "/admin/animals", label: "Animals", permission: "animals.view" as const },
     { href: "/admin/holds", label: "Holds", permission: "holds.view" as const },
     { href: "/admin/payments", label: "Payments", permission: "payments.view" as const },
     { href: "/admin/users", label: "Users", permission: "users.view" as const },
     { href: "/admin/audit-log", label: "Audit log", permission: "system.logs" as const },
-    { href: "/admin/settings", label: "Settings", permission: "system.database" as const },
   ];
   return (
     <main className="py-14 sm:py-20">
