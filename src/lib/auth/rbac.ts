@@ -2,6 +2,7 @@ import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
 import { getSql, type Sql } from "../db.ts";
 import { authMiddleware } from "./middleware.ts";
+import { auth } from "./server.ts";
 import { RBAC_ROLES, type AuditAction, type JsonValue, type RbacRole } from "./rbac-policy.ts";
 import { authorizeRoleAssignment, authorizeUserDeletion, ForbiddenError, getCurrentPermissions, getRoleForUser, hasPermissionForUser, ownerCount, requirePermissionForUser } from "./rbac-guards.ts";
 
@@ -117,6 +118,12 @@ const RoleInput = z.object({
   userId: z.string().trim().min(1).max(200),
   role: z.enum(RBAC_ROLES),
 });
+const CreateUserInput = z.object({
+  name: z.string().trim().min(2, "Name must be at least 2 characters.").max(100),
+  email: z.string().trim().email("Enter a valid email address.").max(320).transform((email) => email.toLowerCase()),
+  password: z.string().min(8, "Password must be at least 8 characters.").max(128),
+  role: z.enum(RBAC_ROLES).nullable().optional(),
+});
 const UserIdInput = z.object({ userId: z.string().trim().min(1).max(200) });
 const BootstrapInput = z.object({ token: z.string().min(1).max(500) });
 
@@ -178,6 +185,45 @@ export const assignRole = createServerFn({ method: "POST" })
       newValue: { role: data.role },
     });
     return { userId: data.userId, role: data.role };
+  });
+
+export const createAdminUser = createServerFn({ method: "POST" })
+  .middleware([authMiddleware])
+  .validator(CreateUserInput)
+  .handler(async ({ context, data }) => {
+    const sql = await getSql();
+    await requirePermissionForUser(sql, context.userId, "users.create");
+    if (data.role) await requirePermissionForUser(sql, context.userId, "roles.manage");
+
+    const result = await auth.api.signUpEmail({
+      body: { email: data.email, password: data.password, name: data.name },
+    });
+    if (!result.user) throw new Error("Could not create the user account.");
+
+    const createdUser = { id: result.user.id, name: result.user.name, email: result.user.email };
+    await recordAudit(sql, {
+      actorUserId: context.userId,
+      action: "user_created",
+      resourceType: "user",
+      resourceId: createdUser.id,
+      newValue: { name: createdUser.name, email: createdUser.email },
+    });
+
+    if (data.role) {
+      await sql.query(
+        `insert into app_user_roles (user_id, role, assigned_by) values ($1, $2, $3)`,
+        [createdUser.id, data.role, context.userId],
+      );
+      await recordAudit(sql, {
+        actorUserId: context.userId,
+        action: "role_created",
+        resourceType: "user_role",
+        resourceId: createdUser.id,
+        newValue: { role: data.role },
+      });
+    }
+
+    return { ...createdUser, role: data.role ?? null };
   });
 
 export const listAdminUsers = createServerFn({ method: "GET" })

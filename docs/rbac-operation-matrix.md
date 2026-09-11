@@ -12,6 +12,7 @@ This matrix records the final server-entry-point audit. The permission registry 
 | Expire/override hold | `updateSugarGliderHold` | `holds.override` | Server-side branch check; status/transition validation | Protected |
 | Role assignment/change | `rbac.ts` / `assignRole` | `roles.manage` | Better Auth + permission + closed role enum + audit | Protected |
 | View users | `rbac.ts` / `listAdminUsers` | `users.view` | Better Auth + permission | Protected |
+| Create user | `rbac.ts` / `createAdminUser` | `users.create` (and `roles.manage` when assigning an initial role) | Better Auth email/password creation + permission + audit | Protected |
 | Delete user | `rbac.ts` / `deleteAdminUser` | `users.delete` | Better Auth + permission + final-Owner invariant + audit | Protected |
 | Initial Owner bootstrap | `rbac.ts` / `bootstrapOwner` | Authenticated exact configured user + one-time token | User ID/token match, existing Owner count, audit | Protected |
 | View audit log | `rbac.ts` / `listAuditLog` | `system.logs` | Better Auth + permission | Protected |
