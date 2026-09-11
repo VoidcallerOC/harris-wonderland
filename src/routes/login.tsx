@@ -34,12 +34,12 @@ function LoginPage() {
     <SiteShell>
       <main className="wrap flex min-h-[70svh] items-center justify-center py-16 sm:py-24">
         <section className="w-full max-w-lg border border-border bg-card p-6 sm:p-10">
-          <p className="font-ui text-kicker font-bold uppercase tracking-kicker text-brass">Studio access</p>
+          <p className="font-ui text-kicker font-bold uppercase tracking-kicker text-brass">Staff access</p>
           <h1 className="mt-2 font-display text-4xl font-semibold italic leading-none tracking-display text-ticket sm:text-5xl">
             Sign in.
           </h1>
           <p className="mt-4 leading-snug text-fg-soft">
-            Google sign-in is for the site builder until the shop is ready to take the desk. Shop staff are not added until that handoff.
+            Sign in with Google. Only accounts that have already been assigned a desk role can enter administration.
           </p>
 
           {!session.isPending && !authEnabled && (
@@ -50,7 +50,7 @@ function LoginPage() {
 
           {(denied || errorMessage) && (
             <p role="alert" className="mt-6 border border-red-500/40 bg-red-500/10 p-3 text-sm text-fg-soft">
-              {errorMessage ?? "This Google account is not on the studio list. Sign out and use the approved Gmail."}
+              {errorMessage ?? "This account does not have a desk role yet."}
             </p>
           )}
 

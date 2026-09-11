@@ -1,6 +1,6 @@
 import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
-import { getSql, type Sql } from "../db.ts";
+import { getSql } from "../db.ts";
 import { authMiddleware } from "./middleware.ts";
 import { RBAC_ROLES, type AuditAction, type JsonValue, type RbacRole } from "./rbac-policy.ts";
 import { authorizeRoleAssignment, authorizeUserDeletion, ForbiddenError, getCurrentPermissions, getRoleForUser, hasPermissionForUser, ownerCount, requirePermissionForUser } from "./rbac-guards.ts";
@@ -46,35 +46,6 @@ type PaymentAttemptRow = {
   completed_at: string | null;
 };
 
-const STUDIO_OWNER_EMAILS = ["nickhsousa96@gmail.com"];
-
-function studioOwnerEmails(): Set<string> {
-  const extra = (process.env.ADMIN_EMAILS ?? "")
-    .split(",")
-    .map((value) => value.trim().toLowerCase())
-    .filter(Boolean);
-  return new Set([...STUDIO_OWNER_EMAILS, ...extra]);
-}
-
-async function grantStudioOwnerIfAllowed(sql: Sql, userId: string): Promise<void> {
-  if (await getRoleForUser(sql, userId)) return;
-  const user = await getCurrentUser(sql, userId);
-  const email = user?.email?.trim().toLowerCase();
-  if (!email || !studioOwnerEmails().has(email)) return;
-  await sql.query(
-    `insert into app_user_roles (user_id, role, assigned_by) values ($1, 'owner', $1)
-     on conflict (user_id) do nothing`,
-    [userId],
-  );
-  await recordAudit(sql, {
-    actorUserId: userId,
-    action: "role_created",
-    resourceType: "user_role",
-    resourceId: userId,
-    newValue: { role: "owner", allowlist: true },
-  });
-}
-
 function toAudit(row: AuditRow): AuditEntry {
   return {
     id: row.id,
@@ -88,7 +59,7 @@ function toAudit(row: AuditRow): AuditEntry {
   };
 }
 
-export async function getCurrentUser(sql: Sql, userId: string): Promise<CurrentUserRow | null> {
+export async function getCurrentUser(sql: import("../db.ts").Sql, userId: string): Promise<CurrentUserRow | null> {
   const rows = await sql.query<CurrentUserRow>(`select id, name, email, image from "user" where id = $1`, [userId]);
   return rows[0] ?? null;
 }
@@ -97,7 +68,7 @@ export const hasPermission = hasPermissionForUser;
 export const requirePermission = requirePermissionForUser;
 
 export async function recordAudit(
-  sql: Sql,
+  sql: import("../db.ts").Sql,
   input: {
     actorUserId: string;
     action: AuditAction;
@@ -133,7 +104,6 @@ export const getAdminDashboard = createServerFn({ method: "GET" })
   .middleware([authMiddleware])
   .handler(async ({ context }) => {
     const sql = await getSql();
-    await grantStudioOwnerIfAllowed(sql, context.userId);
     await requirePermissionForUser(sql, context.userId, "dashboard.view");
     const role = await getRoleForUser(sql, context.userId);
     const permissions = await getCurrentPermissions(sql, context.userId);
@@ -193,7 +163,6 @@ export const listAdminUsers = createServerFn({ method: "GET" })
   .middleware([authMiddleware])
   .handler(async ({ context }) => {
     const sql = await getSql();
-    await grantStudioOwnerIfAllowed(sql, context.userId);
     await requirePermissionForUser(sql, context.userId, "users.view");
     const rows = await sql.query<UserRow>(
       `select u.id, u.name, u.email, r.role, r.updated_at as role_updated_at
@@ -224,7 +193,6 @@ export const listAuditLog = createServerFn({ method: "GET" })
   .middleware([authMiddleware])
   .handler(async ({ context }) => {
     const sql = await getSql();
-    await grantStudioOwnerIfAllowed(sql, context.userId);
     await requirePermissionForUser(sql, context.userId, "system.logs");
     const rows = await sql.query<AuditRow>(
       `select id, actor_user_id, action, resource_type, resource_id, previous_value, new_value, created_at
@@ -237,7 +205,6 @@ export const listAdminPayments = createServerFn({ method: "GET" })
   .middleware([authMiddleware])
   .handler(async ({ context }) => {
     const sql = await getSql();
-    await grantStudioOwnerIfAllowed(sql, context.userId);
     await requirePermissionForUser(sql, context.userId, "payments.view");
     const rows = await sql.query<PaymentAttemptRow>(
       `select id, hold_id, payment_mode, amount_cents, status, square_payment_id, square_order_id, error_message, created_at, completed_at
