@@ -46,7 +46,6 @@ type PaymentAttemptRow = {
   completed_at: string | null;
 };
 
-/** Builder desk only. Shop staff, including Adam, are assigned by hand later. */
 const BUILDER_OWNER_EMAIL = "nickhsousa96@gmail.com";
 
 async function grantBuilderOwnerIfNeeded(sql: Sql, userId: string): Promise<void> {
@@ -189,7 +188,7 @@ export const listAdminUsers = createServerFn({ method: "GET" })
     await requirePermissionForUser(sql, context.userId, "users.view");
     const rows = await sql.query<UserRow>(
       `select u.id, u.name, u.email, r.role, r.updated_at as role_updated_at
-       from "user" u left join app_user_roles r on r.user_id = u.id order by u.createdAt desc`,
+       from "user" u left join app_user_roles r on r.user_id = u.id order by u."createdAt" desc`,
     );
     return rows.map((row) => ({ ...row, roleUpdatedAt: row.role_updated_at ? new Date(row.role_updated_at).toISOString() : null }));
   });
