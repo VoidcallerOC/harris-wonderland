@@ -1,4 +1,5 @@
 import { redirect } from "@tanstack/react-router";
+import { ForbiddenError } from "./rbac-guards.ts";
 
 /**
  * Route loaders use this wrapper so direct navigation to every protected admin
@@ -8,6 +9,9 @@ export async function requireAdminRoute<T>(loader: () => Promise<T>): Promise<T>
   try {
     return await loader();
   } catch (error) {
+    if (error instanceof ForbiddenError) {
+      throw redirect({ to: "/login", search: { reason: "denied" } });
+    }
     if (error instanceof Error && error.message === "Unauthorized") {
       throw redirect({ to: "/login" });
     }
