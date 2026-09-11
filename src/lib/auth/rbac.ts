@@ -1,6 +1,6 @@
 import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
-import { getSql } from "../db.ts";
+import { getSql, type Sql } from "../db.ts";
 import { authMiddleware } from "./middleware.ts";
 import { RBAC_ROLES, type AuditAction, type JsonValue, type RbacRole } from "./rbac-policy.ts";
 import { authorizeRoleAssignment, authorizeUserDeletion, ForbiddenError, getCurrentPermissions, getRoleForUser, hasPermissionForUser, ownerCount, requirePermissionForUser } from "./rbac-guards.ts";
@@ -46,6 +46,27 @@ type PaymentAttemptRow = {
   completed_at: string | null;
 };
 
+/** Builder desk only. Shop staff, including Adam, are assigned by hand later. */
+const BUILDER_OWNER_EMAIL = "nickhsousa96@gmail.com";
+
+async function grantBuilderOwnerIfNeeded(sql: Sql, userId: string): Promise<void> {
+  if (await getRoleForUser(sql, userId)) return;
+  const user = await getCurrentUser(sql, userId);
+  if (user?.email?.trim().toLowerCase() !== BUILDER_OWNER_EMAIL) return;
+  await sql.query(
+    `insert into app_user_roles (user_id, role, assigned_by) values ($1, 'owner', $1)
+     on conflict (user_id) do nothing`,
+    [userId],
+  );
+  await recordAudit(sql, {
+    actorUserId: userId,
+    action: "role_created",
+    resourceType: "user_role",
+    resourceId: userId,
+    newValue: { role: "owner", builder: true },
+  });
+}
+
 function toAudit(row: AuditRow): AuditEntry {
   return {
     id: row.id,
@@ -59,7 +80,7 @@ function toAudit(row: AuditRow): AuditEntry {
   };
 }
 
-export async function getCurrentUser(sql: import("../db.ts").Sql, userId: string): Promise<CurrentUserRow | null> {
+export async function getCurrentUser(sql: Sql, userId: string): Promise<CurrentUserRow | null> {
   const rows = await sql.query<CurrentUserRow>(`select id, name, email, image from "user" where id = $1`, [userId]);
   return rows[0] ?? null;
 }
@@ -68,7 +89,7 @@ export const hasPermission = hasPermissionForUser;
 export const requirePermission = requirePermissionForUser;
 
 export async function recordAudit(
-  sql: import("../db.ts").Sql,
+  sql: Sql,
   input: {
     actorUserId: string;
     action: AuditAction;
@@ -104,6 +125,7 @@ export const getAdminDashboard = createServerFn({ method: "GET" })
   .middleware([authMiddleware])
   .handler(async ({ context }) => {
     const sql = await getSql();
+    await grantBuilderOwnerIfNeeded(sql, context.userId);
     await requirePermissionForUser(sql, context.userId, "dashboard.view");
     const role = await getRoleForUser(sql, context.userId);
     const permissions = await getCurrentPermissions(sql, context.userId);
@@ -163,6 +185,7 @@ export const listAdminUsers = createServerFn({ method: "GET" })
   .middleware([authMiddleware])
   .handler(async ({ context }) => {
     const sql = await getSql();
+    await grantBuilderOwnerIfNeeded(sql, context.userId);
     await requirePermissionForUser(sql, context.userId, "users.view");
     const rows = await sql.query<UserRow>(
       `select u.id, u.name, u.email, r.role, r.updated_at as role_updated_at
