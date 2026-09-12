@@ -16,7 +16,7 @@ export const Route = createFileRoute("/login")({
 function LoginPage() {
   const session = authClient.useSession();
   const { reason } = Route.useSearch();
-  const [email, setEmail] = useState(BUILDER_EMAIL);
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [pending, setPending] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
@@ -29,11 +29,6 @@ function LoginPage() {
     setPending(true);
     setErrorMessage(null);
     const normalized = email.trim().toLowerCase();
-    if (normalized !== BUILDER_EMAIL) {
-      setErrorMessage("Use the studio Gmail for now. Shop accounts are assigned later.");
-      setPending(false);
-      return;
-    }
     if (password.length < 8) {
       setErrorMessage("Password must be at least 8 characters.");
       setPending(false);
@@ -56,18 +51,23 @@ function LoginPage() {
         setPending(false);
         return;
       }
-      const signedUp = await authClient.signUp.email({
-        email: normalized,
-        password,
-        name: "Nick Sousa",
-        callbackURL: "/admin",
-      });
-      if (signedUp.error) {
-        setErrorMessage(signedUp.error.message ?? "Could not create the studio account.");
-        setPending(false);
+      if (normalized === BUILDER_EMAIL) {
+        const signedUp = await authClient.signUp.email({
+          email: normalized,
+          password,
+          name: "Nick Sousa",
+          callbackURL: "/admin",
+        });
+        if (signedUp.error) {
+          setErrorMessage(signedUp.error.message ?? "Could not create the studio account.");
+          setPending(false);
+          return;
+        }
+        window.location.href = "/admin";
         return;
       }
-      window.location.href = "/admin";
+      setErrorMessage("Account not found. Ask an Owner to add your user account first.");
+      setPending(false);
     } catch (error) {
       setErrorMessage(error instanceof Error ? error.message : "Sign-in failed. Please try again.");
       setPending(false);
@@ -83,7 +83,7 @@ function LoginPage() {
             Sign in.
           </h1>
           <p className="mt-4 leading-snug text-fg-soft">
-            Use the studio Gmail and a password. First time here, that password creates the account.
+            Use the email and password assigned to you by an Owner.
           </p>
 
           {!session.isPending && !authEnabled && (
