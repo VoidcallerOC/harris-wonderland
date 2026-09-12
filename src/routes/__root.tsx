@@ -1,5 +1,6 @@
 import { createRootRoute, HeadContent, Outlet, Scripts } from "@tanstack/react-router";
 import { Analytics } from "@vercel/analytics/react";
+import { SpeedInsights } from "@vercel/speed-insights/react";
 import { AuthProvider } from "@/lib/auth/provider";
 import { PreviewHostBridge } from "@/components/preview-host-bridge";
 import { SITE } from "@/lib/site";
@@ -90,6 +91,7 @@ function RootDocument() {
           <Outlet />
         </AuthProvider>
         <Analytics />
+        <SpeedInsights />
         <Scripts />
       </body>
     </html>
