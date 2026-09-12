@@ -170,8 +170,12 @@ function RackRail({ children }: { children: ReactNode }) {
       >
         {children}
       </div>
-      <div className="pointer-events-none absolute inset-y-0 left-0 hidden w-16 bg-gradient-to-r from-bg-2 to-transparent md:block" />
-      <div className="pointer-events-none absolute inset-y-0 right-0 hidden w-16 bg-gradient-to-l from-bg-2 to-transparent md:block" />
+      {canPrev ? (
+        <div className="pointer-events-none absolute inset-y-0 left-0 hidden w-16 bg-gradient-to-r from-bg-2 to-transparent md:block" />
+      ) : null}
+      {canNext ? (
+        <div className="pointer-events-none absolute inset-y-0 right-0 hidden w-16 bg-gradient-to-l from-bg-2 to-transparent md:block" />
+      ) : null}
       <button
         type="button"
         aria-label="Previous on the rack"

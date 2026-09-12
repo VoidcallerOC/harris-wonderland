@@ -40,7 +40,7 @@ export type ShopFilter =
   "animals" | "pythons" | "colubrids" | "feeders" | "supplies" | "all" | AnimalCategoryId;
 
 export const SHOP_FILTERS: { id: ShopFilter; label: string }[] = [
-  { id: "animals", label: "On the rack" },
+  { id: "animals", label: "Available animals" },
   ...ANIMAL_ROOT_CATEGORIES.map((category) => ({ id: category.id, label: category.name })),
   { id: "pythons", label: "Pythons" },
   { id: "colubrids", label: "Colubrids (Snakes)" },
