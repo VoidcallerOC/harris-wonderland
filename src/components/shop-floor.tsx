@@ -34,7 +34,10 @@ function ProductCard({
   const add = useCart((s) => s.add);
   const buyable = canBuy(product);
   const { kind, title } = splitProductName(product.name);
-  const cat = displayCategoryName(product.categories[0] ?? kind ?? "Harris");
+  const productText = `${product.name} ${product.description}`.toLowerCase();
+  const cat = /gecko|pangea|repashy/.test(productText)
+    ? "Reptile Diets"
+    : displayCategoryName(product.categories[0] ?? kind ?? "Harris");
   const packs = (product.skus ?? []).filter((sku) => !sku.soldOut && sku.price > 0);
   const [skuId, setSkuId] = useState(defaultSku(product)?.id ?? packs[0]?.id ?? "");
   const selected = packs.find((pack) => pack.id === skuId) ?? packs[0];

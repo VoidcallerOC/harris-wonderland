@@ -114,6 +114,15 @@ function categoryDepth(category: AnimalCategoryId) {
 export function inventoryCategory(product: SquareProduct): AnimalCategoryId | undefined {
   if (isFeeder(product)) return undefined;
   const blob = blobOf(product);
+  if (
+    blob.includes("diet") ||
+    blob.includes("pangea") ||
+    blob.includes("repashy") ||
+    blob.includes("vitamin") ||
+    blob.includes("supplement")
+  ) {
+    return undefined;
+  }
   return ANIMAL_TAXONOMY.filter((category) =>
     category.inventoryKeywords?.some((keyword) => blob.includes(keyword)),
   ).sort((a, b) => categoryDepth(b.id) - categoryDepth(a.id))[0]?.id;
