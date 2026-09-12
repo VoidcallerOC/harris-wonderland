@@ -4,10 +4,11 @@ import { SiteShell } from "@/components/site-shell";
 import { authClient, authEnabled, signOut } from "@/lib/auth/client";
 
 const BUILDER_EMAIL = "nickhsousa96@gmail.com";
+type LoginSearch = { reason?: "denied" };
 
 export const Route = createFileRoute("/login")({
-  validateSearch: (search: Record<string, unknown>) => ({
-    reason: typeof search.reason === "string" ? search.reason : undefined,
+  validateSearch: (search: Record<string, unknown>): LoginSearch => ({
+    reason: search.reason === "denied" ? "denied" : undefined,
   }),
   component: LoginPage,
 });
