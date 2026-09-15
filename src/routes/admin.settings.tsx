@@ -35,7 +35,7 @@ function AdminSettingsPage() {
   return (
     <SiteShell>
       <AdminPanel access={initial.access} title="Site copy." description="These fields power the public homepage, footer, phone, and address. Save a field and it replaces the hard-coded line on the live site. Care sheets and Square product names stay on their own systems.">
-        <div className="grid gap-5">
+        <div className="grid items-start gap-5 md:grid-cols-2 xl:grid-cols-3">
           {fields.map((field) => (
             <CopyRow key={field.key} field={field} busy={busy === field.key} onSave={save} />
           ))}
