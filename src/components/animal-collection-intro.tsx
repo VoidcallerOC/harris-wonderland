@@ -8,10 +8,10 @@ export function AnimalCollectionIntro() {
     <section className="border-b border-border py-14 sm:py-20">
       <div className="wrap">
         <Kicker>Available animals</Kicker>
-        <Display as="h1" className="mt-2 text-display">
+        <Display data-copy-key="collection_title" as="h1" className="mt-2 text-display">
           Find the right animal for your setup.
         </Display>
-        <Lede className="mt-5">
+        <Lede data-copy-key="collection_lede" className="mt-5">
           Reptiles, mammals, birds, and tropical fish are organized by family below. The live shop page remains connected to Square for current inventory, pricing, pickup, and checkout.
         </Lede>
         <div className="mt-7 flex flex-wrap gap-3">

@@ -24,10 +24,10 @@ function MerchPage() {
         <section className="border-b border-border py-14 sm:py-20">
           <div className="wrap">
             <Kicker>Wear the shop</Kicker>
-            <Display as="h1" className="mt-2 text-display">
+            <Display data-copy-key="merch_title" as="h1" className="mt-2 text-display">
               Merch
             </Display>
-            <Lede className="mt-5">
+            <Lede data-copy-key="merch_lede" className="mt-5">
               Not stocked yet. When there is something worth printing, it will be here and
               in the Square store — and you can be the first to know.
             </Lede>

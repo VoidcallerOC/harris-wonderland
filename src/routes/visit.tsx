@@ -26,10 +26,10 @@ function VisitPage() {
         <section className="border-b border-border py-14 sm:py-20">
           <div className="wrap">
             <Kicker>364 Albany Turnpike · Route 44</Kicker>
-            <Display as="h1" className="mt-2 text-display">
+            <Display data-copy-key="visit_title" as="h1" className="mt-2 text-display">
               Come in through the snake-handle door.
             </Display>
-            <Lede className="mt-5">{SITE.landmark} Dedicated parking, accessible entry.</Lede>
+            <Lede data-copy-key="visit_lede" className="mt-5">{SITE.landmark} Dedicated parking, accessible entry.</Lede>
           </div>
         </section>
 

@@ -42,10 +42,10 @@ function RentalsPage() {
         <section className="border-b border-border py-14 sm:py-20">
           <div className="wrap">
             <Kicker>Bring the animals to you</Kicker>
-            <Display as="h1" className="mt-2 text-display">
+            <Display data-copy-key="rentals_title" as="h1" className="mt-2 text-display">
               Animal rentals &amp; appearances
             </Display>
-            <Lede className="mt-5">
+            <Lede data-copy-key="rentals_lede" className="mt-5">
               Adam brings live reptiles — handled by keepers, staged for the room — to parties,
               sets, and classrooms. Tell us the kind of event and the date; he confirms animals,
               price, and permits himself.

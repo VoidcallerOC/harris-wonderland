@@ -86,7 +86,7 @@ export function Hero() {
       </div>
       <div className="relative wrap flex flex-col justify-end gap-7 pb-12 pt-8 md:min-h-[100svh] md:gap-8 md:pb-16 md:pt-28">
         <div className="max-w-3xl">
-          <Kicker>Connecticut reptile specialty shop</Kicker>
+          <Kicker data-copy-key="hero_kicker">Connecticut reptile specialty shop</Kicker>
           <h1 className="mt-3 font-display text-display font-semibold italic leading-[0.88] tracking-display text-ticket">
             Harris
             <br />
@@ -95,7 +95,7 @@ export function Hero() {
           <p className="mt-4 font-ui text-kicker font-bold uppercase tracking-kicker text-fg-soft">
             Snakes, lizards, frogs · Canton, Connecticut
           </p>
-          <Lede className="mt-5">
+          <Lede data-copy-key="hero_lede" className="mt-5">
             A working herp collection — snakes, lizards, frogs, and feeders — kept by the
             people who breed them. Come in and we will help you pick the right one for
             your setup.

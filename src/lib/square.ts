@@ -123,9 +123,18 @@ export function inventoryCategory(product: SquareProduct): AnimalCategoryId | un
   ) {
     return undefined;
   }
-  return ANIMAL_TAXONOMY.filter((category) =>
+  const matched = ANIMAL_TAXONOMY.filter((category) =>
     category.inventoryKeywords?.some((keyword) => blob.includes(keyword)),
   ).sort((a, b) => categoryDepth(b.id) - categoryDepth(a.id))[0]?.id;
+  if (matched) return matched;
+
+  // Square's live catalog occasionally omits or renames categories. Keep the
+  // admin inventory useful by recognizing unambiguous animal names as a
+  // fallback; feeders and husbandry products were excluded above.
+  if (/\b(python|snake|lizard|gecko|frog|tortoise|turtle|chameleon|iguana|monitor|anole|skink|axolotl|newt)\b/i.test(blob)) {
+    return "reptiles";
+  }
+  return undefined;
 }
 
 function belongsToCategory(product: SquareProduct, categoryId: AnimalCategoryId) {

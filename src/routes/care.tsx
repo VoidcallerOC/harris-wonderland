@@ -50,10 +50,10 @@ function CarePage() {
       <section className="border-b border-border py-14 sm:py-20">
         <div className="wrap">
           <Kicker>Husbandry</Kicker>
-          <Display as="h1" className="mt-2 text-display">
+          <Display data-copy-key="care_title" as="h1" className="mt-2 text-display">
             The sheet matches the animal on the rack.
           </Display>
-          <Lede className="mt-5">
+          <Lede data-copy-key="care_lede" className="mt-5">
             Real husbandry for the animals we actually sell — heat, humidity, enclosure,
             diet. When you take one home we go through it again at the counter, with the
             sheet for your animal.

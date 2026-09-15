@@ -25,10 +25,10 @@ function StoryPage() {
         <div className="wrap grid items-end gap-8 lg:grid-cols-[1.1fr_0.9fr]">
           <div>
             <Kicker>The Harris story</Kicker>
-            <Display as="h1" className="mt-2 text-display">
+            <Display data-copy-key="story_title" as="h1" className="mt-2 text-display">
               From a house of tanks to Route 44.
             </Display>
-            <Lede className="mt-5">
+            <Lede data-copy-key="story_lede" className="mt-5">
               Biology, not scripts. A fish-keeper who taught high-school science, a
               herpetologist with field seasons in Costa Rica, Thailand, Australia, South
               Africa, and the Bahamas, and the person who will tell you which animal

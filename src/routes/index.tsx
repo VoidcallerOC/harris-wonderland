@@ -67,8 +67,8 @@ function Home() {
         <div className="wrap grid items-start gap-8 lg:grid-cols-[1.15fr_0.85fr]">
           <div>
             <Kicker>Exhibits</Kicker>
-            <Display className="mt-2">What is in the cases.</Display>
-            <Lede className="mt-4">
+            <Display data-copy-key="home_exhibits_title" className="mt-2">What is in the cases.</Display>
+            <Lede data-copy-key="home_exhibits_lede" className="mt-4">
               Morphs you will not find at a chain, feeders priced for people who actually
               feed, and staff who will hold an animal until your setup is ready.
             </Lede>
@@ -113,8 +113,8 @@ function Home() {
         <div className="wrap flex items-end justify-between gap-6">
           <div>
             <Kicker>The floor</Kicker>
-            <Display className="mt-2">Look closer.</Display>
-            <Lede className="mt-4">
+            <Display data-copy-key="home_floor_title" className="mt-2">Look closer.</Display>
+            <Lede data-copy-key="home_floor_lede" className="mt-4">
               The collection rewards a second glance: color, texture, tiny feet, watchful
               eyes. These are the animals people come back to stand in front of.
             </Lede>
@@ -151,8 +151,8 @@ function Home() {
       <section className="py-16 sm:py-24">
         <div className="wrap">
           <Kicker>Beginner chooser</Kicker>
-          <Display className="mt-2">The right first animal.</Display>
-          <Lede className="mt-4 mb-8">
+          <Display data-copy-key="home_beginner_title" className="mt-2">The right first animal.</Display>
+          <Lede data-copy-key="home_beginner_lede" className="mt-4 mb-8">
             We steer first-timers toward hardy species. Corn or king. Leopard gecko.
             Red-Footed Tortoises. Ask at the counter before you commit to the showy one.
           </Lede>

@@ -58,10 +58,10 @@ function FishPage() {
         <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(11,10,9,0.2)_0%,rgba(11,10,9,0.88)_100%)]" />
         <div className="relative wrap flex min-h-[52svh] flex-col justify-end pb-12 pt-24">
           <Kicker>Tropical fish · freshwater · marine</Kicker>
-          <Display as="h1" className="mt-2 text-display">
+          <Display data-copy-key="fish_title" as="h1" className="mt-2 text-display">
             Fish room
           </Display>
-          <Lede className="mt-4">
+          <Lede data-copy-key="fish_lede" className="mt-4">
             Harris started as a fish house. Canton still offers freshwater and marine fish,
             plus sugar gliders when we have them.
           </Lede>

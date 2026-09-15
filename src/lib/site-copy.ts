@@ -15,6 +15,27 @@ export const COPY_FIELDS = [
   { key: "landmark", label: "Landmark / door", value: SITE.landmark },
   { key: "phone_display", label: "Shop phone", value: SITE.phones.shop.display },
   { key: "email", label: "Shop email", value: SITE.emails.adam },
+  { key: "home_exhibits_title", label: "Home · exhibits heading", value: "What is in the cases." },
+  { key: "home_exhibits_lede", label: "Home · exhibits intro", value: "Morphs you will not find at a chain, feeders priced for people who actually feed, and staff who will hold an animal until your setup is ready." },
+  { key: "home_floor_title", label: "Home · floor heading", value: "Look closer." },
+  { key: "home_floor_lede", label: "Home · floor intro", value: "The collection rewards a second glance: color, texture, tiny feet, watchful eyes. These are the animals people come back to stand in front of." },
+  { key: "home_beginner_title", label: "Home · beginner heading", value: "The right first animal." },
+  { key: "home_beginner_lede", label: "Home · beginner intro", value: "We steer first-timers toward hardy species. Corn or king. Leopard gecko. Red-Footed Tortoises. Ask at the counter before you commit to the showy one." },
+  { key: "collection_title", label: "Collection · heading", value: "Find the right animal for your setup." },
+  { key: "collection_lede", label: "Collection · intro", value: "Reptiles, mammals, birds, and tropical fish are organized by family below. The live shop page remains connected to Square for current inventory, pricing, pickup, and checkout." },
+  { key: "care_title", label: "Care · heading", value: "Care sheets for the animals we keep." },
+  { key: "care_lede", label: "Care · intro", value: "Start with the species, then build the enclosure around what it actually needs. These notes are the same conversations we have at the counter." },
+  { key: "fish_title", label: "Fish · heading", value: "The wet side of the house." },
+  { key: "fish_lede", label: "Fish · intro", value: "Freshwater, marine, and the equipment to keep a living room tank honest." },
+  { key: "merch_title", label: "Merch · heading", value: "Wear the shop." },
+  { key: "merch_lede", label: "Merch · intro", value: "A small run of Harris in Wonderland goods is coming. Ask at the counter for what is currently in." },
+  { key: "rentals_title", label: "Rentals · heading", value: "Bring the animals to you." },
+  { key: "rentals_lede", label: "Rentals · intro", value: "Birthday programs, classrooms, libraries, and scouts. We bring a small, well-handled collection and the story behind each animal." },
+  { key: "story_title", label: "Story · heading", value: "From a house of tanks to Route 44." },
+  { key: "story_lede", label: "Story · intro", value: "Biology, not scripts. A fish-keeper who taught high-school science, a herpetologist with field seasons across the world, and the person who will tell you which animal actually fits your setup." },
+  { key: "visit_title", label: "Visit · heading", value: "Come in through the snake-handle door." },
+  { key: "visit_lede", label: "Visit · intro", value: "Dedicated parking, accessible entry, and a working reptile shop on Route 44. Snake-handle door toward the right side of the building." },
+
 ] as const;
 
 export type CopyField = (typeof COPY_FIELDS)[number];
