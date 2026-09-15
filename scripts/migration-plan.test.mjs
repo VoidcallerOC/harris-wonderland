@@ -16,8 +16,8 @@ import { projectRoot } from "./with-app-env.mjs";
 const AUTH_MIGRATION = "0001_auth.sql";
 
 /**
- * The auth-on copy of the Better Auth schema and its source, or null when the
- * app has not turned sign-in on (the shipped state).
+ * The optional Better Auth schema copy and its source, or null when no copy is
+ * present. Production and preview can consume the source under migrations/auth.
  */
 function authSchemaCopy(root) {
   const copy = join(root, "migrations", AUTH_MIGRATION);
@@ -56,7 +56,7 @@ test("non-.sql entries are dropped (readdir also yields the auth/ directory)", (
   assert.deepEqual(pendingMigrations(["auth", "README.md"], []), []);
 });
 
-test("the auth schema ships outside the globbed directory", () => {
+test("core migrations include site copy and auth ships in its opt-in directory", () => {
   const migrationsDir = join(projectRoot(), "migrations");
   assert.deepEqual(
     pendingMigrations(readdirSync(migrationsDir), []).filter(({ name }) => name !== "0001_auth.sql"),
@@ -65,16 +65,17 @@ test("the auth schema ships outside the globbed directory", () => {
       { name: "0002_hold_payments.sql", path: "0002_hold_payments.sql" },
       { name: "0003_payment_attempt_concurrency.sql", path: "0003_payment_attempt_concurrency.sql" },
       { name: "0004_rbac.sql", path: "0004_rbac.sql" },
+      { name: "0005_site_copy.sql", path: "0005_site_copy.sql" },
     ],
   );
   assert.ok(readdirSync(join(migrationsDir, "auth")).includes("0001_auth.sql"));
 });
 
-test("this workspace's auth schema copy is byte-identical to its source", () => {
+test("any auth schema copy is byte-identical to its source", () => {
   // An edited copy diverges silently: basename keying skips it on a database
   // that already ran the original, and applies it on a fresh PGLite preview.
   const pair = authSchemaCopy(projectRoot());
-  if (pair === null) return; // sign-in off — nothing has been copied up
+  if (pair === null) return; // no root copy — the auth source is used directly
   assert.equal(
     pair.copy,
     pair.source,
