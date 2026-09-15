@@ -6,7 +6,9 @@ export type DbSource = "postgres" | "pglite";
 /** Production is explicit: it never inherits the local PGlite fallback. */
 export const isProduction =
   typeof process !== "undefined" &&
-  (process.env.NODE_ENV === "production" || process.env.VERCEL_ENV === "production");
+  (process.env.VERCEL_ENV
+    ? process.env.VERCEL_ENV === "production"
+    : process.env.NODE_ENV === "production");
 
 // An empty/whitespace DATABASE_URL (an easy misconfig in deploy UIs) must mean
 // "unset" — otherwise production would silently run on the PGLite fallback.
