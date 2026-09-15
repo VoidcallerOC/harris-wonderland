@@ -313,3 +313,14 @@
 .forge-attribution { margin: .65rem 0 0; color: inherit; font-size: .75rem; opacity: .72; }
 .forge-attribution a { color: inherit; text-underline-offset: 2px; }
 .forge-attribution a:hover, .forge-attribution a:focus-visible { opacity: 1; }
+
+.site-copy-editor {
+  box-sizing: border-box;
+  display: block;
+  width: 100%;
+  min-width: 0;
+  height: 5rem;
+  min-height: 5rem;
+  max-height: 5rem;
+  line-height: 1.35;
+}

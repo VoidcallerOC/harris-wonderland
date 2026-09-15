@@ -57,7 +57,7 @@ function CopyRow({
 }) {
   const [value, setValue] = useState(field.value);
   const multiline = field.value.length > 80 || field.key.includes("lede") || field.key.includes("blurb") || field.key.includes("description");
-  const editorClassName = "box-border h-20 w-full resize-none overflow-y-auto border border-border bg-transparent px-3 py-2 text-ticket outline-none focus:border-brass";
+  const editorClassName = "site-copy-editor resize-none overflow-y-auto border border-border bg-transparent px-3 py-2 text-ticket outline-none focus:border-brass";
   return (
     <article className="border border-border bg-card p-5">
       <label className="grid gap-2 text-sm text-fg-soft">
