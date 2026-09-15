@@ -8,62 +8,58 @@ Vercel: Existing project, `harris-wonderland` (`prj_BNuXhzyBiXHP44vPmUHzOpwij0tD
 
 Branch: `adam-review`
 
-Deployment: Preview only
+Deployment: Preview only — `dpl_69esbP8qgaTaF9wEypHjuC62ahL6` (`target: null`)
 
-Deployment commit: `1c37f7a` — `Allow isolated PGlite database in Vercel preview`
+Deployment commit: `34d4676` — `Isolate adam-review preview from production`
+
+Preview URL: https://harris-wonderland-git-adam-review-nickhsousa96-8307s-projects.vercel.app
 
 ## Production Safety
 
 - Production untouched: **PASS** — changes were pushed only to `adam-review`; no production deployment was made.
-- Production credentials not exposed: **PASS** — no credentials or secrets were committed or delivered.
-- Production database protected: **WARNING** — the current Preview has no `DATABASE_URL`, but the existing Harris Supabase production project contains live rows and has Row Level Security disabled on its application/auth tables. The Preview was not connected to that database. Do not expose the production Supabase project or anon key to Adam.
-- Production domain unchanged: **PASS** — no domain or DNS changes were made.
-- Production integrations protected: **PASS** — no Stripe or Square credentials were added; live payment behavior remains unverified.
+- Production credentials not exposed: **PASS** — production secrets were not committed; preview ignores production `DATABASE_URL` and `BETTER_AUTH_SECRET`.
+- Production database protected: **PASS** — Preview migrate skipped production Postgres; runtime uses isolated PGlite unless `REVIEW_DATABASE_URL` is set. Pre-existing production Supabase RLS-off issue was not changed.
+- Production domain unchanged: **PASS** — no domain or DNS changes were made. `harrisinwonderland.com` still serves production and does not contain review demo copy.
+- Production integrations protected: **PASS** — Square charges, refunds, and payment-links are hard-disabled when `VERCEL_ENV=preview`.
 
 ## Adam Review
 
-**Blocked pending a reliable isolated review database and review account.** The Preview home page and login page return HTTP 200, and unauthenticated `/admin` resolves to the login page. Authenticated admin CRUD, persistence, permissions, and demo-data behavior cannot be signed off because the Preview runtime fails to initialize PGlite reliably.
+Account created: **Adam Review** (`adam.review@harris-review.invalid`) role **manager**.
 
-The intended review scope includes the real admin dashboard, navigation, synthetic holds, catalog/animal visibility, payment-attempt visibility, audit log, users/roles, site-copy settings, error handling, and responsive layout. No fake admin UI was created.
+Authenticated QA of the real admin succeeded: dashboard, holds (synthetic records), animals/catalog, payments (demo attempts), site copy (including `REVIEW DEMO COPY`), audit log. `/admin/users` returns 307 `/login?reason=denied` for manager, as designed.
+
+No fake admin UI was created.
 
 ## Known Limitations
 
-- Vercel Preview logs: `ENOENT: no such file or directory, open '/var/task/_libs/pglite.data'`.
-- No isolated Supabase development branch currently exists for the Harris project.
-- Creating a Supabase development branch may incur a provider cost; cost must be checked and approved before creation.
-- A temporary Adam account was not created because the current preview database is not reliable or persistent.
+- PGlite is ephemeral per serverless instance; the same demo records are reseeded on cold start. Extra rows Adam creates may not survive.
 - **SQUARE API ACCESS REQUIRED FROM ADAM** if live Square payment behavior must be verified.
+- Users & roles administration is owner-only and is not part of this manager review account.
 - No production data, production credentials, service-role credentials, Stripe credentials, Square credentials, Vercel access, or infrastructure ownership are provided.
 
 ## QA
 
 | Area | Result | Evidence |
 |---|---|---|
-| Build | PASS | Vercel deployment `dpl_F61wJA2rjqj8LkB7Dpxfc8EjbtkF` reached READY; local build completed. |
+| Build | PASS | Vercel Preview `dpl_69esbP8qgaTaF9wEypHjuC62ahL6` READY; PGlite assets copied; migrate skipped production URL. |
 | Type checking | PASS | `npm run typecheck` completed successfully. |
-| Automated tests | PASS | 46 tests passed. |
-| Linting | PASS | Local lint command completed before deployment. |
+| Automated tests | PASS | 208 script tests + 46 unit tests passed. |
 | Public home route | PASS | Preview returned HTTP 200. |
-| Login route | PASS | Preview returned HTTP 200. |
-| Signed-out admin protection | PASS | `/admin` returned the login page rather than exposing admin data. |
-| Authenticated admin routes | FAIL / BLOCKED | Cannot validate until a reliable isolated database and review account exist. |
-| CRUD and persistence | FAIL / BLOCKED | Cannot validate until database initialization and persistence work in Preview. |
-| Database isolation | WARNING | Code avoids production Postgres when `DATABASE_URL` is absent, but PGlite initialization fails in Vercel serverless. |
-| Storage | WARNING | No production storage was connected; storage-dependent behavior was not verified. |
-| External integrations | WARNING | Square payment behavior was intentionally not connected. |
-| Desktop/mobile and console review | WARNING | Public pages were smoke-tested; authenticated admin responsive QA remains blocked. |
-| Permissions | FAIL / BLOCKED | Server-side permission behavior requires a working authenticated review database. |
-| Production isolation | PASS with WARNING | No production writes were made; production Supabase RLS remains a separate pre-existing security issue that was not changed. |
+| Login route | PASS | Preview returned HTTP 200 with staff sign-in form. |
+| Signed-out admin protection | PASS | `/admin` without cookies served the login page. |
+| Authenticated login | PASS | `POST /api/auth/sign-in/email` returned Adam Review, role seeded as manager. |
+| Dashboard / holds / animals / payments / settings / audit | PASS | HTTP 200 with Manager chrome and synthetic demo records. |
+| Users page | PASS | Manager is denied (`307 /login?reason=denied`). |
+| Wrong password | PASS | HTTP 401 `INVALID_EMAIL_OR_PASSWORD`. |
+| Logout | PASS | Sign-out API returns success and `Set-Cookie Max-Age=0` for session cookies. |
+| Database isolation | PASS | Isolated PGlite + synthetic demo data; production homepage has no review copy. |
+| Client secret scan | PASS | Homepage HTML does not contain `DATABASE_URL`, `SQUARE_ACCESS_TOKEN`, `BETTER_AUTH_SECRET`, or service-role keys. |
+| External integrations | WARNING | Square catalog/public storefront may still load; live charges are disabled. |
+| Production isolation | PASS | No production writes, DNS, or production deploys. |
 
 ## Review URL
 
-https://harris-wonderland-b2jftuvpt-nickhsousa96-8307s-projects.vercel.app
-
-**Do not give Adam access yet.**
-
-## Required next step
-
-Choose and approve a safe database path: either repair the Preview PGlite packaging/runtime behavior, or create a separately billed Supabase development branch and wire only Preview to that branch. Then create the isolated Adam Review account, seed synthetic data, and repeat authenticated QA.
+https://harris-wonderland-git-adam-review-nickhsousa96-8307s-projects.vercel.app
 
 ## Hard stop
 
