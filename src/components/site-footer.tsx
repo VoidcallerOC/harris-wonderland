@@ -132,6 +132,7 @@ export function SiteFooter() {
           </a>
         </div>
       </div>
+      <p className="forge-attribution">Website by <a href="https://forge-ct.com" target="_blank" rel="noopener noreferrer">Forge-CT</a></p>
     </footer>
   );
 }
