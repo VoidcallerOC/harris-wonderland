@@ -142,6 +142,22 @@ function authPopupPlugin(): Plugin {
   };
 }
 
+function copyPgliteAssetsPlugin(): Plugin {
+  return {
+    name: "copy-pglite-assets",
+    apply: "build",
+    enforce: "post",
+    async closeBundle() {
+      try {
+        const { copyPgliteAssets } = await import("./scripts/copy-pglite-assets.mjs");
+        copyPgliteAssets();
+      } catch (err) {
+        console.warn("[copy-pglite-assets] vite plugin skipped:", err);
+      }
+    },
+  };
+}
+
 // `0.0.0.0:8080` is the live-preview contract — don't change host/port.
 // The dev server starts once `src/router.tsx` and `src/routes/` exist — see
 // AGENTS.md § "First scaffold".
@@ -157,6 +173,7 @@ export default defineConfig(({ command, isPreview }) => ({
     strictPort: true,
   },
   resolve: { tsconfigPaths: true },
+  optimizeDeps: { exclude: ["@electric-sql/pglite"] },
   plugins: [
     pgliteBootstrapPlugin(),
     // Before tanstackStart so /auth/popup never falls through to the SPA.
@@ -178,6 +195,7 @@ export default defineConfig(({ command, isPreview }) => ({
           }),
         ]
       : []),
+    copyPgliteAssetsPlugin(),
     viteReact(),
   ],
 }));

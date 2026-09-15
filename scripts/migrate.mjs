@@ -20,7 +20,16 @@ import pg from "pg";
 import { inspectDatabaseUrl } from "./database-url.mjs";
 import { pendingMigrations } from "./migration-plan.mjs";
 
-const databaseUrl = process.env.DATABASE_URL;
+const isPreview = process.env.VERCEL_ENV === "preview";
+const reviewDatabaseUrl = process.env.REVIEW_DATABASE_URL?.trim();
+if (isPreview && !reviewDatabaseUrl) {
+  console.log(
+    "[migrate] Vercel preview — skipping production DATABASE_URL; the isolated PGlite fallback migrates itself.",
+  );
+  process.exit(0);
+}
+
+const databaseUrl = isPreview ? reviewDatabaseUrl : process.env.DATABASE_URL;
 if (!databaseUrl) {
   if (process.env.NODE_ENV === "production" || process.env.VERCEL_ENV === "production") {
     console.error(

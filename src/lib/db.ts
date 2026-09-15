@@ -1,4 +1,7 @@
 import { pendingMigrations } from "../../scripts/migration-plan.mjs";
+import { loadPgliteAssetOptions } from "./pglite-assets";
+import { isolatedDatabaseUrl, isVercelPreview } from "./review-env";
+import { seedReviewDatabase } from "./review-seed";
 
 /** Which database backend is active. */
 export type DbSource = "postgres" | "pglite";
@@ -10,12 +13,8 @@ export const isProduction =
     ? process.env.VERCEL_ENV === "production"
     : process.env.NODE_ENV === "production");
 
-// An empty/whitespace DATABASE_URL (an easy misconfig in deploy UIs) must mean
-// "unset" — otherwise production would silently run on the PGLite fallback.
-const rawDatabaseUrl =
-  typeof process !== "undefined" ? process.env.DATABASE_URL : undefined;
-export const databaseUrl =
-  rawDatabaseUrl && rawDatabaseUrl.trim() ? rawDatabaseUrl : undefined;
+// Preview ignores production DATABASE_URL unless REVIEW_DATABASE_URL is set.
+export const databaseUrl = isolatedDatabaseUrl();
 
 if (typeof window === "undefined" && isProduction && !databaseUrl) {
   throw new Error(
@@ -25,7 +24,7 @@ if (typeof window === "undefined" && isProduction && !databaseUrl) {
 }
 
 /**
- * Active backend: PostgreSQL when `DATABASE_URL` is set, otherwise a local
+ * Active backend: PostgreSQL when an isolated/production URL is set, otherwise
  * embedded **PGLite** (Postgres compiled to WASM) for development/preview only.
  */
 export const dbSource: DbSource = databaseUrl ? "postgres" : "pglite";
@@ -45,7 +44,7 @@ export interface Sql {
   ): Promise<T[]>;
   query<T = Record<string, unknown>>(
     text: string,
-    params?: unknown[],
+    params?: unknown[]
   ): Promise<T[]>;
 }
 
@@ -123,12 +122,14 @@ async function createPgliteSql(): Promise<Sql> {
   // data survives source edits (it resets on dev-server restart).
   globalRef.__pgliteInstance__ ??= (async () => {
     const { PGlite } = await import("@electric-sql/pglite");
+    const assets = await loadPgliteAssetOptions();
     const pg = new PGlite({
       parsers: {
         [OID_INT8]: Number,
         [OID_DATE]: identity,
         [OID_INTERVAL]: identity,
       },
+      ...(assets ?? {}),
     });
     await pg.waitReady;
     await pg.exec(
@@ -174,26 +175,18 @@ async function createPgliteSql(): Promise<Sql> {
         await tx.query("insert into _migrations (name) values ($1)", [name]);
       });
     }
+    try {
+      await seedReviewDatabase(pg);
+    } catch (err) {
+      console.error("[db] review seed failed:", err);
+      if (isVercelPreview()) throw err;
+    }
   };
   const pass = (globalRef.__pgliteMigrateChain__ ?? Promise.resolve())
     .catch(() => undefined) // an earlier failed pass must not wedge the chain
     .then(migrate);
   globalRef.__pgliteMigrateChain__ = pass;
   await pass;
-
-  // Preview-only synthetic records make the admin review useful without ever
-  // copying production data. This path is unreachable when DATABASE_URL is set.
-  if (process.env.VERCEL_ENV === "preview") {
-    await pg.query(
-      `insert into sugar_glider_holds
-        (id, customer_name, customer_email, customer_phone, animal_id, animal_description, status,
-         total_amount_cents, deposit_amount_cents, balance_due_cents, hold_expires_at, notes)
-       values
-        ('00000000-0000-4000-8000-000000000001', 'Demo Customer One', 'demo-one@example.invalid', '555-010-0101', 'demo-sugar-glider-1', 'Demo Sugar Glider · Classic', 'requested', 125000, 25000, 100000, now() + interval '48 hours', 'Synthetic review record — not a real customer.'),
-        ('00000000-0000-4000-8000-000000000002', 'Demo Customer Two', 'demo-two@example.invalid', '555-010-0102', 'demo-sugar-glider-2', 'Demo Sugar Glider · Mosaic', 'held', 145000, 29000, 116000, now() + interval '72 hours', 'Synthetic review record — not a real customer.')
-       on conflict (id) do nothing`,
-    );
-  }
 
   return toSql(async <T>(text: string, params: unknown[]) => {
     const result = await pg.query<T>(text, params);

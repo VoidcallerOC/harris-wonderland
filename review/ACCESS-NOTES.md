@@ -1,38 +1,46 @@
 # Adam Review Access Notes
 
+Internal notes. Do not treat this as a production credential handoff.
+
 ## Preview URL
 
-https://harris-wonderland-b2jftuvpt-nickhsousa96-8307s-projects.vercel.app
+https://harris-wonderland-git-adam-review-nickhsousa96-8307s-projects.vercel.app
 
-This is a Preview deployment of the existing Vercel project, built from branch `adam-review`.
+This is a Preview deployment of the existing Vercel project, built from branch `adam-review`. Production domains are unchanged.
 
 ## Authentication method
 
-The preview exposes the application's existing Better Auth email/password login at `/login`. A temporary Adam review account has **not** been created because the current serverless preview database is not yet reliable or persistent.
+The preview exposes the application's existing Better Auth email/password login at `/login`.
 
 ## Adam review account
 
-Status: **BLOCKED pending isolated review database**.
+| Field | Value |
+|---|---|
+| Name | Adam Review |
+| Email | `adam.review@harris-review.invalid` |
+| Password | `HarrisReview-Adam-2026` |
+| Role | manager |
+| Seeded | Yes, on every isolated PGlite boot |
 
-Name: Adam Review
+This password is committed only because the repository is already public and the account can reach **synthetic review data only**. It is not a production secret. It cannot access GitHub, Vercel, Supabase, Square, billing, or production Postgres.
 
-Purpose: Project review only.
-
-Permissions: The intended account would receive only the minimum admin permissions needed to review the existing admin interface. It would receive no infrastructure, production database, secrets, billing, deployment, Vercel, or ownership access.
+Manager permissions are the existing RBAC role: business admin minus `users.*`, `roles.manage`, `system.database`, `system.deploy`, and `system.secrets`.
 
 ## Data isolation
 
-The current code selects PGlite when `DATABASE_URL` is absent, and production continues to require Postgres. However, the Vercel Preview runtime currently logs `ENOENT: no such file or directory, open '/var/task/_libs/pglite.data'`. Because this prevents dependable database initialization and persistence, Adam must not be given access yet.
-
-No Supabase development branch currently exists for the Harris project. Creating one may incur a provider cost and requires approval before proceeding.
+- Preview **ignores** production `DATABASE_URL` unless `REVIEW_DATABASE_URL` is explicitly set.
+- Default preview path is in-process PGlite, reseeded with synthetic holds/payments/copy.
+- `scripts/migrate.mjs` will not migrate production Postgres during a Preview build.
+- PGlite WASM/data files are copied into the Vercel function `_libs` directory so `/var/task/_libs/pglite.data` exists.
+- Better Auth on preview uses a commit-SHA-derived secret, never the production `BETTER_AUTH_SECRET`.
+- Square charges, refunds, and payment-links are hard-disabled when `VERCEL_ENV=preview`.
 
 ## Limitations and dependencies
 
 - **SQUARE API ACCESS REQUIRED FROM ADAM** if live Square payment behavior must be verified.
-- An isolated preview database is required before admin CRUD, authentication persistence, demo data, and permissions can be signed off.
+- PGlite is ephemeral per serverless instance. Cookie cache is extended on preview so sessions can survive instance hops; created demo rows may not.
 - No production data, production database, production credentials, service-role credentials, Stripe credentials, Square credentials, Vercel access, or infrastructure access are provided.
-- Demo data is intended to be synthetic and temporary; it is not safe to use until the database-backed Preview is working.
 
-## Credential handling
+## Hard stop
 
-Any temporary password or one-time access token must be delivered separately through a secure channel. Never commit it to this repository.
+Do not merge `adam-review` into `main`, promote the preview to production, change DNS, or give Adam production credentials.

@@ -33,9 +33,10 @@ import { betterAuth } from "better-auth";
 import { bearer, genericOAuth } from "better-auth/plugins";
 import { tanstackStartCookies } from "better-auth/tanstack-start";
 import { getCookie } from "@tanstack/react-start/server";
-import { randomBytes } from "node:crypto";
+import { createHash, randomBytes } from "node:crypto";
 import { Pool } from "pg";
 import { databaseUrl, ensureDbReady, getPglite, isProduction } from "../db";
+import { isVercelPreview, REVIEW_BRANCH_ALIAS } from "../review-env";
 import { emailAndPasswordEnabled } from "./email-password";
 import { GATE_PROVIDER_ID, gateIdentitySessions } from "./gate-session.server";
 import { GROK_PROVIDERS } from "./providers";
@@ -58,9 +59,17 @@ void ensureDbReady();
 const globalAuthRef = globalThis as typeof globalThis & {
   __grokAuthPreviewSecret__?: string;
 };
-function previewAuthSecret(): string {
+function ephemeralPreviewAuthSecret(): string {
   globalAuthRef.__grokAuthPreviewSecret__ ??= randomBytes(32).toString("hex");
   return globalAuthRef.__grokAuthPreviewSecret__;
+}
+
+function stablePreviewAuthSecret(): string {
+  const material =
+    process.env.VERCEL_GIT_COMMIT_SHA?.trim() ||
+    process.env.VERCEL_DEPLOYMENT_ID?.trim() ||
+    "harris-wonderland-review-preview";
+  return createHash("sha256").update(`harris-review-auth:${material}`).digest("hex");
 }
 
 const env = (key: string): string | undefined => {
@@ -91,6 +100,7 @@ const previewAllowedHosts: string[] = [
   ...PREVIEW_ALLOWED_HOSTS,
   "harrisinwonderland.com",
   "www.harrisinwonderland.com",
+  "*.vercel.app",
 ];
 const LOCAL_DEV_ORIGINS: string[] = [
   "http://localhost:8080",
@@ -98,6 +108,7 @@ const LOCAL_DEV_ORIGINS: string[] = [
   "http://[::1]:8080",
 ];
 const vercelOrigin = env("VERCEL_URL") ? `https://${env("VERCEL_URL")}` : undefined;
+const vercelBranchOrigin = env("VERCEL_BRANCH_URL") ? `https://${env("VERCEL_BRANCH_URL")}` : undefined;
 const extraOrigin = env("BETTER_AUTH_URL");
 const baseURL = explicitBaseURL ?? {
   allowedHosts: [...previewAllowedHosts, "localhost", "127.0.0.1", "[::1]"],
@@ -111,6 +122,9 @@ const trustedOrigins: string[] = [
   ...previewAllowedHosts,
   ...previewAllowedHosts.flatMap((host) => [`https://${host}`, `http://${host}`]),
   ...(vercelOrigin ? [vercelOrigin] : []),
+  ...(vercelBranchOrigin ? [vercelBranchOrigin] : []),
+  REVIEW_BRANCH_ALIAS,
+  "https://*.vercel.app",
   ...(extraOrigin ? [extraOrigin] : []),
 ];
 
@@ -142,7 +156,9 @@ const grokOAuthPlugin = authConfigured
 
 export const auth = betterAuth({
   baseURL,
-  secret: env("BETTER_AUTH_SECRET") ?? previewAuthSecret(),
+  secret: isVercelPreview()
+    ? stablePreviewAuthSecret()
+    : (env("BETTER_AUTH_SECRET") ?? ephemeralPreviewAuthSecret()),
   database,
   trustedOrigins,
   account: {
@@ -156,7 +172,7 @@ export const auth = betterAuth({
       requireLocalEmailVerified: false,
     },
   },
-  session: { cookieCache: { enabled: true, maxAge: 300 } },
+  session: { cookieCache: { enabled: true, maxAge: isVercelPreview() ? 60 * 60 * 24 * 7 : 300 } },
   ...(emailAndPasswordEnabled ? { emailAndPassword: { enabled: true } } : {}),
   advanced: {
     useSecureCookies: false,

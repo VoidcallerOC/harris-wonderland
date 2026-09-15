@@ -1,6 +1,18 @@
+# Adam Review
+
 Welcome to the project review environment.
 
 This is a temporary Vercel Preview deployment of the existing Harris in Wonderland application. It contains demonstration data created for review and is intended for project review only. It is not the production site and must not be used for real customer, payment, or operational activity.
+
+**Do not merge `adam-review` into `main`.**
+
+## Review Environment
+
+- Preview URL: https://harris-wonderland-git-adam-review-nickhsousa96-8307s-projects.vercel.app
+- Login: `/login`
+- Branch: `adam-review`
+- Account: Adam Review (`adam.review@harris-review.invalid`) / role **manager**
+- Password: `HarrisReview-Adam-2026` (review-only demo credential for synthetic data)
 
 ### What to Review
 
@@ -17,10 +29,12 @@ Please document specific, reproducible issues rather than general preferences. I
 
 ### Review Scope
 
-Review the dashboard, admin navigation, holds, animal/catalog visibility, payment-attempt visibility, audit log, users and roles where your account permits it, site-copy settings, error messages, and desktop/mobile layout. Use clearly labeled demo records only. CRUD behavior should be tested where the existing application exposes it.
+Review the dashboard, admin navigation, holds, animal/catalog visibility, payment-attempt visibility, audit log, site-copy settings, error messages, and desktop/mobile layout. Users and roles are owner-only and are not included in this manager account. Use clearly labeled demo records only.
 
 ### Important Safety Notes
 
-The preview is configured to use an isolated in-process review database when no preview database URL is supplied. It is seeded with synthetic records only. Do not enter real customer information, real payment details, or production credentials. Square payment actions are not part of the safe review path and require Square API access from Adam/client if they must be verified.
+The preview uses an isolated in-process review database. It is seeded with synthetic records only. Do not enter real customer information, real payment details, or production credentials.
+
+**SQUARE API ACCESS REQUIRED FROM ADAM** if live Square payment behavior must be verified. Preview cannot charge cards.
 
 Use the accompanying `adam-review-checklist.md` to record findings. This branch is review-only and must not be merged into production.

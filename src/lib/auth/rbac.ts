@@ -1,6 +1,6 @@
 import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
-import { dbSource, getSql, type Sql } from "../db.ts";
+import { getSql, type Sql } from "../db.ts";
 import { authMiddleware } from "./middleware.ts";
 import { auth } from "./server.ts";
 import { RBAC_ROLES, type AuditAction, type JsonValue, type RbacRole } from "./rbac-policy.ts";
@@ -52,9 +52,7 @@ const BUILDER_OWNER_EMAIL = "nickhsousa96@gmail.com";
 async function grantBuilderOwnerIfNeeded(sql: Sql, userId: string): Promise<void> {
   if (await getRoleForUser(sql, userId)) return;
   const user = await getCurrentUser(sql, userId);
-  const isReviewPreview = dbSource === "pglite" && process.env.VERCEL_ENV === "preview";
-  const canBootstrap = user?.email?.trim().toLowerCase() === BUILDER_OWNER_EMAIL
-    || (isReviewPreview && (await ownerCount(sql)) === 0);
+  const canBootstrap = user?.email?.trim().toLowerCase() === BUILDER_OWNER_EMAIL;
   if (!canBootstrap) return;
   await sql.query(
     `insert into app_user_roles (user_id, role, assigned_by) values ($1, 'owner', $1)

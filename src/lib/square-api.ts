@@ -5,6 +5,7 @@ import fallbackSkus from "./feeder-skus.json";
 import { withFeederSkus } from "./feeders";
 import { SQUARE, isFeeder, stripHtml, type CatalogPayload, type SquareProduct, type SquareSku } from "./square";
 import { SITE } from "./site";
+import { squarePaymentsAllowed } from "./review-env";
 
 type FallbackFile = {
   fetchedAt: string;
@@ -169,12 +170,13 @@ export const getSquareCatalog = createServerFn({ method: "GET" }).handler(async 
 });
 
 export const getSquarePayConfig = createServerFn({ method: "GET" }).handler(async () => {
+  const allowed = squarePaymentsAllowed();
   const applicationId = process.env.VITE_SQUARE_APPLICATION_ID ?? process.env.SQUARE_APPLICATION_ID ?? "";
   return {
     applicationId: applicationId || null,
     locationId: process.env.SQUARE_LOCATION_ID || SQUARE.locationId,
-    canCharge: Boolean(process.env.SQUARE_ACCESS_TOKEN && applicationId),
-    canLink: Boolean(process.env.SQUARE_ACCESS_TOKEN),
+    canCharge: allowed && Boolean(process.env.SQUARE_ACCESS_TOKEN && applicationId),
+    canLink: allowed && Boolean(process.env.SQUARE_ACCESS_TOKEN),
   };
 });
 
@@ -229,6 +231,11 @@ export async function chargeSquareCard(input: {
   buyerEmail: string;
   note: string;
 }): Promise<SquareChargeResult> {
+  if (!squarePaymentsAllowed()) {
+    throw new Error(
+      "Square charges are disabled in the review environment. SQUARE API ACCESS REQUIRED FROM ADAM to verify live payment behavior.",
+    );
+  }
   const token = process.env.SQUARE_ACCESS_TOKEN;
   if (!token) throw new Error("Square payments are not configured.");
   const response = await fetch("https://connect.squareup.com/v2/payments", {
@@ -267,6 +274,11 @@ export async function chargeSquareCard(input: {
 }
 
 export async function refundSquarePayment(paymentId: string, amountCents: number, idempotencyKey: string) {
+  if (!squarePaymentsAllowed()) {
+    throw new Error(
+      "Square refunds are disabled in the review environment. SQUARE API ACCESS REQUIRED FROM ADAM to verify live payment behavior.",
+    );
+  }
   const token = process.env.SQUARE_ACCESS_TOKEN;
   if (!token) throw new Error("Square payments are not configured.");
   const response = await fetch("https://connect.squareup.com/v2/refunds", {
@@ -311,7 +323,7 @@ export const startSquareCheckout = createServerFn({ method: "POST" })
       };
     });
     const total = items.reduce((sum, item) => sum + item.price * item.qty, 0);
-    const token = process.env.SQUARE_ACCESS_TOKEN;
+    const token = squarePaymentsAllowed() ? process.env.SQUARE_ACCESS_TOKEN : undefined;
     const locationId = process.env.SQUARE_LOCATION_ID || SQUARE.locationId;
     const note = [
       `Pickup · Harris in Wonderland · ${data.buyer.name} · ${data.buyer.phone}`,
