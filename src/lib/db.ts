@@ -179,6 +179,20 @@ async function createPgliteSql(): Promise<Sql> {
   globalRef.__pgliteMigrateChain__ = pass;
   await pass;
 
+  // Preview-only synthetic records make the admin review useful without ever
+  // copying production data. This path is unreachable when DATABASE_URL is set.
+  if (process.env.VERCEL_ENV === "preview") {
+    await pg.query(
+      `insert into sugar_glider_holds
+        (id, customer_name, customer_email, customer_phone, animal_id, animal_description, status,
+         total_amount_cents, deposit_amount_cents, balance_due_cents, hold_expires_at, notes)
+       values
+        ('00000000-0000-4000-8000-000000000001', 'Demo Customer One', 'demo-one@example.invalid', '555-010-0101', 'demo-sugar-glider-1', 'Demo Sugar Glider · Classic', 'requested', 125000, 25000, 100000, now() + interval '48 hours', 'Synthetic review record — not a real customer.'),
+        ('00000000-0000-4000-8000-000000000002', 'Demo Customer Two', 'demo-two@example.invalid', '555-010-0102', 'demo-sugar-glider-2', 'Demo Sugar Glider · Mosaic', 'held', 145000, 29000, 116000, now() + interval '72 hours', 'Synthetic review record — not a real customer.')
+       on conflict (id) do nothing`,
+    );
+  }
+
   return toSql(async <T>(text: string, params: unknown[]) => {
     const result = await pg.query<T>(text, params);
     return result.rows;
