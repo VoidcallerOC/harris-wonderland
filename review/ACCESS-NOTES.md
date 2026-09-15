@@ -2,31 +2,36 @@
 
 ## Preview URL
 
-To be filled after the `adam-review` branch deployment is ready.
+https://harris-wonderland-b2jftuvpt-nickhsousa96-8307s-projects.vercel.app
+
+This is a Preview deployment of the existing Vercel project, built from branch `adam-review`.
 
 ## Authentication method
 
-The preview uses the application's existing Better Auth email/password flow. The temporary Adam review account, if created, must be created inside the isolated preview database and delivered through a secure channel. No password or secret belongs in Git.
+The preview exposes the application's existing Better Auth email/password login at `/login`. A temporary Adam review account has **not** been created because the current serverless preview database is not yet reliable or persistent.
 
 ## Adam review account
 
-Status: Pending preview deployment and account creation.
+Status: **BLOCKED pending isolated review database**.
 
 Name: Adam Review
 
 Purpose: Project review only.
 
-Permissions: The minimum admin permissions needed to review the existing admin interface. No infrastructure, production database, secrets, billing, deployment, Vercel, or ownership access.
+Permissions: The intended account would receive only the minimum admin permissions needed to review the existing admin interface. It would receive no infrastructure, production database, secrets, billing, deployment, Vercel, or ownership access.
 
 ## Data isolation
 
-The preview is intended to run without `DATABASE_URL`, which selects the application's in-process PGlite database. The preview database is seeded with synthetic demo records only. Production uses a separate Postgres connection and is not used by the review preview.
+The current code selects PGlite when `DATABASE_URL` is absent, and production continues to require Postgres. However, the Vercel Preview runtime currently logs `ENOENT: no such file or directory, open '/var/task/_libs/pglite.data'`. Because this prevents dependable database initialization and persistence, Adam must not be given access yet.
+
+No Supabase development branch currently exists for the Harris project. Creating one may incur a provider cost and requires approval before proceeding.
 
 ## Limitations and dependencies
 
-- Square payment execution is not enabled for safe review. **SQUARE API ACCESS REQUIRED FROM ADAM** if live Square payment behavior must be verified.
-- The review environment does not provide production storage, production database access, production credentials, Stripe secrets, Square secrets, Vercel access, or infrastructure access.
-- Demo data is temporary and may reset when the preview instance is recreated.
+- **SQUARE API ACCESS REQUIRED FROM ADAM** if live Square payment behavior must be verified.
+- An isolated preview database is required before admin CRUD, authentication persistence, demo data, and permissions can be signed off.
+- No production data, production database, production credentials, service-role credentials, Stripe credentials, Square credentials, Vercel access, or infrastructure access are provided.
+- Demo data is intended to be synthetic and temporary; it is not safe to use until the database-backed Preview is working.
 
 ## Credential handling
 
