@@ -1,4 +1,12 @@
 {
+  "redirects": [
+    {
+      "source": "/(.*)",
+      "has": [{ "type": "host", "value": "www.harrisinwonderland.com" }],
+      "destination": "https://harrisinwonderland.com/$1",
+      "permanent": true
+    }
+  ],
   "headers": [
     {
       "source": "/images/(.*)",
