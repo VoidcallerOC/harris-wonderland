@@ -57,14 +57,15 @@ function CopyRow({
 }) {
   const [value, setValue] = useState(field.value);
   const multiline = field.value.length > 80 || field.key.includes("lede") || field.key.includes("blurb") || field.key.includes("description");
+  const editorClassName = "box-border h-20 w-full resize-none overflow-y-auto border border-border bg-transparent px-3 py-2 text-ticket outline-none focus:border-brass";
   return (
     <article className="border border-border bg-card p-5">
       <label className="grid gap-2 text-sm text-fg-soft">
         {field.label}
         {multiline ? (
-          <textarea value={value} onChange={(event) => setValue(event.target.value)} rows={5} className="border border-border bg-transparent px-3 py-2 text-ticket outline-none focus:border-brass" />
+          <textarea value={value} onChange={(event) => setValue(event.target.value)} rows={5} className={editorClassName} />
         ) : (
-          <input value={value} onChange={(event) => setValue(event.target.value)} className="min-h-12 border border-border bg-transparent px-3 text-ticket outline-none focus:border-brass" />
+          <input value={value} onChange={(event) => setValue(event.target.value)} className={editorClassName} />
         )}
       </label>
       <div className="mt-3">
